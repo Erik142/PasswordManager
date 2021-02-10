@@ -7,6 +7,11 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Properties;
 
+/**
+ * 
+ * @author Erik Wahlberger
+ *
+ */
 public class Configuration {
 	public enum AppMode {
 		Client,
@@ -19,6 +24,13 @@ public class Configuration {
 	public int serverPort;
 	public boolean useDummyData;
 	
+	/**
+	 * Loads a Configuration from a File object
+	 * @param file The property file to be loaded as a Configuration
+	 * @return The Configuration
+	 * @throws FileNotFoundException Thrown if the file was not found on the computer
+	 * @throws IOException
+	 */
 	public static Configuration GetConfiguration(File file) throws FileNotFoundException, IOException {
 		if (!file.exists()) {
 			throw new FileNotFoundException("No configuration file found under the path '" + file.getAbsolutePath() + "'.");
