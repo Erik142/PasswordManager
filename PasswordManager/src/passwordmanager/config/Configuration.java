@@ -46,6 +46,8 @@ public class Configuration {
 		configuration.serverPort = serverPort;
 		configuration.useDummyData = useDummyData;
 		
+		inputStream.close();
+		
 		return configuration;
 	}
 
