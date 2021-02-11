@@ -5,7 +5,7 @@ public class PasswordClient {
 /**	
  * 
  *  
- * @author yemeri 
+ * @author Yemeri 
  *  
  */
 	
@@ -16,12 +16,14 @@ public class PasswordClient {
 	
 //	Initiate communication with server
 	public void ActivateServerNetwork() {
+		//Use items from configuration file here. Use Socket
 		
 	}
 	
-/**	Code below regards Login instructions for UserAccount. Send & recieve Login information **/
+/**	Code below regards Login instructions for UserAccount. Send & receive Login information **/
 	
 	public UserAccount LoginManipulation (UserAccount C) {
+		return C;
 		
 		
 	}
@@ -29,29 +31,46 @@ public class PasswordClient {
 /**	Code below regards Credentials. Manipulates user passwords (Store/Retrieve/Modify/Delete) using PasswordServer, UserAcc, PasswordDatabase & Credentials. For passwords stored inside the Password manager **/
 	
 	
-	public Credential GetCredential (UserAccount C) {
+	public Credential getCredential (UserAccount C) {
+		return null;
 		
 	} 
 	
 	
-	public boolean StoreCredential (Credential C) {
-		
-		
-	}
-	
-	public boolean ModifyCredential (Credential C) {
+	public boolean storeCredential (Credential C) {
+		return false;
 		
 	}
 	
-	public boolean DeleteCredential (Credential C) {
+	public boolean modifyCredential (Credential C) {
+		return false;
 		
+	}
+	
+	public boolean deleteCredential (Credential C) {
+		return false;
 		
 	}
 	
 /**	Manipulates user account (Store/Retrieve/Modify/Delete) using UserAcc, PasswordServer and PasswordDatabase Credentials. For account used to login **/
 //	to the password manager interface.
 	
-	public void UserAccountManipulation () {
+public UserAccount getCredential (String email, String password) {
+		return null; 
+	} 
+	
+	
+	public boolean StoreUserAccount (UserAccount Y) {
+		return false;
+		
+	}
+	
+	public boolean modifyUserAccount (UserAccount Y) {
+		return false; 
+	}
+	
+	public boolean deleteUserAccount (UserAccount Y) {
+		return false;
 		
 	}
 	
