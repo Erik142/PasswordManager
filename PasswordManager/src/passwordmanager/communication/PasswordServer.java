@@ -64,24 +64,24 @@ public class PasswordServer implements Runnable {
 		
 	}
 	
-	private void addAccount(UserAccount account) {
-		
+	private boolean addAccount(UserAccount account) {
+		return false;
 	}
 	
-	private void addCredential(Credential credential) {
-		
+	private boolean addCredential(Credential credential) {
+		return false;
 	}
 	
-	private void deleteAccount(UserAccount account) {
-		
+	private boolean deleteAccount(UserAccount account) {
+		return false;
 	}
 	
 	private boolean deleteAllPasswords(UserAccount account) {
 		return true;
 	}
 	
-	private void deleteCredential(Credential credential) {
-		
+	private boolean deleteCredential(Credential credential) {
+		return false;
 	}
 	
 	private UserAccount getAccount(String username, String passwordHash) {
@@ -96,8 +96,8 @@ public class PasswordServer implements Runnable {
 		return null;
 	}
 	
-	private void updateAccount(UserAccount account) {
-		
+	private boolean updateAccount(UserAccount account) {
+		return false;
 	}
 	
 	private boolean isUserAuthorized(UserAccount account) {
