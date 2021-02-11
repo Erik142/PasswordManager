@@ -1,11 +1,18 @@
 package passwordmanager.communication;
 
+
+import java.io.Serializable;
 import java.net.Socket;
 
 import passwordmanager.Credential;
 import passwordmanager.UserAccount;
 
-public class CommunicationProtocol {
+/**
+ * 
+ * @author Erik Wahlberger
+ *
+ */
+public class CommunicationProtocol implements Serializable {
 	public enum CommunicationOperation {
 		AddCredential,
 		DeleteCredential,
