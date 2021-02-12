@@ -39,7 +39,7 @@ public class CommunicationProtocol implements Serializable {
 		this.socket = socket;
 	}
 	
-	public void sendRequest(Object object, CommunicationOperation operation) {
+	public void send(Object object, CommunicationOperation operation) {
 		do {
 			try {
 				if (outputStream == null) {
