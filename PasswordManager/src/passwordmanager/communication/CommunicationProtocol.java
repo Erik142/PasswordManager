@@ -70,6 +70,83 @@ public class CommunicationProtocol implements Serializable {
 		}
 	}
 	
+	public Object sendAndReceive(Object object, CommunicationOperation operation) {
+		do {
+			try {
+				if (outputStream == null) {
+					outputStream = new DataOutputStream(socket.getOutputStream());
+				}
+				break;
+			} catch(IOException ex) {
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		} while(true);
+		
+		try {
+			byte[] operationBytes = serializeObject(operation);
+			byte[] objectBytes = serializeObject(object);
+			
+			outputStream.writeInt(operationBytes.length);
+			outputStream.write(operationBytes);
+			outputStream.writeInt(objectBytes.length);
+			outputStream.write(objectBytes);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		do {
+			try {
+				if (inputStream == null) {
+					inputStream = new DataInputStream(socket.getInputStream());
+				}
+				break;
+			} catch(IOException ex) {
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		} while(true);
+		
+		while (!socket.isClosed()) {
+			try {
+				int operationLength = inputStream.readInt();
+				CommunicationOperation returnOperation = null;
+				
+				if (operationLength > 0) {
+					returnOperation = (CommunicationOperation)deserializeObject(inputStream.readNBytes(operationLength));
+					
+					if (returnOperation != operation) {
+						throw new Exception("Returned operation was wrong!");
+					}
+					
+					int objectLength = inputStream.readInt();
+					Object returnObject = null;
+					
+					if (objectLength > 0) {
+						returnObject = deserializeObject(inputStream.readNBytes(objectLength));
+					
+						return returnObject;
+					}
+				}
+			} catch (IOException|ClassNotFoundException e) {
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return null;
+	}
+	
 	public void subscribeOnSocket(CommunicationEventListener eventListener) {
 		Thread subscribeThread = new Thread(() -> {
 			do {
