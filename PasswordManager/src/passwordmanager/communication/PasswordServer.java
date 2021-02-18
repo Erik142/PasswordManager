@@ -32,6 +32,10 @@ public class PasswordServer implements Runnable {
 		this.clientThreads = new ArrayList<Thread>();
 	}
 	
+	protected void finalize() {
+		close();
+	}
+	
 	public void listen() {
 		try {
 			serverSocket = new ServerSocket();
@@ -64,6 +68,15 @@ public class PasswordServer implements Runnable {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	public void close() {
+		try {
+			serverSocket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
