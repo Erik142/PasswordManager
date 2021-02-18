@@ -107,29 +107,33 @@ public class PasswordServer implements Runnable {
 			@Override
 			public void onUserAccountEvent(UserAccount userAccount, CommunicationOperation operation) {
 				// TODO Auto-generated method stub
-				Object returnValue = null;
+				Object[] returnValue = new Object[1];
 				
 				switch (operation) {
 				case AddUser:
-					returnValue = addAccount(userAccount);
+					returnValue[0] = addAccount(userAccount);
 					break;
 				case DeleteUser:
 					boolean result = true;
 					result &= deleteAllPasswords(userAccount);
 					result &= deleteAccount(userAccount);
-					returnValue = result;
+					returnValue[0] = result;
 					break;
 				case GetCredential:
-					returnValue = getCredential(userAccount);
+					returnValue[0] = getCredential(userAccount);
+					break;
+				case GetAllCredentials:
+					returnValue = getCredentials(userAccount);
 					break;
 				case GetUser:
 					// TODO: Implement this method with actual user name and password values
-					returnValue = getAccount(null, null);
+					returnValue[0] = getAccount(null, null);
+					break;
 				case UpdateUser:
-					returnValue = updateAccount(userAccount);
+					returnValue[0] = updateAccount(userAccount);
 					break;
 				case VerifyUser:
-					returnValue = isUserAuthorized(userAccount);
+					returnValue[0] = isUserAuthorized(userAccount);
 					break;
 				}
 				
