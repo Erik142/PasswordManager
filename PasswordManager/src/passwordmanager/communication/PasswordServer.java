@@ -54,7 +54,7 @@ public class PasswordServer implements Runnable {
 			return;
 		}
 		
-		while(true) {
+		while(!serverSocket.isClosed()) {
 			try {
 				Socket clientSocket = serverSocket.accept();
 				
@@ -66,7 +66,6 @@ public class PasswordServer implements Runnable {
 				
 				clientThreads.add(clientThread);
 			} catch (IOException e) {
-				e.printStackTrace();
 			}
 		}
 	}
