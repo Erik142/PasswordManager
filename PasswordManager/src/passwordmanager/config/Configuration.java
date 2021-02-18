@@ -16,6 +16,7 @@ public class Configuration {
 	public enum AppMode {
 		Client,
 		Server,
+		ServerTest,
 		Debug
 	}
 	
