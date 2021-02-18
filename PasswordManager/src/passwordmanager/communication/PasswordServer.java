@@ -24,12 +24,9 @@ public class PasswordServer implements Runnable {
 	private Configuration config;
 	private PasswordDatabase database;
 	private ServerSocket serverSocket;
-	private ArrayList<Thread> clientThreads;
 	
 	public PasswordServer(Configuration config) {
 		this.config = config;
-		
-		this.clientThreads = new ArrayList<Thread>();
 	}
 	
 	protected void finalize() {
@@ -63,8 +60,6 @@ public class PasswordServer implements Runnable {
 				});
 				
 				clientThread.start();
-				
-				clientThreads.add(clientThread);
 			} catch (IOException e) {
 			}
 		}
