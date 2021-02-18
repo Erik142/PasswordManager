@@ -45,6 +45,9 @@ public class Program {
 			
 			System.out.println("Server started!");
 			break;
+		case ServerTest:
+			new PasswordServerDebug(config);
+			break;
 		case Client:
 			System.out.println("Starting new client...");
 			break;
