@@ -1,6 +1,7 @@
 package passwordmanager.communication;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -33,12 +34,17 @@ public class PasswordServer implements Runnable {
 	
 	public void listen() {
 		try {
+			serverSocket = new ServerSocket();
+			serverSocket.setReuseAddress(true);
+			
 			if (!StringExtensions.isNullOrEmpty(config.serverIp.getHostAddress())) {
-				serverSocket = new ServerSocket(config.serverPort, MAX_PENDING_CONNECTIONS, config.serverIp);
+				serverSocket.bind(new InetSocketAddress(config.serverIp, config.serverPort), MAX_PENDING_CONNECTIONS);
 			}
 			else {
-				serverSocket = new ServerSocket(config.serverPort, MAX_PENDING_CONNECTIONS);
+				serverSocket.bind(new InetSocketAddress(config.serverPort), MAX_PENDING_CONNECTIONS);
 			}
+			
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;
