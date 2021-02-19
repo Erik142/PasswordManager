@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import passwordmanager.Credential;
 import passwordmanager.UserAccount;
@@ -24,6 +25,7 @@ public class CommunicationProtocol implements Serializable {
 		DeleteCredential,
 		UpdateCredential,
 		GetCredential,
+		GetAllCredentials,
 		AddUser,
 		DeleteUser,
 		UpdateUser,
@@ -39,7 +41,11 @@ public class CommunicationProtocol implements Serializable {
 		this.socket = socket;
 	}
 	
-	public void send(Object object, CommunicationOperation operation) {
+	public <T> void send(T object, CommunicationOperation operation) {
+		send(new Object[] { object }, operation);
+	}
+	
+	public <T> void send(T[] objects, CommunicationOperation operation) {
 		do {
 			try {
 				if (outputStream == null) {
@@ -57,20 +63,31 @@ public class CommunicationProtocol implements Serializable {
 		} while(true);
 		
 		try {
-			byte[] operationBytes = serializeObject(operation);
-			byte[] objectBytes = serializeObject(object);
+			int amountOfObjects = objects.length;
+			outputStream.writeInt(amountOfObjects);
 			
+			byte[] operationBytes = serializeObject(operation);
 			outputStream.writeInt(operationBytes.length);
 			outputStream.write(operationBytes);
-			outputStream.writeInt(objectBytes.length);
-			outputStream.write(objectBytes);
+			
+			for (Object obj : objects) {
+				byte[] objectBytes = serializeObject(obj);
+			
+				outputStream.writeInt(objectBytes.length);
+				outputStream.write(objectBytes);
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	public Object sendAndReceive(Object object, CommunicationOperation operation) {
+	@SuppressWarnings("unchecked")
+	public <T1,T2> T1 sendAndReceive(T2 object, CommunicationOperation operation) {
+		return (T1) sendAndReceiveMultiple(object, operation).get(0);
+	}
+	
+	public <T1,T2> ArrayList<T1> sendAndReceiveMultiple(T2 object, CommunicationOperation operation) {
 		do {
 			try {
 				if (outputStream == null) {
@@ -88,6 +105,9 @@ public class CommunicationProtocol implements Serializable {
 		} while(true);
 		
 		try {
+			int amountOfObjects = 1;
+			outputStream.writeInt(amountOfObjects);
+			
 			byte[] operationBytes = serializeObject(operation);
 			byte[] objectBytes = serializeObject(object);
 			
@@ -118,6 +138,14 @@ public class CommunicationProtocol implements Serializable {
 		
 		while (!socket.isClosed()) {
 			try {
+				int amountOfObjects = inputStream.readInt();
+				
+				if (amountOfObjects <= 0) {
+					continue;
+				}
+				
+				ArrayList<T1> returnObjects = new ArrayList<T1>();
+				
 				int operationLength = inputStream.readInt();
 				CommunicationOperation returnOperation = null;
 				
@@ -128,16 +156,21 @@ public class CommunicationProtocol implements Serializable {
 						throw new Exception("Returned operation was wrong!");
 					}
 					
-					int objectLength = inputStream.readInt();
-					Object returnObject = null;
-					
-					if (objectLength > 0) {
-						returnObject = deserializeObject(inputStream.readNBytes(objectLength));
-					
-						return returnObject;
+					for (int i = 0; i < amountOfObjects; i++) {
+						int objectLength = inputStream.readInt();
+						T1 obj = null;
+						
+						if (objectLength > 0) {
+							obj = deserializeObject(inputStream.readNBytes(objectLength));
+						
+							returnObjects.add(obj);
+						}
 					}
+					
+					return returnObjects;
 				}
 			} catch (IOException|ClassNotFoundException e) {
+				e.printStackTrace();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -167,33 +200,38 @@ public class CommunicationProtocol implements Serializable {
 			
 			while (!socket.isClosed()) {
 				try {
+					int amountOfObjects = inputStream.readInt();
+					
 					int operationLength = inputStream.readInt();
 					CommunicationOperation operation = null;
 					
 					if (operationLength > 0) {
 						operation = (CommunicationOperation)deserializeObject(inputStream.readNBytes(operationLength));
 						
-						int objectLength = inputStream.readInt();
-						Object object = null;
-						
-						if (objectLength > 0) {
-							object = deserializeObject(inputStream.readNBytes(objectLength));
-						
-							switch(operation) {
-							case AddUser:
-							case DeleteUser:
-							case UpdateUser:
-							case GetUser:
-							case VerifyUser:
-								eventListener.onUserAccountEvent((UserAccount)object, operation);
-								break;
-							case AddCredential:
-							case DeleteCredential:
-							case UpdateCredential:
-							case GetCredential:
-								eventListener.onCredentialEvent((Credential)object, operation);
-								break;
-							default:
+						for (int i = 0; i < amountOfObjects; i++) {
+							int objectLength = inputStream.readInt();
+							Object object = null;
+							
+							if (objectLength > 0) {
+								object = deserializeObject(inputStream.readNBytes(objectLength));
+							
+								switch(operation) {
+								case AddUser:
+								case DeleteUser:
+								case UpdateUser:
+								case GetCredential:
+								case GetAllCredentials:
+								case GetUser:
+								case VerifyUser:
+									eventListener.onUserAccountEvent((UserAccount)object, operation);
+									break;
+								case AddCredential:
+								case DeleteCredential:
+								case UpdateCredential:
+									eventListener.onCredentialEvent((Credential)object, operation);
+									break;
+								default:
+								}
 							}
 						}
 					}
@@ -205,17 +243,18 @@ public class CommunicationProtocol implements Serializable {
 		subscribeThread.start();
 	}
 	
-	private Object deserializeObject(byte[] bytes) throws ClassNotFoundException, IOException {
+	@SuppressWarnings("unchecked")
+	private <T> T deserializeObject(byte[] bytes) throws ClassNotFoundException, IOException {
 		byte[] decryptedData = AES.decrypt(bytes);
 		ByteArrayInputStream bis = new ByteArrayInputStream(decryptedData);
 		ObjectInputStream ois = new ObjectInputStream(bis);
 		
-		Object obj = ois.readObject();
+		T obj = (T)ois.readObject();
 		
 		return obj;
 	}
 	
-	private byte[] serializeObject(Object object) throws IOException {
+	private <T> byte[] serializeObject(T object) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(baos);
 		

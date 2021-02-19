@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 
+import passwordmanager.communication.PasswordServer;
 import passwordmanager.config.Configuration;
 
 public class Program {
@@ -36,6 +37,16 @@ public class Program {
 		switch(config.appMode) {
 		case Server:
 			System.out.println("Starting new server...");
+			
+			PasswordServer server = new PasswordServer(config);
+			
+			Thread serverThread = new Thread(server);
+			serverThread.start();
+			
+			System.out.println("Server started!");
+			break;
+		case ServerTest:
+			new PasswordServerDebug(config);
 			break;
 		case Client:
 			System.out.println("Starting new client...");
