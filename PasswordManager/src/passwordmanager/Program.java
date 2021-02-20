@@ -4,8 +4,10 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.Base64;
 
 import passwordmanager.communication.PasswordServer;
+import passwordmanager.communication.RSA;
 import passwordmanager.config.Configuration;
 
 public class Program {
@@ -47,6 +49,22 @@ public class Program {
 			break;
 		case ServerTest:
 			new PasswordServerDebug(config);
+		case RSATest:
+			RSA rsa = new RSA();
+			rsa.setRecipientPublicKey(rsa.getPublicKey());
+			
+			try {
+			String originalString = "Hejsan svejsan";
+			String encryptedString = Base64.getEncoder().encodeToString(rsa.encrypt(originalString.getBytes()));
+			String decryptedString = new String(rsa.decrypt(Base64.getDecoder().decode(encryptedString)));
+			
+			System.out.println("Original string: " + originalString);
+			System.out.println("Encrypted base64 string: " + encryptedString);
+			System.out.println("Decrypted string: " + decryptedString);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 			break;
 		case Client:
 			System.out.println("Starting new client...");
@@ -57,5 +75,4 @@ public class Program {
 			break;
 		}
 	}
-
 }
