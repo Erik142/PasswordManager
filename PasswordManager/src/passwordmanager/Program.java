@@ -49,6 +49,8 @@ public class Program {
 			break;
 		case ServerTest:
 			new PasswordServerDebug(config);
+			System.exit(0);
+			break;
 		case RSATest:
 			RSA rsa = new RSA();
 			rsa.setRecipientPublicKey(rsa.getPublicKey());

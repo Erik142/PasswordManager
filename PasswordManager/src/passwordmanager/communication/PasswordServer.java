@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 
 import passwordmanager.Credential;
 import passwordmanager.PasswordDatabase;
@@ -91,6 +90,9 @@ public class PasswordServer implements Runnable {
 					break;
 				case UpdateCredential:
 					returnValue = updateCredential(credential);
+					break;
+				default:
+					break;
 				}
 				
 				if (returnValue != null) {
@@ -101,6 +103,7 @@ public class PasswordServer implements Runnable {
 			@Override
 			public void onUserAccountEvent(UserAccount userAccount, CommunicationOperation operation) {
 				// TODO Auto-generated method stub
+				
 				Object[] returnValue = new Object[1];
 				
 				switch (operation) {
@@ -128,6 +131,8 @@ public class PasswordServer implements Runnable {
 					break;
 				case VerifyUser:
 					returnValue[0] = isUserAuthorized(userAccount);
+					break;
+				default:
 					break;
 				}
 				
