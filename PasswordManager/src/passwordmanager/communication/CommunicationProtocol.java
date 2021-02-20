@@ -302,6 +302,11 @@ public class CommunicationProtocol implements Serializable {
 						case UpdateCredential:
 							eventListener.onCredentialEvent((Credential)object, operation);
 							break;
+						case IsKeyValid:
+							boolean isKeyValid = isKeyValid();
+							
+							send(isKeyValid, CommunicationOperation.IsKeyValid);
+							break;
 						case InitiateConnection:
 							System.out.println("Initiate connection event!");
 							PublicKey publicKey = rsa.getPublicKey();
