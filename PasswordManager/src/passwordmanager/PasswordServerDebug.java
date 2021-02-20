@@ -29,7 +29,7 @@ public class PasswordServerDebug {
 		try {
 			Thread.sleep(1000);
 			clientSocket = new Socket(config.serverIp, config.serverPort);
-			CommunicationProtocol protocol = new CommunicationProtocol(clientSocket);
+			CommunicationProtocol protocol = new CommunicationProtocol(clientSocket, CommunicationProtocol.ProtocolMode.Client);
 			
 			UserAccount testAccount = new UserAccount();
 			System.out.println("Retrieving single credential!!");

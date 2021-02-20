@@ -33,12 +33,21 @@ public class CommunicationProtocol implements Serializable {
 		VerifyUser
 	}
 	
+	public enum ProtocolMode {
+		Client,
+		Server
+	}
+	
+	private final ProtocolMode PROTO_MODE;
+	
 	private Socket socket;
 	private DataInputStream inputStream;
 	private DataOutputStream outputStream;
 	
-	public CommunicationProtocol(Socket socket) {
+	public CommunicationProtocol(Socket socket, ProtocolMode mode) {
 		this.socket = socket;
+		
+		this.PROTO_MODE = mode;
 	}
 	
 	public <T> void send(T object, CommunicationOperation operation) {

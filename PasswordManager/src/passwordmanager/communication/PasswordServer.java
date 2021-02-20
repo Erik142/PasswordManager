@@ -75,7 +75,7 @@ public class PasswordServer implements Runnable {
 	}
 	
 	private void processClient(Socket client) {
-		CommunicationProtocol communicationProtocol = new CommunicationProtocol(client);
+		CommunicationProtocol communicationProtocol = new CommunicationProtocol(client, CommunicationProtocol.ProtocolMode.Server);
 		
 		communicationProtocol.subscribeOnSocket(new CommunicationEventListener() {
 			@Override
