@@ -2,12 +2,11 @@ package passwordmanager;
 
 import java.net.Socket;
 
-import com.google.common.collect.Multimap;
-import java.util.Map.Entry;
-
 import passwordmanager.communication.CommunicationProtocol;
 import passwordmanager.communication.CommunicationProtocol.CommunicationOperation;
 import passwordmanager.communication.PasswordServer;
+import passwordmanager.communication.Query;
+import passwordmanager.communication.Response;
 import passwordmanager.config.Configuration;
 
 public class PasswordServerDebug {
@@ -36,23 +35,34 @@ public class PasswordServerDebug {
 			
 			UserAccount testAccount = new UserAccount();
 			System.out.println("Retrieving single credential!!");
-			Credential credential = protocol.sendAndReceive(testAccount, CommunicationProtocol.CommunicationOperation.GetCredential);
+			
+			Query<UserAccount> singleCredentialQuery = new Query<UserAccount>("", CommunicationOperation.GetCredential, testAccount); 
+			
+			Response<Credential> credentialResponse = protocol.sendAndReceive(singleCredentialQuery);
+			
+			System.out.println("Response code: " + credentialResponse.getResponseCode().toString());
+			System.out.println("Response data: " + credentialResponse.getData());
+			
+			Credential credential = credentialResponse.getData();
 			
 			if (credential != null) {
 				System.out.println("MAIN: Received credential! " + credential);
 			}
 			
+			Query<UserAccount> multiCredentialQuery = new Query<UserAccount>("", CommunicationOperation.GetAllCredentials, testAccount); 
+			
 			System.out.println("Retrieving multiple credentials!!");
-			Multimap<CommunicationOperation, Object> credentials = protocol.sendAndReceiveMultiple(testAccount, CommunicationProtocol.CommunicationOperation.GetAllCredentials);
+			Response<Credential[]> multiCredentialResponse = protocol.sendAndReceive(multiCredentialQuery);
 			System.out.println("Credentials received!");
 			
+			Credential[] credentials = multiCredentialResponse.getData();
 			
-			System.out.println("Main program Length of Credentials: " + credentials.size());
+			System.out.println("Main program Length of Credentials: " + credentials.length);
 			if (credentials != null) {
 				System.out.println("MAIN: Received credentials!");
 				
-				for (Entry<CommunicationOperation, Object> cred : credentials.entries()) {
-					System.out.println(cred.getValue());
+				for (Credential cred : credentials) {
+					System.out.println(cred);
 				}
 			}
 			
