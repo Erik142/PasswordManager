@@ -1,12 +1,14 @@
 package passwordmanager;
 
 import java.net.Socket;
-import java.util.ArrayList;
+
+import com.google.common.collect.Multimap;
+import java.util.Map.Entry;
 
 import passwordmanager.communication.CommunicationProtocol;
+import passwordmanager.communication.CommunicationProtocol.CommunicationOperation;
 import passwordmanager.communication.PasswordServer;
 import passwordmanager.config.Configuration;
-import passwordmanager.config.Configuration.AppMode;
 
 public class PasswordServerDebug {
 	public PasswordServerDebug(Configuration config) {
@@ -25,7 +27,8 @@ public class PasswordServerDebug {
 		
 		System.out.println("Server test!!");
 		
-		Socket clientSocket;
+		Socket clientSocket = null;
+		
 		try {
 			Thread.sleep(1000);
 			clientSocket = new Socket(config.serverIp, config.serverPort);
@@ -36,22 +39,24 @@ public class PasswordServerDebug {
 			Credential credential = protocol.sendAndReceive(testAccount, CommunicationProtocol.CommunicationOperation.GetCredential);
 			
 			if (credential != null) {
-				System.out.println("Received credential! " + credential);
+				System.out.println("MAIN: Received credential! " + credential);
 			}
 			
 			System.out.println("Retrieving multiple credentials!!");
-			ArrayList<Credential> credentials = protocol.sendAndReceiveMultiple(testAccount, CommunicationProtocol.CommunicationOperation.GetAllCredentials);
+			Multimap<CommunicationOperation, Object> credentials = protocol.sendAndReceiveMultiple(testAccount, CommunicationProtocol.CommunicationOperation.GetAllCredentials);
 			System.out.println("Credentials received!");
 			
 			
 			System.out.println("Main program Length of Credentials: " + credentials.size());
 			if (credentials != null) {
-				System.out.println("Received credentials!");
+				System.out.println("MAIN: Received credentials!");
 				
-				for (Credential cred : credentials) {
-					System.out.println(cred.toString());
+				for (Entry<CommunicationOperation, Object> cred : credentials.entries()) {
+					System.out.println(cred.getValue());
 				}
 			}
+			
+			clientSocket.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -59,6 +64,6 @@ public class PasswordServerDebug {
 		
 		server.close();
 		System.out.println("PasswordServerDebug finished executing!");
-	
+		
 	}
 }
