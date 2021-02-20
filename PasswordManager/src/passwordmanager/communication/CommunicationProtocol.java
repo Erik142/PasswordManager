@@ -14,6 +14,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -82,6 +83,111 @@ public class CommunicationProtocol implements Serializable {
 		this.rsa = new RSA();
 		
 		this.PROTO_MODE = mode;
+		
+		if (PROTO_MODE == ProtocolMode.Client) {
+			initiateConnection();
+			negotiateKeys();
+		}
+	}
+	
+	private void initiateConnection() {
+		// TODO: Validate connection
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println("Initiating connection on client side!");
+		System.out.println("Exchanging RSA keys...");
+		
+		PublicKey publicKey = rsa.getPublicKey();
+		if (publicKey == null) {
+			System.out.println("RSA Public key is null!");
+		}
+		PublicKey remotePublicKey = sendAndReceive(publicKey, CommunicationOperation.InitiateConnection);
+		
+		rsa.setRecipientPublicKey(remotePublicKey);
+		
+		System.out.println("Successfully exchanged RSA keys");
+		
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+	}
+	
+	private void negotiateKeys() {
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println("Negotiating AES keys! " + PROTO_MODE);
+		
+		if (rsa.getRecipientPublicKey() == null) {
+			// Connection has not been initiated
+			System.out.println("RSA keys have not been exchanged!");
+			return;
+		}
+		
+		System.out.println("RSA keys are valid!");
+		
+		if (PROTO_MODE == ProtocolMode.Server) {
+			// Generate AES keys and send them to client
+			passwordKey = AES.generateKeyPassword();
+			salt = AES.generateSalt();
+			
+			StringBuilder builder = new StringBuilder();
+			
+			// Append the number of valid transactions
+			Random random = new Random();
+			int validTransactions = 1 + random.nextInt(MAX_VALID_TRANSACTIONS);
+			validTransactionsRemaining = validTransactions;
+			
+			builder.append(String.format("%02d", validTransactions));
+			
+			// Assume that password and salt has the same length, according to AES class
+			int length = passwordKey.length();
+			
+			for (int i = 0; i < length; i++) {
+				builder.append(passwordKey.charAt(i));
+				builder.append(salt.charAt(i));
+			}
+			
+			send(builder.toString(), CommunicationOperation.GetKey);
+		}
+		else {
+			// Receive AES keys and decipher them
+			System.out.println("Client receiving AES keys...");
+			String keys = sendAndReceive(null, CommunicationOperation.GetKey);
+			System.out.println("Client: AES keys have been received!");
+			
+			String transactionsString = keys.substring(0, 2);
+			int transactions = Integer.parseInt(transactionsString);
+			
+			validTransactionsRemaining = transactions;
+			
+			System.out.println("Transactions string: " + transactionsString);
+			System.out.println("Valid transactions remaining: " + validTransactionsRemaining);
+			
+			keys = keys.substring(2);
+			
+			passwordKey = "";
+			salt = "";
+			
+			for (int i = 0; i < keys.length() - 1; i += 2) {
+				passwordKey += keys.charAt(i);
+				salt += keys.charAt(i + 1);
+			}
+		}
+		
+		System.out.println("Finished negotiating AES keys! " + PROTO_MODE);
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+	}
+	
+	private boolean isKeyValid() {
+		return validTransactionsRemaining > 0;
 	}
 	
 	public <T> void send(T object, CommunicationOperation operation) {
@@ -117,6 +223,28 @@ public class CommunicationProtocol implements Serializable {
 			break;
 		default:
 			serializeMethod = CryptographyMethod.AES;
+		}
+		
+		// Re-negotiate keys if key is not valid
+		if (serializeMethod == CryptographyMethod.AES && operation != CommunicationOperation.GetKey) {
+			System.out.println("Checking for AES key validity... " + PROTO_MODE.toString());
+			if (PROTO_MODE == ProtocolMode.Client) {
+				while (!isKeyValid()) {
+					System.out.println("AES keys need to be exchanged!");
+					negotiateKeys();
+				}
+			}
+			else {
+				if (!isKeyValid()) {
+					send(false, CommunicationProtocol.CommunicationOperation.IsKeyValid);
+				}
+			}
+		}
+		else if (serializeMethod == null) {
+			System.out.println("Serialize method is null! " + PROTO_MODE.toString());
+		}
+		else {
+			System.out.println("Not checking for AES key validity! " + PROTO_MODE.toString());
 		}
 		
 		try {
@@ -301,6 +429,10 @@ public class CommunicationProtocol implements Serializable {
 						case DeleteCredential:
 						case UpdateCredential:
 							eventListener.onCredentialEvent((Credential)object, operation);
+							break;
+						case GetKey:
+							System.out.println("Server generating and negotiating keys!");
+							negotiateKeys();
 							break;
 						case IsKeyValid:
 							boolean isKeyValid = isKeyValid();
