@@ -245,14 +245,13 @@ public class CommunicationProtocol implements Serializable {
 					negotiateKeys();
 				}
 			}
-			/*
 			else {
 				if (!isKeyValid()) {
 					Response<Boolean> response = new Response<Boolean>(ResponseCode.InvalidKey, message.operation,false);
 					send(response);
 				}
 			}
-			*/
+			
 		}
 		
 		try {
