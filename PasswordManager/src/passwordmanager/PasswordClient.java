@@ -1,9 +1,16 @@
 package passwordmanager;
 
+import java.io.IOException;
+import java.net.Socket;
+
 import passwordmanager.communication.CommunicationProtocol;
 import passwordmanager.communication.CommunicationProtocol.CommunicationOperation;
+import passwordmanager.communication.CommunicationProtocol.ProtocolMode;
 import passwordmanager.communication.Query;
 import passwordmanager.communication.Response;
+import passwordmanager.config.Configuration;
+
+
 
 public class PasswordClient {
 	
@@ -16,33 +23,23 @@ public class PasswordClient {
 	
 /** Public classes because the PasswordController has to be able to call on them **/
 	
-	
-	
-	
-//	Initiate communication with server
-	public void ActivateServerNetwork() {
-		//Use items from configuration file here. Use Socket
-		
-	}
-	
-	
 	private CommunicationProtocol Protocol; 
 	
+	public PasswordClient(Configuration config) throws IOException {
+		Socket socket = new Socket(config.serverIp, config.serverPort);
+		Protocol = new CommunicationProtocol(socket, ProtocolMode.Client);
 	
-/**	Code below regards Login instructions for UserAccount. Send & receive Login information **/
-	
-	public UserAccount LoginManipulation (UserAccount account) {
-		return account;
-		
-		
 	}
+	
+	
+	
 	
 /**	Code below regards Credentials. Manipulates user passwords (Store/Retrieve/Modify/Delete) using PasswordServer, UserAcc, PasswordDatabase & Credentials. For passwords stored inside the Password manager **/
 	
 	
-	public Credential getCredential (UserAccount account) {
-		Query<UserAccount> query = new Query<UserAccount>("", CommunicationOperation.GetCredential, account);
-		Response<Credential> response = Protocol.sendAndReceive(query);
+	public Credential[] getCredential (UserAccount account) {
+		Query<UserAccount> query = new Query<UserAccount>("", CommunicationOperation.GetAllCredentials, account);
+		Response<Credential[]> response = Protocol.sendAndReceive(query);
 		return response.getData();
 		
 	} 
@@ -73,11 +70,10 @@ public class PasswordClient {
 /**	Manipulates user account (Store/Retrieve/Modify/Delete) using UserAcc, PasswordServer and PasswordDatabase Credentials. For account used to login **/
 //	to the password manager interface.
 	
-public String verifyUser (UserAccount account) {
-	//*Not sure if Credentials is the credential for the individual or not* Not sure about the email and password part//
+public boolean verifyUser (UserAccount account) {
 	
 	Query<UserAccount> query = new Query<UserAccount>("", CommunicationOperation.VerifyUser, account);
-	Response<String> response = Protocol.sendAndReceive(query);
+	Response<Boolean> response = Protocol.sendAndReceive(query);
 	return response.getData();
 
 	} 
@@ -85,8 +81,8 @@ public String verifyUser (UserAccount account) {
 	
 	public boolean StoreUserAccount (UserAccount account) {
 		Query<UserAccount> query = new Query<UserAccount>("", CommunicationOperation.AddUser, account);
-		Response<UserAccount> response = Protocol.sendAndReceive(query);
-		return response.getData() != null;
+		Response<Boolean> response = Protocol.sendAndReceive(query);
+		return response.getData();
 		
 		
 	}
@@ -94,15 +90,15 @@ public String verifyUser (UserAccount account) {
 	public boolean modifyUserAccount (UserAccount account) {
 		
 		Query<UserAccount> query = new Query<UserAccount>("", CommunicationOperation.UpdateUser, account);
-		Response<Credential> response = Protocol.sendAndReceive(query);
-		return response.getData() != null;
+		Response<Boolean> response = Protocol.sendAndReceive(query);
+		return response.getData();
 	}
 	
 	public boolean deleteUserAccount (UserAccount account) {
 		
 		Query<UserAccount> query = new Query<UserAccount>("", CommunicationOperation.DeleteUser, account);
-		Response<Credential> response = Protocol.sendAndReceive(query);
-		return response.getData() != null;
+		Response<Boolean> response = Protocol.sendAndReceive(query);
+		return response.getData();
 		
 	}
 	
