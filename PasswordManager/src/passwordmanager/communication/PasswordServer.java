@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 
 import passwordmanager.Credential;
 import passwordmanager.PasswordDatabase;
 import passwordmanager.UserAccount;
 import passwordmanager.communication.CommunicationProtocol.CommunicationOperation;
+import passwordmanager.communication.Response.ResponseCode;
 import passwordmanager.config.Configuration;
 import passwordmanager.util.StringExtensions;
 
@@ -75,7 +75,7 @@ public class PasswordServer implements Runnable {
 	}
 	
 	private void processClient(Socket client) {
-		CommunicationProtocol communicationProtocol = new CommunicationProtocol(client);
+		CommunicationProtocol communicationProtocol = new CommunicationProtocol(client, CommunicationProtocol.ProtocolMode.Server);
 		
 		communicationProtocol.subscribeOnSocket(new CommunicationEventListener() {
 			@Override
@@ -91,48 +91,60 @@ public class PasswordServer implements Runnable {
 					break;
 				case UpdateCredential:
 					returnValue = updateCredential(credential);
+					break;
+				default:
+					break;
 				}
 				
 				if (returnValue != null) {
-					communicationProtocol.send(returnValue, operation);
+					Response<Object> serverResponse = new Response<Object>(ResponseCode.OK, operation, returnValue);
+					communicationProtocol.send(serverResponse);
 				}
 			}
 
 			@Override
 			public void onUserAccountEvent(UserAccount userAccount, CommunicationOperation operation) {
 				// TODO Auto-generated method stub
-				Object[] returnValue = new Object[1];
+				
+				Response<Object> response;
+				
+				Object returnValue = null;
 				
 				switch (operation) {
 				case AddUser:
-					returnValue[0] = addAccount(userAccount);
+					returnValue = addAccount(userAccount);
 					break;
 				case DeleteUser:
 					boolean result = true;
 					result &= deleteAllPasswords(userAccount);
 					result &= deleteAccount(userAccount);
-					returnValue[0] = result;
+					returnValue = result;
 					break;
 				case GetCredential:
-					returnValue[0] = getCredential(userAccount);
+					returnValue = getCredential(userAccount);
 					break;
 				case GetAllCredentials:
 					returnValue = getCredentials(userAccount);
 					break;
 				case GetUser:
 					// TODO: Implement this method with actual user name and password values
-					returnValue[0] = getAccount(null, null);
+					returnValue = getAccount(null, null);
 					break;
 				case UpdateUser:
-					returnValue[0] = updateAccount(userAccount);
+					returnValue = updateAccount(userAccount);
 					break;
 				case VerifyUser:
-					returnValue[0] = isUserAuthorized(userAccount);
+					returnValue = isUserAuthorized(userAccount);
+					break;
+				default:
 					break;
 				}
 				
 				if (returnValue != null) {
-					communicationProtocol.send(returnValue, operation);
+					
+					Response<Object> serverResponse = new Response<Object>(ResponseCode.OK, operation, returnValue);
+					
+					communicationProtocol.send(serverResponse);
 				}
 			}
 		});

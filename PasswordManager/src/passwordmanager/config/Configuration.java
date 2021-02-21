@@ -17,6 +17,7 @@ public class Configuration {
 		Client,
 		Server,
 		ServerTest,
+		RSATest,
 		Debug
 	}
 	

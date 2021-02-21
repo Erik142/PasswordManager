@@ -9,18 +9,27 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 public class AES {
-	private static final String SECRET_KEY = "s2Dc2ptk64@U7dMfpW7&";
-	private static final String SALT = "8m*oANuTATfvP#Ng$Xus";
+	private static final int KEY_LENGTH = 128;
 	
-	public static byte[] encrypt(byte[] data) {
+	public static String generateKeyPassword() {
+		return RandomStringUtils.randomAlphanumeric(KEY_LENGTH);
+	}
+	
+	public static String generateSalt() {
+		return RandomStringUtils.randomAlphanumeric(KEY_LENGTH);
+	}
+	
+	public static byte[] encrypt(byte[] data, String keyPassword, String salt) {
 		try
 	    {
-	        byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	        byte[] iv = new byte[KEY_LENGTH/8];
 	        IvParameterSpec ivspec = new IvParameterSpec(iv);
 	         
 	        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-	        KeySpec spec = new PBEKeySpec(SECRET_KEY.toCharArray(), SALT.getBytes(), 65536, 256);
+	        KeySpec spec = new PBEKeySpec(keyPassword.toCharArray(), salt.getBytes(), 65536, 256);
 	        SecretKey tmp = factory.generateSecret(spec);
 	        SecretKeySpec secretKey = new SecretKeySpec(tmp.getEncoded(), "AES");
 	         
@@ -36,14 +45,14 @@ public class AES {
 	    return null;
 	}
 	
-	public static byte[] decrypt(byte[] encryptedData) {
+	public static byte[] decrypt(byte[] encryptedData, String keyPassword, String salt) {
 		try
 	    {
-	        byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	        byte[] iv = new byte[KEY_LENGTH/8];
 	        IvParameterSpec ivspec = new IvParameterSpec(iv);
 	         
 	        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-	        KeySpec spec = new PBEKeySpec(SECRET_KEY.toCharArray(), SALT.getBytes(), 65536, 256);
+	        KeySpec spec = new PBEKeySpec(keyPassword.toCharArray(), salt.getBytes(), 65536, 256);
 	        SecretKey tmp = factory.generateSecret(spec);
 	        SecretKeySpec secretKey = new SecretKeySpec(tmp.getEncoded(), "AES");
 	         
