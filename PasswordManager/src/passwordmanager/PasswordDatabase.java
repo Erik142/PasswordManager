@@ -4,6 +4,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+/*
+ * 
+ * @author Ermin Fazlic
+ * 
+ */
 
 public class PasswordDatabase {
 	Connection c =null;
@@ -22,137 +29,140 @@ public class PasswordDatabase {
 	}
 	
 
-	public void getAccount(String account) {
-		
-				
+	public UserAccount getAccount(String Email) {
+			
 		try{
 			
 			this.s=c.createStatement();
-			ResultSet rs=s.executeQuery("SELECT * FROM Accounts WHERE (Email='"+account+"')");
+			ResultSet rs=s.executeQuery("SELECT * FROM Accounts WHERE (Email='"+Email+"')");
+			
 			while(rs.next()) { 
+				
 				String email = rs.getString("Email");
 				String password = rs.getString("Password");
-				//Need to change so it creates an instance of UserAccount and
-				//returns it with these values
-				System.out.println(email+" "+password);
+				
+				UserAccount acc= new UserAccount(email, password);
+				return acc;
 			}
 			
 		}catch(Exception e) {
 			System.out.println("Error: "+ e.getMessage());
 		}
+		return null;
 		
 	}
 	
 	
-	public void addAccount(String account, String pass) {
+	public void addAccount(UserAccount acc) {
 		
 		try{
 			
-			
 			this.s=c.createStatement();
-			s.executeUpdate("INSERT INTO Accounts (Email, Password) VALUES ('"+account+"','"+pass+"')");
-			
+			s.executeUpdate("INSERT INTO Accounts (Email, Password) VALUES ('"+acc.getEmail()+"','"+acc.getPassword()+"')");
 			
 		}catch(Exception e) {
 			System.out.println("Error: "+ e.getMessage());
 		}
 		
 	}
-public void addCredential(String account, String URL, String user, String pass) {
+	
+	public void addCredential(Credential cred) {
 		
 		try{
 			
-			
 			this.s=c.createStatement();
-			s.executeUpdate("INSERT INTO Credentials (User, URL, Username, Password) VALUES ('"+account+"','"+URL+"','"+user+"','"+pass+"')");
-			
+			s.executeUpdate("INSERT INTO Credentials (User, URL, Username, Password) VALUES ('"+cred.getUser()+"','"+cred.getURL()+"','"+cred.getUsername()+"','"+cred.getPassword()+"')");
 			
 		}catch(Exception e) {
 			System.out.println("Error: "+ e.getMessage());
 		}
 		
 	}
-	public void executeQuery(String query) {
+	
+	public List<Credential> listAllCredentials(UserAccount acc) {
+		List<Credential> list=new ArrayList<>();
 		try {
 			this.s=c.createStatement();
-			s.executeQuery(query);
+			ResultSet rs=s.executeQuery("SELECT URL, Username, Password FROM Credentials WHERE User='"+acc.getEmail()+"'");
+			
+			while(rs.next()) {
+				//need to return a list of credentials instead of printing it out
+				String URL=rs.getString("URL");
+				String Username=rs.getString("Username");
+				String Password=rs.getString("Password");
+				Credential cred=new Credential(acc.getEmail(), URL, Username, Password);
+				list.add(cred);
+			}
+		}catch(Exception e) {
+		System.out.println("Error: "+ e.getMessage());
+		}
+		return list;
+	}
+	
+	public Credential listOneCredential(String account, String URL, String username) {
+		try {
+			this.s=c.createStatement();
+			ResultSet rs=s.executeQuery("SELECT URL, Username, Password FROM Credentials WHERE User='"+account+"' AND URL='"+URL+"' AND Username='"+username+"'");
+			while(rs.next()) {
+				//needs to return an instance of Credential instead of printing it out
+				String Url=rs.getString("URL");
+				String Username=rs.getString("Username");
+				String Password=rs.getString("Password");
+				Credential cred= new Credential(account, Url, Username, Password);
+				return cred;
+			}
+		}catch(Exception e) {
+			System.out.println("Error: "+ e.getMessage());
+		}
+		return null;
+	}
+	
+	public void deleteCredential(Credential cred) {
+		try {
+			this.s=c.createStatement();
+			s.executeUpdate("DELETE FROM Credentials WHERE User='"+cred.getUser()+"' AND URL='"+cred.getURL()+"' AND Username='"+cred.getUsername()+"'");
 		}catch(Exception e) {
 			System.out.println("Error: "+ e.getMessage());
 		}
 	}
-public void listAllCredentials(String account) {
-	try {
-		this.s=c.createStatement();
-		ResultSet rs=s.executeQuery("SELECT URL, Username, Password FROM Credentials WHERE User='"+account+"'");
-		while(rs.next()) {
-			//need to return a list of credentials instead of printing it out
-			String URL=rs.getString("URL");
-			String Username=rs.getString("Username");
-			String Password=rs.getString("Password");
-			System.out.println(URL+" "+Username+" "+Password);
-		}
-	}catch(Exception e) {
-		System.out.println("Error: "+ e.getMessage());
-	}
-}
-public void listOneCredential(String account, String URL, String username) {
-	try {
-		this.s=c.createStatement();
-		ResultSet rs=s.executeQuery("SELECT URL, Username, Password FROM Credentials WHERE User='"+account+"' AND URL='"+URL+"' AND Username='"+username+"'");
-		while(rs.next()) {
-			//needs to return an instance of Credential instead of printing it out
-			String Url=rs.getString("URL");
-			String Username=rs.getString("Username");
-			String Password=rs.getString("Password");
-			System.out.println(Url+" "+Username+" "+Password);
-		}
-	}catch(Exception e) {
-		System.out.println("Error: "+ e.getMessage());
-	}
-}
-public void deleteCredential(String account, String URL, String username) {
-	try {
-		this.s=c.createStatement();
-		s.executeUpdate("DELETE FROM Credentials WHERE User='"+account+"' AND URL='"+URL+"' AND Username='"+username+"'");
-	}catch(Exception e) {
-		System.out.println("Error: "+ e.getMessage());
-	}
-}
-public void deleteAllCredentials(String account) {
-	try {
-		this.s=c.createStatement();
-		s.executeUpdate("DELETE FROM Credentials WHERE User='"+account+"'");
-	}catch(Exception e) {
-		System.out.println("Error: "+ e.getMessage());
-	}
-}
-public void deleteAccount(String account) {
-	try {
-		this.deleteAllCredentials(account);
-		this.s=c.createStatement();
-		s.executeUpdate("DELETE FROM Accounts WHERE Email='"+account+"'");
-	}catch(Exception e) {
-		System.out.println("Error: "+ e.getMessage());
-	}
-}
-public void ChangeAccountPassword(String account, String newPass) {
-	try {
-		this.s=c.createStatement();
-		s.executeUpdate("UPDATE Accounts SET Password='"+newPass+"' WHERE Email='"+account+"'");
-	}catch(Exception e) {
-		System.out.println("Error: "+ e.getMessage());
-	}
-}
-public void ChangeCredential(String account,String URL, String username, String newPass) {
-	try {
-		this.s=c.createStatement();
-		s.executeUpdate("UPDATE Credentials SET Password='"+newPass+"' WHERE User='"+account+"' AND URL='"+URL+"' AND Username='"+username+"'");
-	}catch(Exception e) {
-		System.out.println("Error: "+ e.getMessage());
-	}
-}
 	
+	public void deleteAllCredentials(UserAccount a) {
+		try {
+			this.s=c.createStatement();
+			s.executeUpdate("DELETE FROM Credentials WHERE User='"+a.getEmail()+"'");
+		}catch(Exception e) {
+			System.out.println("Error: "+ e.getMessage());
+		}
+	}
 	
+	public void deleteAccount(UserAccount a) {
+		try {
+			this.deleteAllCredentials(a);
+			this.s=c.createStatement();
+			s.executeUpdate("DELETE FROM Accounts WHERE Email='"+a.getEmail()+"'");
+		}catch(Exception e) {
+			System.out.println("Error: "+ e.getMessage());
+		}
+	}
+	
+	public void ChangeAccountPassword(UserAccount a, String newPass) {
+		try {
+			this.s=c.createStatement();
+			s.executeUpdate("UPDATE Accounts SET Password='"+newPass+"' WHERE Email='"+a.getEmail()+"'");
+		}catch(Exception e) {
+			System.out.println("Error: "+ e.getMessage());
+		}
+	}
+	
+	public void ChangeCredential(Credential cred, String newPass) {
+		try {
+			this.s=c.createStatement();
+			s.executeUpdate("UPDATE Credentials SET Password='"+newPass+"' WHERE User='"+cred.getUser()+"' AND URL='"+cred.getURL()+"' AND Username='"+cred.getUsername()+"'");
+		}catch(Exception e) {
+			System.out.println("Error: "+ e.getMessage());
+		}
+	}
+		
 	public void closeConnection() {
 		try {
 			c.close();
@@ -160,19 +170,5 @@ public void ChangeCredential(String account,String URL, String username, String 
 			System.out.println("Error: "+ e.getMessage());
 		}
 	}
-	/*
-	public static void main(String[] args) {
-		PasswordDatabase db=new PasswordDatabase();
-		//db.addAccount("Tester", "password");
-		//db.addCredential("Tester", "Facebook.com", "username", "pass");
-		//db.getAccount("Tester");
-		//db.listOneCredential("Tester", "Facebook.com");
-		//db.deleteCredential("Tester", "Youtube.com", "username2");
-		//db.deleteAllCredentials("Tester");
-		//db.listAllCredentials("Tester");
-		//db.deleteAccount("Test2@gmail.com");
-		//db.ChangeAccountPassword("Test2@gmail.com", "Password");
-		//db.ChangeCredential("Tester", "Facebook.com", "username2", "newpassword");
-		db.closeConnection();
-	}*/
+	
 }
