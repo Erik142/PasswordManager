@@ -67,6 +67,8 @@ public class CommunicationProtocol implements Serializable {
 	
 	private String passwordKey = "";
 	private String salt = "";
+	private String recipientPasswordKey = "";
+	private String recipientSalt = "";
 	private int validTransactionsRemaining = 0;
 	
 	private final ProtocolMode PROTO_MODE;
@@ -132,11 +134,11 @@ public class CommunicationProtocol implements Serializable {
 		
 		System.out.println("RSA keys are valid!");
 		
+		// Generate AES keys and send them to recipient
+		passwordKey = AES.generateKeyPassword();
+		salt = AES.generateSalt();
+		
 		if (PROTO_MODE == ProtocolMode.Server) {
-			// Generate AES keys and send them to client
-			passwordKey = AES.generateKeyPassword();
-			salt = AES.generateSalt();
-			
 			StringBuilder builder = new StringBuilder();
 			
 			// Append the number of valid transactions
@@ -176,17 +178,16 @@ public class CommunicationProtocol implements Serializable {
 				
 				validTransactionsRemaining = transactions;
 				
-				System.out.println("Transactions string: " + transactionsString);
 				System.out.println("Valid transactions remaining: " + validTransactionsRemaining);
 				
 				keys = keys.substring(2);
 				
-				passwordKey = "";
-				salt = "";
+				recipientPasswordKey = "";
+				recipientSalt = "";
 				
 				for (int i = 0; i < keys.length() - 1; i += 2) {
-					passwordKey += keys.charAt(i);
-					salt += keys.charAt(i + 1);
+					recipientPasswordKey += keys.charAt(i);
+					recipientSalt += keys.charAt(i + 1);
 				}
 			}
 			else {
@@ -206,7 +207,7 @@ public class CommunicationProtocol implements Serializable {
 		return validTransactionsRemaining > 0;
 	}
 
-	public <T> void send(Message<T> query) {
+	public <T> void send(Message<T> message) {
 		do {
 			try {
 				if (outputStream == null) {
@@ -225,7 +226,7 @@ public class CommunicationProtocol implements Serializable {
 		
 		CryptographyMethod serializeMethod = null;
 		
-		switch (query.getOperation()) {
+		switch (message.getOperation()) {
 		case GetKey:
 			serializeMethod = CryptographyMethod.RSA;
 			break;
@@ -237,30 +238,25 @@ public class CommunicationProtocol implements Serializable {
 		}
 		
 		// Re-negotiate keys if key is not valid
-		if (serializeMethod == CryptographyMethod.AES && query.getOperation() != CommunicationOperation.GetKey) {
-			System.out.println("Checking for AES key validity... " + PROTO_MODE.toString());
+		if (serializeMethod == CryptographyMethod.AES && message.getOperation() != CommunicationOperation.GetKey) {
 			if (PROTO_MODE == ProtocolMode.Client) {
 				while (!isKeyValid()) {
 					System.out.println("AES keys need to be exchanged!");
 					negotiateKeys();
 				}
 			}
+			/*
 			else {
 				if (!isKeyValid()) {
-					Response<Boolean> response = new Response<Boolean>(ResponseCode.InvalidKey,query.operation,false);
+					Response<Boolean> response = new Response<Boolean>(ResponseCode.InvalidKey, message.operation,false);
 					send(response);
 				}
 			}
-		}
-		else if (serializeMethod == null) {
-			System.out.println("Serialize method is null! " + PROTO_MODE.toString());
-		}
-		else {
-			System.out.println("Not checking for AES key validity! " + PROTO_MODE.toString());
+			*/
 		}
 		
 		try {
-			switch (query.getOperation()) {
+			switch (message.getOperation()) {
 			case InitiateConnection:
 				outputStream.writeInt(INITIATE_NEW_CONNECTION);
 				break;
@@ -273,20 +269,11 @@ public class CommunicationProtocol implements Serializable {
 			
 			byte[] objectBytes = null;
 			
-			if (query.getOperation() == CommunicationOperation.GetKey) {
+			if (message.getOperation() == CommunicationOperation.GetKey) {
 				// Data length limitation in RSA encryption, cannot encrypt the entire Message object at once
 				// Encrypt temporary AES key with RSA, and the rest of the message with AES
-				String oldAesKey = passwordKey;
-				String oldAesSalt = salt;
-				
-				String aesKey = AES.generateKeyPassword();
-				String aesSalt = AES.generateSalt();
-				
-				System.out.println("Generated temporary AES key: " + aesKey);
-				System.out.println("Generated temporary AES salt: " + aesSalt);
-				
-				byte[] aesKeyBytes = serializeObject(aesKey, CryptographyMethod.RSA);
-				byte[] aesSaltBytes = serializeObject(aesSalt, CryptographyMethod.RSA);
+				byte[] aesKeyBytes = serializeObject(passwordKey, CryptographyMethod.RSA);
+				byte[] aesSaltBytes = serializeObject(salt, CryptographyMethod.RSA);
 				
 				int aesKeyLength = aesKeyBytes.length;
 				int aesSaltLength = aesSaltBytes.length;
@@ -296,21 +283,12 @@ public class CommunicationProtocol implements Serializable {
 				outputStream.writeInt(aesSaltLength);
 				outputStream.write(aesSaltBytes);
 				
-				passwordKey = aesKey;
-				salt = aesSalt;
-				
-				objectBytes = serializeObject(query, CryptographyMethod.AES);
-				
-				passwordKey = oldAesKey;
-				salt = oldAesSalt;
-				
-				System.out.println("Serialized AES query...");
+				objectBytes = serializeObject(message, CryptographyMethod.AES);
 			}
 			else {
-				objectBytes = serializeObject(query, serializeMethod);
+				objectBytes = serializeObject(message, serializeMethod);
 			}
 			
-			System.out.println("Object successfully serialized!! " + PROTO_MODE.toString());
 			outputStream.writeInt(objectBytes.length);
 			outputStream.write(objectBytes);
 			
@@ -352,7 +330,6 @@ public class CommunicationProtocol implements Serializable {
 				int connectionType = inputStream.readInt();
 				
 				if (connectionType < 0) {
-					System.out.println("Connection type less than 0!!");
 					continue;
 				}
 				
@@ -368,13 +345,10 @@ public class CommunicationProtocol implements Serializable {
 					deserializeMethod = CryptographyMethod.AES;
 				}
 				
-				System.out.println("Protocol receive method: " + deserializeMethod + ", " + PROTO_MODE);
-				
 				Message<T> response = null;
 				
 				if (deserializeMethod == CryptographyMethod.RSA) {
 					// Exchanging AES keys
-					System.out.println("Recieved AES Exchange message!");
 					int aesKeyLength = inputStream.readInt();
 					
 					byte[] aesKeyBytes = inputStream.readNBytes(aesKeyLength);
@@ -385,31 +359,15 @@ public class CommunicationProtocol implements Serializable {
 					
 					int responseLength = inputStream.readInt();
 					
-					System.out.println("Received temporary AES key bytes length: " + aesKeyBytes.length);
-					System.out.println("Received temporary AES salt bytes length: " + aesSaltBytes.length);
-					
-					String aesKey = deserializeObject(aesKeyBytes, CryptographyMethod.RSA);
-					String aesSalt = deserializeObject(aesSaltBytes, CryptographyMethod.RSA);
-					
-					System.out.println("Received temporary AES key: " + aesKey);
-					System.out.println("Received temporary AES salt: " + aesSalt);
-					
-					String oldAesKey = passwordKey;
-					String oldSalt = salt;
-					
-					passwordKey = aesKey;
-					salt = aesSalt;
+					recipientPasswordKey = deserializeObject(aesKeyBytes, CryptographyMethod.RSA);
+					recipientSalt = deserializeObject(aesSaltBytes, CryptographyMethod.RSA);
 					
 					response = deserializeObject(inputStream.readNBytes(responseLength), CryptographyMethod.AES);
-					
-					passwordKey = oldAesKey;
-					salt = oldSalt;
 				}
 				else {
 					int responseLength = inputStream.readInt();
 					
 					if (responseLength <= 0) {
-						System.out.println("Response length was less than 0!");
 						continue;
 					}
 					
@@ -445,10 +403,7 @@ public class CommunicationProtocol implements Serializable {
 			
 			while (!socket.isClosed()) {
 				try {
-					System.out.println("Trying to retrieve query on server!");
 					Message<Object> retrievedQuery = receive();
-					
-					System.out.println("Server retrieved query!!");
 					
 					CommunicationOperation operation = retrievedQuery.operation;
 					Object object = retrievedQuery.data;
@@ -469,14 +424,11 @@ public class CommunicationProtocol implements Serializable {
 						eventListener.onCredentialEvent((Credential)object, operation);
 						break;
 					case GetKey:
-						System.out.println("Server generating and negotiating keys!");
 						negotiateKeys();
 						break;
 					case InitiateConnection:
-						System.out.println("Initiate connection event!");
 						PublicKey publicKey = rsa.getPublicKey();
 						PublicKey remotePublicKey = (PublicKey)object;
-						System.out.println("Server recieved public key");
 						
 						rsa.setRecipientPublicKey(remotePublicKey);
 						
@@ -511,7 +463,7 @@ public class CommunicationProtocol implements Serializable {
 		byte[] decryptedData = null; 
 		
 		if (cryptographyMethod == CryptographyMethod.AES) {
-			decryptedData = AES.decrypt(bytes, passwordKey, salt);
+			decryptedData = AES.decrypt(bytes, recipientPasswordKey, recipientSalt);
 		}
 		else if (cryptographyMethod == CryptographyMethod.RSA) {
 			decryptedData = rsa.decrypt(bytes);
@@ -519,12 +471,6 @@ public class CommunicationProtocol implements Serializable {
 		else {
 			decryptedData = bytes;
 		}
-		
-		if (decryptedData == null) {
-			System.out.println("Decrypted data is null!! + " + PROTO_MODE.toString());
-		}
-		
-		System.out.println("Cryptographic method: " + cryptographyMethod.toString() + ". " + PROTO_MODE.toString());
 		
 		ByteArrayInputStream bis = new ByteArrayInputStream(decryptedData);
 		ObjectInputStream ois = new ObjectInputStream(bis);
@@ -556,7 +502,6 @@ public class CommunicationProtocol implements Serializable {
 		}
 		// It is an AES key request/response if the encryption method is RSA
 		else if (cryptographyMethod == CryptographyMethod.RSA) {
-			System.out.println("AES Message byte array length: " + baos.toByteArray().length);
 			encryptedBytes = rsa.encrypt(baos.toByteArray());
 		}
 		else {
