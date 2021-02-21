@@ -19,7 +19,7 @@ public class PasswordGenerator {
 
     String lowercase = "abcdefghijklmnopqrstuvwxyz";
     if(lower==false){lowercase="";}
-    String uppercase = "ABCDEFGJKLMNPRSTUVWXYZ";
+    String uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     if(upper==false){uppercase="";}
     String numbers = "0123456789";
     if(num==false){numbers="";}
