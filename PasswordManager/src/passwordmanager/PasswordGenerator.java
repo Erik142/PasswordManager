@@ -4,7 +4,7 @@ import java.util.Random;
 public class PasswordGenerator {        
     public static String generatePassword (int length, boolean lower,boolean upper, boolean num, boolean symb) {
         boolean pinCode=false;
-    if(lower==false &&upper==false&&num==false&&symb==false) //if nothing is selected, everything will be included. 
+    if(lower==false &&upper==false&&num==false&&symb==false) //if nothing is picked, then everything will be included. 
     {
         lower=true; upper=true; num=true; symb=true;
     }
@@ -12,7 +12,7 @@ public class PasswordGenerator {
     {
         pinCode=true; length=4;
     } 
-    //minimum length of 6, unless it is a PIN code, then only 4 is acceptable (library cards etc.)
+    //minimum length of 6, unless it is a PIN code, then only 4 is the lowest acceptable (library cards or credit cards etc.)
     if (length < 6 && pinCode==false) {
         length = 6;
     }
