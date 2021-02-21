@@ -31,7 +31,7 @@ public class PasswordServerDebug {
 			clientSocket = new Socket(config.serverIp, config.serverPort);
 			CommunicationProtocol protocol = new CommunicationProtocol(clientSocket);
 			
-			UserAccount testAccount = new UserAccount();
+			UserAccount testAccount = new UserAccount("", "");
 			System.out.println("Retrieving single credential!!");
 			Credential credential = protocol.sendAndReceive(testAccount, CommunicationProtocol.CommunicationOperation.GetCredential);
 			

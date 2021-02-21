@@ -163,14 +163,14 @@ public class PasswordServer implements Runnable {
 	}
 	
 	private Credential getCredential(UserAccount userAccount) {
-		return new Credential();
+		return new Credential("", "", "", "");
 	}
 	
 	private Credential[] getCredentials(UserAccount account) {
 		return new Credential[] {
-				new Credential(),
-				new Credential(),
-				new Credential()
+				new Credential("", "", "", ""),
+				new Credential("", "", "", ""),
+				new Credential("", "", "", "")
 		};
 	}
 	
