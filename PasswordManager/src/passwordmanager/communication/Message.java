@@ -5,7 +5,7 @@ import java.io.Serializable;
 import passwordmanager.communication.CommunicationProtocol.CommunicationOperation;
 
 public abstract class Message<T> implements Serializable {
-	protected final Object data;
+	protected final T data;
 	protected final CommunicationOperation operation;
 	
 	public Message(CommunicationOperation operation, T data) {
@@ -14,7 +14,7 @@ public abstract class Message<T> implements Serializable {
 	}
 	
 	public T getData() {
-		return (T)this.data;
+		return this.data;
 	}
 	
 	public CommunicationOperation getOperation() {
