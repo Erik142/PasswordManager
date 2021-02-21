@@ -1,5 +1,7 @@
 package passwordmanager;
 
+import passwordmanager.communication.CommunicationProtocol;
+
 public class PasswordClient {
 	
 /**	
@@ -20,10 +22,14 @@ public class PasswordClient {
 		
 	}
 	
+	
+	private CommunicationProtocol Protocol; 
+	
+	
 /**	Code below regards Login instructions for UserAccount. Send & receive Login information **/
 	
-	public UserAccount LoginManipulation (UserAccount C) {
-		return C;
+	public UserAccount LoginManipulation (UserAccount account) {
+		return account;
 		
 		
 	}
@@ -37,17 +43,17 @@ public class PasswordClient {
 	} 
 	
 	
-	public boolean storeCredential (Credential C) {
+	public boolean storeCredential (Credential credential) {
 		return false;
 		
 	}
 	
-	public boolean modifyCredential (Credential C) {
+	public boolean modifyCredential (Credential credential) {
 		return false;
 		
 	}
 	
-	public boolean deleteCredential (Credential C) {
+	public boolean deleteCredential (Credential credential) {
 		return false;
 		
 	}
@@ -55,21 +61,21 @@ public class PasswordClient {
 /**	Manipulates user account (Store/Retrieve/Modify/Delete) using UserAcc, PasswordServer and PasswordDatabase Credentials. For account used to login **/
 //	to the password manager interface.
 	
-public UserAccount getCredential (String email, String password) {
+public Credential getCredential (String email, String password) {
 		return null; 
 	} 
 	
 	
-	public boolean StoreUserAccount (UserAccount Y) {
+	public boolean StoreUserAccount (UserAccount account) {
 		return false;
 		
 	}
 	
-	public boolean modifyUserAccount (UserAccount Y) {
+	public boolean modifyUserAccount (UserAccount account) {
 		return false; 
 	}
 	
-	public boolean deleteUserAccount (UserAccount Y) {
+	public boolean deleteUserAccount (UserAccount account) {
 		return false;
 		
 	}
