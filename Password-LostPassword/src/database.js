@@ -39,7 +39,6 @@ async function getUserEmail(requestId) {
             resolve(result)
         })
     })
-
 }
 
 async function updateUserAccount(userAccount) {
@@ -54,7 +53,6 @@ async function updateUserAccount(userAccount) {
             reject(err)
         }
     })
-
 }
 
 async function deleteRequest(requestId) {
@@ -71,5 +69,4 @@ async function deleteRequest(requestId) {
             reject(err)
         }
     })
-
 }
