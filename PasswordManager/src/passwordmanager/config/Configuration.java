@@ -3,9 +3,12 @@ package passwordmanager.config;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Properties;
+
+import com.google.gson.Gson;
 
 /**
  * 
@@ -37,30 +40,12 @@ public class Configuration {
 		if (!file.exists()) {
 			throw new FileNotFoundException("No configuration file found under the path '" + file.getAbsolutePath() + "'.");
 		}
+
+		FileReader fileReader = new FileReader(file);
 		
-		Properties properties = new Properties();
-		FileInputStream inputStream = new FileInputStream(file.getAbsoluteFile());
+		Gson gson = new Gson();
 		
-		properties.load(inputStream);
-		
-		Configuration configuration = new Configuration();
-		
-		String appModeString = properties.getProperty("appMode");
-		String serverIpString = properties.getProperty("serverIp");
-		String portString = properties.getProperty("port");
-		String useDummyDataString = properties.getProperty("useDummyData");
-		
-		AppMode appMode = AppMode.valueOf(appModeString);
-		InetAddress serverIp = InetAddress.getByName(serverIpString);
-		int serverPort = Integer.parseInt(portString);
-		boolean useDummyData = Boolean.parseBoolean(useDummyDataString);
-		
-		configuration.appMode = appMode;
-		configuration.serverIp = serverIp;
-		configuration.serverPort = serverPort;
-		configuration.useDummyData = useDummyData;
-		
-		inputStream.close();
+		Configuration configuration = gson.fromJson(fileReader, Configuration.class);
 		
 		return configuration;
 	}

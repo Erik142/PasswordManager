@@ -12,7 +12,7 @@ import passwordmanager.config.Configuration;
 
 public class Program {
 
-	private static final String CONFIG_PATH = "config.properties";
+	private static final String CONFIG_PATH = "config.json";
 	
 	public static void main(String[] args) {
 		URL res = Program.class.getClassLoader().getResource(CONFIG_PATH);
