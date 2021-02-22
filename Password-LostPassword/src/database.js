@@ -30,14 +30,12 @@ async function getUserEmail(requestId) {
     return new Promise((resolve, reject) => {
         dbInstance.db.get(query, requestId, (err, rows) => {
             if (err == null && rows != null) {
-                console.log('query finished')
                 result = rows.email
             } 
             else if (err != null) {
                 reject(err)
             }
             
-            console.log('Result: ' + result)
             resolve(result)
         })
     })
@@ -50,7 +48,6 @@ async function updateUserAccount(userAccount) {
     return new Promise((resolve,reject) => {
         try {
             let result = dbInstance.db.run(query, userAccount.password, userAccount.email)
-            console.log(result)
             resolve(true)
         }
         catch (err) {
@@ -68,7 +65,6 @@ async function deleteRequest(requestId) {
     return new Promise((resolve, reject) => {
         try {
             let result = dbInstance.db.run(query, requestIdNum)
-            console.log(result)
             resolve(true)
         }
         catch(err) {
