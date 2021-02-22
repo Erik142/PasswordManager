@@ -40,7 +40,7 @@ app.post('/:requestId', async function(req, res) {
 
     var email = await db.getUserEmail(req.params.requestId)
 
-    if (req.body.password == req.body['confirm-password'] && req.body.password != '') {
+    if (req.body.password == req.body['confirm-password'] && req.body.password.length >= 8) {
         var userAccount = {
             email:email,
             password:req.body.password,
@@ -58,6 +58,9 @@ app.post('/:requestId', async function(req, res) {
 
         if ((req.body.password != '' && req.body['confirm-password'] != '' ) && req.body.password != req.body['confirm-password']) {
             errorMessage = 'Passwords are not equal.'
+        }
+        else if (req.body.password.length < 8) {
+            errorMessage = 'Password must be at least 8 characters long'
         }
 
         res.render('index', {
