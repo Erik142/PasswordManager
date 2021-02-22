@@ -33,42 +33,42 @@ app.get('/:requestId', async function(req, res) {
 });
 
 app.post('/:requestId', async function(req, res) {
-    console.log('Posted form!')
-
-    console.log(req.body)
-
-
     var email = await db.getUserEmail(req.params.requestId)
 
-    if (req.body.password == req.body['confirm-password'] && req.body.password.length >= 8) {
-        var userAccount = {
-            email:email,
-            password:req.body.password,
-        }
-    
-        await db.updateUserAccount(userAccount)
-        await db.deleteRequest(req.params.requestId)
-
-        res.render('success', {
-            email:email
-        })
+    if (email == '') {
+        res.render('error')
     }
     else {
-        let errorMessage = "Password cannot be empty."
+        if (req.body.password == req.body['confirm-password'] && req.body.password.length >= 8) {
+            var userAccount = {
+                email:email,
+                password:req.body.password,
+            }
+        
+            await db.updateUserAccount(userAccount)
+            await db.deleteRequest(req.params.requestId)
 
-        if ((req.body.password != '' && req.body['confirm-password'] != '' ) && req.body.password != req.body['confirm-password']) {
-            errorMessage = 'Passwords are not equal.'
+            res.render('success', {
+                email:email
+            })
         }
-        else if (req.body.password.length < 8) {
-            errorMessage = 'Password must be at least 8 characters long'
-        }
+        else {
+            let errorMessage = "Password cannot be empty."
 
-        res.render('index', {
-            requestId:req.params.requestId,
-            email:email,
-            showError:true,
-            errorMessage:errorMessage
-        })
+            if ((req.body.password != '' && req.body['confirm-password'] != '' ) && req.body.password != req.body['confirm-password']) {
+                errorMessage = 'Passwords are not equal.'
+            }
+            else if (req.body.password.length < 8) {
+                errorMessage = 'Password must be at least 8 characters long'
+            }
+
+            res.render('index', {
+                requestId:req.params.requestId,
+                email:email,
+                showError:true,
+                errorMessage:errorMessage
+            })
+        }
     }
 })
 
