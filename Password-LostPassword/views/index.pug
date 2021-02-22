@@ -1,0 +1,27 @@
+html 
+    head
+        style
+            include ../node_modules/bootstrap/dist/css/bootstrap.min.css
+        script(src='../node_modules/bootstrap/dist/js/bootstrap.min.js')
+        title PasswordManager - Reset password 
+    body
+        section(class="section mt-5")
+            div(class="container")
+                div(class="row")
+                    div(class="col-xs-8 col-md-8 mx-auto align-self-center")
+                        h1 PasswordManager - Reset password
+                        br
+                        hr
+                        h3 Change password for #{email}
+                        br
+                        form(action='/' + requestId, method="post") 
+                            div(class="form-group")
+                                label(for="password") New password
+                                input(type="password" class="form-control" id="password" placeholder="Enter a password")
+                            div(class="form-group")
+                                label(for="confirm-password") Confirm password
+                                input(type="password" class="form-control" id="confirm-password" placeholder="Re-type the password" name="password")
+                            div(class="form-group")
+                                label(for="input-text") New password
+                                input(class="form-control" id="input-text" placeholder="Type some text" name="input-text")
+                            button(type="submit" class="btn btn-primary") Change password
