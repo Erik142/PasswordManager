@@ -79,7 +79,6 @@ app.post('/:requestId', async function(req, res) {
     }
 })
 
-// TODO: Load database path from config
 try {
     db.openConnection(path.join(__dirname, '../../', config.dbPath)).then(() => {
         app.listen(config.webPort, config.serverIp)
