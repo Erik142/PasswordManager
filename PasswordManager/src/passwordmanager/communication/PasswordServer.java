@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 
 import passwordmanager.Credential;
 import passwordmanager.PasswordDatabase;
@@ -27,6 +28,7 @@ public class PasswordServer implements Runnable {
 	
 	public PasswordServer(Configuration config) {
 		this.config = config;
+		this.database = new PasswordDatabase();
 	}
 	
 	protected void finalize() {
@@ -105,20 +107,24 @@ public class PasswordServer implements Runnable {
 			@Override
 			public void onUserAccountEvent(UserAccount userAccount, CommunicationOperation operation) {
 				// TODO Auto-generated method stub
-				
-				Response<Object> response;
+				ResponseCode responseCode = ResponseCode.OK;
 				
 				Object returnValue = null;
 				
 				switch (operation) {
 				case AddUser:
 					returnValue = addAccount(userAccount);
+					
+					responseCode = (boolean)returnValue == true ? ResponseCode.OK : ResponseCode.Fail;
+					
 					break;
 				case DeleteUser:
-					boolean result = true;
+					Boolean result = true;
 					result &= deleteAllPasswords(userAccount);
 					result &= deleteAccount(userAccount);
 					returnValue = result;
+					
+					responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
 					break;
 				case GetCredential:
 					returnValue = getCredential(userAccount);
@@ -128,7 +134,13 @@ public class PasswordServer implements Runnable {
 					break;
 				case GetUser:
 					// TODO: Implement this method with actual user name and password values
-					returnValue = getAccount(null, null);
+					try {
+						returnValue = getAccount(userAccount.getEmail());
+						responseCode = ResponseCode.OK;
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						responseCode = ResponseCode.Fail;
+					}
 					break;
 				case UpdateUser:
 					returnValue = updateAccount(userAccount);
@@ -142,7 +154,7 @@ public class PasswordServer implements Runnable {
 				
 				if (returnValue != null) {
 					
-					Response<Object> serverResponse = new Response<Object>(ResponseCode.OK, operation, returnValue);
+					Response<Object> serverResponse = new Response<Object>(responseCode, operation, returnValue);
 					
 					communicationProtocol.send(serverResponse);
 				}
@@ -151,7 +163,12 @@ public class PasswordServer implements Runnable {
 	}
 	
 	private boolean addAccount(UserAccount account) {
-		return false;
+		try {
+			database.addAccount(account);
+			return true;
+		} catch (SQLException e) {
+			return false;
+		}
 	}
 	
 	private boolean addCredential(Credential credential) {
@@ -159,7 +176,12 @@ public class PasswordServer implements Runnable {
 	}
 	
 	private boolean deleteAccount(UserAccount account) {
-		return false;
+		try {
+			database.deleteAccount(account);
+			return true;
+		} catch (SQLException e) {
+			return false;
+		}
 	}
 	
 	private boolean deleteAllPasswords(UserAccount account) {
@@ -170,8 +192,8 @@ public class PasswordServer implements Runnable {
 		return false;
 	}
 	
-	private UserAccount getAccount(String username, String passwordHash) {
-		return null;
+	private UserAccount getAccount(String email) throws SQLException {
+		return database.getAccount(email);
 	}
 	
 	private Credential getCredential(UserAccount userAccount) {
