@@ -1,5 +1,9 @@
 package passwordmanager;
 
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -12,16 +16,33 @@ import java.util.List;
  * 
  */
 
+import passwordmanager.config.Configuration;
+
 public class PasswordDatabase {
 	Connection c =null;
 	Statement s=null;
 	
-	PasswordDatabase(){
+	private final String DB_FILE = "PasswordManagerDatabase.db";
+	
+	PasswordDatabase(Configuration config){
 		// Try to connect to Database
 		try {
+			URL res = Program.class.getClassLoader().getResource(DB_FILE);
+			File dbFile;
+			
+			/* 
+			 * We know that the Program.class file is located two subdirectories below the git repo folder
+			 * The config file specifies the db file relative to the git repo folder, therefore we use
+			 * the folder of Program.class, append "../../" to go to subdirectories above that path,
+			 * then add the path in the config file
+			 */
+			
+			final String programFilePath = new File(Program.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParent();
+			dbFile = Paths.get(programFilePath, "../../", config.dbPath).normalize().toFile();
 			
 			Class.forName("org.sqlite.JDBC");
-			c= DriverManager.getConnection("jdbc:sqlite:PasswordManagerDatabase.db");
+			System.out.println(dbFile.getAbsolutePath());
+			c= DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
 			System.out.println("Database connected!");
 		} catch(Exception e) {
 			System.out.println("Error: "+ e.getMessage());

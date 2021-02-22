@@ -28,6 +28,7 @@ public class Configuration {
 	public InetAddress serverIp;
 	public int serverPort;
 	public boolean useDummyData;
+	public String dbPath;
 	
 	/**
 	 * Loads a Configuration from a File object
