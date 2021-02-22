@@ -12,16 +12,19 @@ html
                         h1 PasswordManager - Reset password
                         br
                         hr
-                        h3 Change password for #{email}
-                        br
-                        form(action='/' + requestId, method="post") 
-                            div(class="form-group")
-                                label(for="password") New password
-                                input(type="password" class="form-control" id="password" placeholder="Enter a password")
-                            div(class="form-group")
-                                label(for="confirm-password") Confirm password
-                                input(type="password" class="form-control" id="confirm-password" placeholder="Re-type the password" name="password")
-                            div(class="form-group")
-                                label(for="input-text") New password
-                                input(class="form-control" id="input-text" placeholder="Type some text" name="input-text")
-                            button(type="submit" class="btn btn-primary") Change password
+                        div(class="rounded border border-secondary")
+                            div(class="m-3")
+                                h3 Change password for #{email}
+                                br
+                                if showError
+                                    div(class="alert alert-danger" role="alert")
+                                        p #{errorMessage}
+                                    br
+                                form(action='/' + requestId, method="post") 
+                                    div(class="form-group")
+                                        label(for="password") New password
+                                        input(type="password" class="form-control" id="password" placeholder="Enter a password" name="password")
+                                    div(class="form-group")
+                                        label(for="confirm-password") Confirm password
+                                        input(type="password" class="form-control" id="confirm-password" placeholder="Re-type the password" name="confirm-password")
+                                    button(type="submit" class="btn btn-primary") Change password
