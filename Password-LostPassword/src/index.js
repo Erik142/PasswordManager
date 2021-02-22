@@ -3,9 +3,16 @@ const multer = require('multer')
 const express = require('express')
 const db = require('./database')
 const path = require('path')
+const fs = require('fs')
 
 const upload = multer()
 const app = express()
+
+const relativeConfigPath = '../../PasswordManager/resources/config.json'
+
+const configPath = path.join(__dirname, relativeConfigPath)
+
+var config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 
 app.set('view engine', 'pug')
 
@@ -75,7 +82,7 @@ app.post('/:requestId', async function(req, res) {
 // TODO: Load database path from config
 try {
     db.openConnection(path.join(__dirname, '../../PasswordManager/PasswordManagerDatabase.db')).then(() => {
-        app.listen(3000)
+        app.listen(config.webPort, config.serverIp)
     })
 } catch(err) {
     console.log(err)
