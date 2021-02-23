@@ -24,66 +24,83 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(upload.array()); 
 
 app.get('/:requestId', async function(req, res) {
+    try {
+        var email = await db.getUserEmail(req.params.requestId)
 
-    var email = await db.getUserEmail(req.params.requestId)
-
-    if (email != null && email != '')
-    {
-        res.render('index', {
-            email:email,
-            requestId:req.params.requestId
-        })
+        if (email != null && email != '')
+        {
+            res.render('index', {
+                email:email,
+                requestId:req.params.requestId
+            })
+        }
+        else {
+            res.render('error', {
+                errorMessage: "Error! You pressed an invalid reset link"
+            })
+        }
     }
-    else {
-        res.render('error')
+    catch (err) {
+        console.log(err)
+        res.render('error', {
+            errorMessage: err
+        })
     }
 });
 
 app.post('/:requestId', async function(req, res) {
-    var email = await db.getUserEmail(req.params.requestId)
+    try {
+        var email = await db.getUserEmail(req.params.requestId)
 
-    if (email == '') {
-        res.render('error')
-    }
-    else {
-        if (req.body.password == req.body['confirm-password'] && req.body.password.length >= 8) {
-            var userAccount = {
-                email:email,
-                password:req.body.password,
-            }
-        
-            await db.updateUserAccount(userAccount)
-            await db.deleteRequest(req.params.requestId)
-
-            res.render('success', {
-                email:email
+        if (email == '') {
+            res.render('error', {
+                errorMessage: "Error! You pressed an invalid reset link"
             })
         }
         else {
-            let errorMessage = "Password cannot be empty."
+            if (req.body.password == req.body['confirm-password'] && req.body.password.length >= 8) {
+                var userAccount = {
+                    email:email,
+                    password:req.body.password,
+                }
+            
+                await db.updateUserAccount(userAccount)
+                await db.deleteRequest(req.params.requestId)
 
-            if ((req.body.password != '' && req.body['confirm-password'] != '' ) && req.body.password != req.body['confirm-password']) {
-                errorMessage = 'Passwords are not equal.'
+                res.render('success', {
+                    email:email
+                })
             }
-            else if (req.body.password.length < 8) {
-                errorMessage = 'Password must be at least 8 characters long'
-            }
+            else {
+                let errorMessage = "Password cannot be empty."
 
-            res.render('index', {
-                requestId:req.params.requestId,
-                email:email,
-                showError:true,
-                errorMessage:errorMessage
-            })
+                if ((req.body.password != '' && req.body['confirm-password'] != '' ) && req.body.password != req.body['confirm-password']) {
+                    errorMessage = 'Passwords are not equal.'
+                }
+                else if (req.body.password.length < 8) {
+                    errorMessage = 'Password must be at least 8 characters long'
+                }
+
+                res.render('index', {
+                    requestId:req.params.requestId,
+                    email:email,
+                    showError:true,
+                    errorMessage:errorMessage
+                })
+            }
         }
+    }
+    catch (err) {
+        console.log(err)
+        res.render('error', {
+            errorMessage: err
+        })
     }
 })
 
-try {
-    db.openConnection(path.join(__dirname, '../../', config.dbPath)).then(() => {
-        app.listen(config.webPort, config.serverIp)
-    })
-} catch(err) {
+db.openConnection(path.join(__dirname, '../../', config.dbPath)).then(() => {
+    app.listen(config.webPort, config.serverIp)
+}).catch(err => {
     console.log(err)
-    return;
-}
+    return
+})
