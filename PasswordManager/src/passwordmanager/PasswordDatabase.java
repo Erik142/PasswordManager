@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class PasswordDatabase {
 	
 	private final String DB_FILE = "PasswordManagerDatabase.db";
 	
-	PasswordDatabase(Configuration config){
+	public PasswordDatabase(Configuration config){
 		// Try to connect to Database
 		try {
 			URL res = Program.class.getClassLoader().getResource(DB_FILE);
@@ -182,6 +183,28 @@ public class PasswordDatabase {
 		}catch(Exception e) {
 			System.out.println("Error: "+ e.getMessage());
 		}
+	}
+	
+	public void insertResetRequest(UserAccount account) throws SQLException {
+		// Check if reset request already exists for user
+		try {
+			int requestId = getResetRequestId(account);
+			
+			if (requestId > 0) {
+				return;
+			}
+		} catch (Exception e) {
+		}
+		
+		this.s = c.createStatement();
+		s.executeUpdate("INSERT INTO ResetRequests (email) VALUES('" + account.getEmail() + "')");
+	}
+	
+	public int getResetRequestId(UserAccount account) throws SQLException {
+		this.s = c.createStatement();
+		ResultSet rs = s.executeQuery("SELECT id FROM ResetRequests where email='" + account.getEmail() + "'");
+		
+		return rs.getInt("id");
 	}
 		
 	public void closeConnection() {
