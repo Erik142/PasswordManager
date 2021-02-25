@@ -1,0 +1,26 @@
+extends layout.pug 
+
+block content
+    section(class="section mt-5")
+        div(class="container")
+            div(class="row")
+                div(class="col-xs-8 col-md-8 mx-auto align-self-center")
+                    h1 PasswordManager - Reset password
+                    br
+                    hr
+                    div(class="rounded border border-secondary")
+                        div(class="m-3")
+                            h3 Change password for #{email}
+                            br
+                            if showError
+                                div(class="alert alert-danger" role="alert")
+                                    p #{errorMessage}
+                                br
+                            form(action='/' + requestId, method="post") 
+                                div(class="form-group")
+                                    label(for="password") New password
+                                    input(type="password" class="form-control" id="password" placeholder="Enter a password" name="password")
+                                div(class="form-group")
+                                    label(for="confirm-password") Confirm password
+                                    input(type="password" class="form-control" id="confirm-password" placeholder="Re-type the password" name="confirm-password")
+                                button(type="submit" class="btn btn-primary") Change password
