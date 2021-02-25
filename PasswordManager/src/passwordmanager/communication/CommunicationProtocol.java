@@ -34,7 +34,6 @@ public class CommunicationProtocol implements Serializable {
 		AddCredential,
 		DeleteCredential,
 		UpdateCredential,
-		GetCredential,
 		GetAllCredentials,
 		AddUser,
 		DeleteUser,

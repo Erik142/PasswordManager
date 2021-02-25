@@ -82,26 +82,37 @@ public class PasswordServer implements Runnable {
 		communicationProtocol.subscribeOnSocket(new CommunicationEventListener() {
 			@Override
 			public void onCredentialEvent(Credential credential, CommunicationOperation operation) {
+				ResponseCode responseCode = ResponseCode.OK;
+				
 				Object returnValue = null;
+				Boolean result = false;
 				
 				switch (operation) {
 				case AddCredential:
-					returnValue = addCredential(credential);
+					result = addCredential(credential);
+					returnValue = result;
+					
+					responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
 					break;
 				case DeleteCredential:
-					returnValue = deleteCredential(credential);
+					result = deleteCredential(credential);
+					returnValue = result;
+					
+					responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
 					break;
 				case UpdateCredential:
-					returnValue = updateCredential(credential);
+					result = updateCredential(credential);
+					returnValue = result;
+					
+					responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
 					break;
 				default:
+					responseCode = ResponseCode.Fail;
 					break;
 				}
 				
-				if (returnValue != null) {
-					Response<Object> serverResponse = new Response<Object>(ResponseCode.OK, operation, returnValue);
-					communicationProtocol.send(serverResponse);
-				}
+				Response<Object> serverResponse = new Response<Object>(ResponseCode.OK, operation, returnValue);
+				communicationProtocol.send(serverResponse);
 			}
 
 			@Override
@@ -110,6 +121,7 @@ public class PasswordServer implements Runnable {
 				ResponseCode responseCode = ResponseCode.OK;
 				
 				Object returnValue = null;
+				Boolean result = true;
 				
 				switch (operation) {
 				case AddUser:
@@ -119,45 +131,43 @@ public class PasswordServer implements Runnable {
 					
 					break;
 				case DeleteUser:
-					Boolean result = true;
 					result &= deleteAllPasswords(userAccount);
 					result &= deleteAccount(userAccount);
 					returnValue = result;
 					
 					responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
 					break;
-				case GetCredential:
-					returnValue = getCredential(userAccount);
-					break;
 				case GetAllCredentials:
-					returnValue = getCredentials(userAccount);
+					try {
+						returnValue = getCredentials(userAccount);
+					} catch (SQLException e) {
+						responseCode = ResponseCode.Fail;
+					}
 					break;
 				case GetUser:
-					// TODO: Implement this method with actual user name and password values
 					try {
 						returnValue = getAccount(userAccount.getEmail());
-						responseCode = ResponseCode.OK;
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						responseCode = ResponseCode.Fail;
 					}
 					break;
 				case UpdateUser:
-					returnValue = updateAccount(userAccount);
+					result = updateAccount(userAccount);
+					returnValue = result;
+					
+					responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
 					break;
 				case VerifyUser:
 					returnValue = isUserAuthorized(userAccount);
 					break;
 				default:
+					responseCode = ResponseCode.Fail;
 					break;
 				}
 				
-				if (returnValue != null) {
-					
-					Response<Object> serverResponse = new Response<Object>(responseCode, operation, returnValue);
-					
-					communicationProtocol.send(serverResponse);
-				}
+				Response<Object> serverResponse = new Response<Object>(responseCode, operation, returnValue);
+				communicationProtocol.send(serverResponse);
 			}
 		});
 	}
@@ -196,11 +206,7 @@ public class PasswordServer implements Runnable {
 		return database.getAccount(email);
 	}
 	
-	private Credential getCredential(UserAccount userAccount) {
-		return new Credential("", "", "", "");
-	}
-	
-	private Credential[] getCredentials(UserAccount account) {
+	private Credential[] getCredentials(UserAccount account) throws SQLException {
 		return new Credential[] {
 				new Credential("", "", "", ""),
 				new Credential("", "", "", ""),
