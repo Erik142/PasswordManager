@@ -4,6 +4,12 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URL;
+import java.util.Properties;
+
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
 
 import passwordmanager.Credential;
 import passwordmanager.PasswordDatabase;
@@ -175,6 +181,56 @@ public class PasswordServer implements Runnable {
 	}
 	
 	private boolean forgotPassword(UserAccount account) {
+		try {
+			database.insertResetRequest(account);
+			int requestId = database.getResetRequestId(account);
+			
+			if (requestId <= 0) {
+				return false;
+			}
+			
+			System.out.println("Reset password request id: " + requestId);
+			
+			// Configure smtp properties with ssl authentication
+			Properties props = new Properties();
+			props.put("mail.smtp.host", "smtp.gmail.com");
+			props.put("mail.smtp.socketFactory.port", "465");
+			props.put("mail.smtp.socketFactory.class",
+					"javax.net.ssl.SSLSocketFactory");
+			props.put("mail.smtp.auth", "true");
+			props.put("mail.smtp.port", "465");
+			
+			System.out.println("Server e-mail: " + config.serverEmail);
+			System.out.println("Server e-mail password: " + config.serverPassword);
+			
+			Authenticator auth = new Authenticator() {
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(config.serverEmail, config.serverPassword);
+				}
+			};
+			
+			String publicDomainName = config.publicDomainName;
+			
+			System.out.println("Public domain name: " + publicDomainName);
+			
+			if (StringExtensions.isNullOrEmpty(publicDomainName)) {
+				System.out.println("Public domain name is empty!");
+				return false;
+			}
+			
+			URL baseUrl = new URL("https://" + publicDomainName);
+			URL finalUrl = new URL(baseUrl, "" + requestId);
+			
+			Session session = Session.getDefaultInstance(props, auth);
+			EmailUtil.sendEmail(session, config.serverEmail, account.getEmail(), "PasswordManager: Reset password", "A password reset was requested for this user account. Press the following link to reset your password:\r\n\r\n" + finalUrl.toString());
+			
+			System.out.println("Recipient e-mail: " + account.getEmail());
+			
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return false;
 	}
 	
