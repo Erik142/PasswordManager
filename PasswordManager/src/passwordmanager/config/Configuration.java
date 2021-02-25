@@ -29,6 +29,9 @@ public class Configuration {
 	public int serverPort;
 	public boolean useDummyData;
 	public String dbPath;
+	public String serverEmail;
+	public String serverPassword;
+	public String publicDomainName;
 	
 	/**
 	 * Loads a Configuration from a File object
