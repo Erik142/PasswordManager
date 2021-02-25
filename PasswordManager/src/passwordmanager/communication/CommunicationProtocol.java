@@ -43,7 +43,8 @@ public class CommunicationProtocol implements Serializable {
 		VerifyUser,
 		ExchangeKeys,
 		InitiateConnection,
-		VerifyApplication
+		VerifyApplication,
+		ForgotPassword
 	}
 	
 	public enum ProtocolMode {
@@ -413,6 +414,7 @@ public class CommunicationProtocol implements Serializable {
 					case GetAllCredentials:
 					case GetUser:
 					case VerifyUser:
+					case ForgotPassword:
 						eventListener.onUserAccountEvent((UserAccount)object, operation);
 						break;
 					case AddCredential:

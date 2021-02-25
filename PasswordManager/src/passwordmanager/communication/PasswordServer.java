@@ -27,6 +27,7 @@ public class PasswordServer implements Runnable {
 	
 	public PasswordServer(Configuration config) {
 		this.config = config;
+		this.database = new PasswordDatabase(config);
 	}
 	
 	protected void finalize() {
@@ -136,6 +137,9 @@ public class PasswordServer implements Runnable {
 				case VerifyUser:
 					returnValue = isUserAuthorized(userAccount);
 					break;
+				case ForgotPassword:
+					result = forgotPassword(userAccount);
+					returnValue = result;
 				default:
 					break;
 				}
@@ -167,6 +171,10 @@ public class PasswordServer implements Runnable {
 	}
 	
 	private boolean deleteCredential(Credential credential) {
+		return false;
+	}
+	
+	private boolean forgotPassword(UserAccount account) {
 		return false;
 	}
 	
