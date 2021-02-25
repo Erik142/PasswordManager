@@ -21,59 +21,73 @@ public class PasswordClient {
  *  
  */
 	
-/** Public classes because the PasswordController has to be able to call on them **/
 	
-	private CommunicationProtocol Protocol; 
+	private CommunicationProtocol protocol; 
 	
 	public PasswordClient(Configuration config) throws IOException {
 		Socket socket = new Socket(config.serverIp, config.serverPort);
-		Protocol = new CommunicationProtocol(socket, ProtocolMode.Client);
+		protocol = new CommunicationProtocol(socket, ProtocolMode.Client);
 	
 	}
 	
 	
 	
 	
-/**	Code below regards Credentials. Manipulates user passwords (Store/Retrieve/Modify/Delete) using PasswordServer, UserAcc, PasswordDatabase & Credentials. For passwords stored inside the Password manager **/
+/**
+ * 
+ * @param credential is searched for on server database.
+ * @return credential stored on server database.
+ */
 	
 	
-	public Credential[] getCredential (UserAccount account) {
-		Query<UserAccount> query = new Query<UserAccount>("", CommunicationOperation.GetAllCredentials, account);
-		Response<Credential[]> response = Protocol.sendAndReceive(query);
+	public Credential[] getCredentials (UserAccount account) {
+		Query<UserAccount> query = new Query<UserAccount>("", 
+				CommunicationOperation.GetAllCredentials, account);
+		Response<Credential[]> response = protocol.sendAndReceive(query);
 		return response.getData();
 		
 	} 
 	
 	
 	public boolean storeCredential (Credential credential) {
-		Query<Credential> query = new Query<Credential>("", CommunicationOperation.AddCredential, credential);
-		Response<Boolean> response = Protocol.sendAndReceive(query);
+		Query<Credential> query = new Query<Credential>("", 
+				CommunicationOperation.AddCredential, credential);
+		Response<Boolean> response = protocol.sendAndReceive(query);
 		
 		return response.getData();
 		
 	}
 	
 	public boolean modifyCredential (Credential credential) {
-		Query<Credential> query = new Query<Credential>("", CommunicationOperation.UpdateCredential, credential);
-		Response<Credential> response = Protocol.sendAndReceive(query);
-		return response.getData() != null;
+		Query<Credential> query = new Query<Credential>("", 
+				CommunicationOperation.UpdateCredential, credential);
+		Response<Boolean> response = protocol.sendAndReceive(query);
+		
+		return response.getData();
 		
 	}
 	
 	public boolean deleteCredential (Credential credential) {
-		Query<Credential> query = new Query<Credential>("", CommunicationOperation.DeleteCredential, credential);
-		Response<Credential> response = Protocol.sendAndReceive(query);
-		return response.getData() != null;
+		Query<Credential> query = new Query<Credential>("", 
+				CommunicationOperation.DeleteCredential, credential);
+		Response<Boolean> response = protocol.sendAndReceive(query);
+		return response.getData();
 		
 	}
 	
-/**	Manipulates user account (Store/Retrieve/Modify/Delete) using UserAcc, PasswordServer and PasswordDatabase Credentials. For account used to login **/
-//	to the password manager interface.
+	/**
+	 * Class below verifies User's account.
+	 * @param account is to be verified with the stored information on the server database.
+	 * @return true if the UserAccount is successfully stored, otherwise false.
+	 * Same principle applies to classes storeUserAccount, modifyAccount & deleteAccount.
+	 */
+
 	
 public boolean verifyUser (UserAccount account) {
 	
-	Query<UserAccount> query = new Query<UserAccount>("", CommunicationOperation.VerifyUser, account);
-	Response<Boolean> response = Protocol.sendAndReceive(query);
+	Query<UserAccount> query = new Query<UserAccount>("", 
+			CommunicationOperation.VerifyUser, account);
+	Response<Boolean> response = protocol.sendAndReceive(query);
 	return response.getData();
 
 	} 
@@ -81,7 +95,7 @@ public boolean verifyUser (UserAccount account) {
 	
 	public boolean StoreUserAccount (UserAccount account) {
 		Query<UserAccount> query = new Query<UserAccount>("", CommunicationOperation.AddUser, account);
-		Response<Boolean> response = Protocol.sendAndReceive(query);
+		Response<Boolean> response = protocol.sendAndReceive(query);
 		return response.getData();
 		
 		
@@ -90,14 +104,14 @@ public boolean verifyUser (UserAccount account) {
 	public boolean modifyUserAccount (UserAccount account) {
 		
 		Query<UserAccount> query = new Query<UserAccount>("", CommunicationOperation.UpdateUser, account);
-		Response<Boolean> response = Protocol.sendAndReceive(query);
+		Response<Boolean> response = protocol.sendAndReceive(query);
 		return response.getData();
 	}
 	
 	public boolean deleteUserAccount (UserAccount account) {
 		
 		Query<UserAccount> query = new Query<UserAccount>("", CommunicationOperation.DeleteUser, account);
-		Response<Boolean> response = Protocol.sendAndReceive(query);
+		Response<Boolean> response = protocol.sendAndReceive(query);
 		return response.getData();
 		
 	}
