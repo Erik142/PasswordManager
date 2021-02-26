@@ -4,6 +4,7 @@
   "description": "A web server used to host the 'Lost password' page for the server",
   "main": "src/index.js",
   "scripts": {
+    "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Erik Wahlberger",
