@@ -97,10 +97,11 @@ app.post('/:requestId', async function(req, res) {
         })
     }
 })
+try {
+    db.openConnection(config)
 
-db.openConnection(path.join(__dirname, '../../', config.dbPath)).then(() => {
     app.listen(config.webPort, config.serverIp)
-}).catch(err => {
+} catch(err) {
     console.log(err)
     return
-})
+}

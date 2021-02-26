@@ -5,54 +5,43 @@ exports.openConnection = openConnection
 
 const path = require('path')
 const fs = require('fs')
-const sqlite3 = require('sqlite3')
-const sqlite = require('sqlite')
+const postgres = require('postgres')
 
-let dbInstance = null
+let sql = null;
 
-async function openConnection(databasePath) {
-    if (fs.existsSync(databasePath)) {
-        dbInstance = await sqlite.open({
-            filename:databasePath,
-            driver:sqlite3.Database
-        })
-    }
-    else {
-        throw new Error('The file path \'' + databasePath + '\' does not exist.')
-    }
+async function openConnection(config) {
+    sql = postgres({
+        host: config.dbHostName,
+        port: config.dbPort,
+        username: config.dbUserName,
+        password: config.dbPassword,
+        database: 'passwordmanager'
+    })
 }
 
 async function getUserEmail(requestId) {
-    let query = 'SELECT email FROM ResetRequests WHERE id = ?'
+    const emails = await sql`
+        select 
+            email 
+        from public."ResetRequests"
+        where 
+            id = ${ requestId }`
+    
+    console.log(emails)
 
-    let result = ''
-
-    return new Promise((resolve, reject) => {
-        dbInstance.db.get(query, requestId, (err, rows) => {
-            if (err == null && rows != null) {
-                result = rows.email
-            } 
-            else if (err != null) {
-                reject(err)
-            }
-            
-            resolve(result)
-        })
-    })
+    return emails[0].email
 }
 
 async function updateUserAccount(userAccount) {
     let query = 'UPDATE Accounts SET Password = ? WHERE Email = ?'
 
-    return new Promise((resolve,reject) => {
-        try {
-            let result = dbInstance.db.run(query, userAccount.password, userAccount.email)
-            resolve(true)
-        }
-        catch (err) {
-            reject(err)
-        }
-    })
+    const updatedUser = await sql`
+        update 
+            public."Accounts" 
+        set "Password" = ${ userAccount.password }
+        where 
+            "Email" = ${ userAccount.email }
+        returning *`
 }
 
 async function deleteRequest(requestId) {
@@ -60,13 +49,10 @@ async function deleteRequest(requestId) {
 
     let query = 'DELETE FROM ResetRequests WHERE id = ?'
 
-    return new Promise((resolve, reject) => {
-        try {
-            let result = dbInstance.db.run(query, requestIdNum)
-            resolve(true)
-        }
-        catch(err) {
-            reject(err)
-        }
-    })
+    const deletedRequest = await sql`
+        delete 
+        from public."ResetRequests" 
+        where 
+            id = ${ requestId }
+        returning *`
 }
