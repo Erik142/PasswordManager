@@ -4,5 +4,8 @@
     "serverPort": 50000,
     "webPort":3000,
     "useDummyData": true,
-    "dbPath":"PasswordManager/target/classes/PasswordManagerDatabase.db"
+    "dbHostName":"localhost",
+    "dbPort":5432,
+    "dbUserName":"passwordmanager",
+    "dbPassword":"passwordmanager"
 }
