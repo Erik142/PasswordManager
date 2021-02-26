@@ -4,7 +4,7 @@
 FROM maven:3.6.3-openjdk-15-slim AS build
 COPY ./PasswordManager/src /home/app/src
 COPY ./PasswordManager/resources /home/app/resources
-COPY ./PasswordManager/pom.xml /home/app
+COPY ./PasswordManager/pom-deployment.xml /home/app/pom.xml
 RUN mvn -f /home/app/pom.xml clean package
 
 #
