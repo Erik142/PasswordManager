@@ -206,6 +206,11 @@ public class PasswordDatabase {
 		
 		return rs.getInt("id");
 	}
+	
+	public void deleteResetRequestId(UserAccount account) throws SQLException {
+		this.s = c.createStatement();
+		s.executeUpdate("DELETE FROM ResetRequests where email='" + account.getEmail() + "'");
+	}
 		
 	public void closeConnection() {
 		try {
