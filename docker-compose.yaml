@@ -1,0 +1,41 @@
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile-postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgresql
+    networks:
+      - backend
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile-webui
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./Docker/config.json:/root/passwordmanager-ui/config.json
+    networks:
+      - frontend
+      - backend
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile-server
+    restart: always
+    ports:
+      - "50000:50000"
+    volumes:
+      - ./Docker/config.json:/opt/passwordmanager/config.json
+    networks:
+      - frontend
+      - backend
+networks:
+  frontend:
+    name: frontend_network
+    driver: bridge
+  backend:
+    name: backend_network
+    driver: bridge
