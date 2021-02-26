@@ -20,6 +20,7 @@ async function openConnection(config) {
 }
 
 async function getUserEmail(requestId) {
+    try {
     const emails = await sql`
         select 
             email 
@@ -30,6 +31,13 @@ async function getUserEmail(requestId) {
     console.log(emails)
 
     return emails[0].email
+    } catch (err) {
+        if (err instanceof TypeError) {
+            return ''
+        }
+
+        throw err
+    }
 }
 
 async function updateUserAccount(userAccount) {
