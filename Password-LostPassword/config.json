@@ -1,0 +1,11 @@
+{
+    "appMode": "DatabaseTest",
+    "serverIp": "127.0.0.1",
+    "serverPort": 50000,
+    "webPort":3000,
+    "useDummyData": true,
+    "dbHostName":"localhost",
+    "dbPort":5432,
+    "dbUserName":"passwordmanager",
+    "dbPassword":"passwordmanager"
+}

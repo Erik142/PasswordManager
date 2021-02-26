@@ -8,7 +8,7 @@ const fs = require('fs')
 const upload = multer()
 const app = express()
 
-const relativeConfigPath = '../../PasswordManager/resources/config.json'
+const relativeConfigPath = '../config.json'
 
 const configPath = path.join(__dirname, relativeConfigPath)
 
