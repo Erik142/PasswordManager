@@ -3,23 +3,57 @@ package passwordmanager;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
+import net.sourceforge.argparse4j.ArgumentParsers;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.ArgumentParserException;
+import net.sourceforge.argparse4j.inf.Namespace;
 import passwordmanager.communication.PasswordServer;
 import passwordmanager.communication.RSA;
 import passwordmanager.config.Configuration;
 
 public class Program {
 
-	private static final String CONFIG_PATH = "config.properties";
+	private static final String CONFIG_PATH = "config.json";
 	
 	public static void main(String[] args) {
 		URL res = Program.class.getClassLoader().getResource(CONFIG_PATH);
-		File configFile;
+		File configFile = null;
 		
+		ArgumentParser parser = ArgumentParsers.newFor("PasswordManager").build()
+                .defaultHelp(true)
+                .description("Store and retrieve passwords from a server.");
+		parser.addArgument("-c", "--config").nargs("?")
+        .help("Configuration file");
+		
+		Namespace ns = null;
+        try {
+            ns = parser.parseArgs(args);
+        } catch (ArgumentParserException e) {
+            parser.handleError(e);
+            System.exit(1);
+        }
+		
+        try {
+        	String configFilePath = ns.getString("config");
+        	configFile = new File(configFilePath);
+        	System.out.println("Config path: " + configFile.getAbsolutePath());
+        	
+        	if (!configFile.exists()) {
+        		configFile = null;
+        	}
+        } catch (Exception e) {
+        }
+        
 		try {
-			configFile = Paths.get(res.toURI()).toFile();
+			if (configFile == null) {
+				configFile = Paths.get(res.toURI()).toFile();
+			}
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 			return;
