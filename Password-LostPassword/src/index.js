@@ -23,6 +23,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // for parsing multipart/form-data
 app.use(upload.array()); 
 
+app.get('/', function(req, res) {
+    res.render('welcome');
+});
+
 app.get('/:requestId', async function(req, res) {
     try {
         var email = await db.getUserEmail(req.params.requestId)
