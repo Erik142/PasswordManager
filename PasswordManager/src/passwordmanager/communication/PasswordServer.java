@@ -17,6 +17,7 @@ import passwordmanager.UserAccount;
 import passwordmanager.communication.CommunicationProtocol.CommunicationOperation;
 import passwordmanager.communication.Response.ResponseCode;
 import passwordmanager.config.Configuration;
+import passwordmanager.util.EmailUtil;
 import passwordmanager.util.StringExtensions;
 
 /**

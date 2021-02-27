@@ -1,4 +1,4 @@
-package passwordmanager.communication;
+package passwordmanager.util;
 
 import java.util.Date;
 
