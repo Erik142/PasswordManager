@@ -29,11 +29,6 @@ public class PasswordDatabase {
 		try {
 			String url = "jdbc:postgresql://" + config.dbHostName + ":" + config.dbPort + "/passwordmanager";
 			
-			System.out.println("Database url: " + url);
-			
-			System.out.println("User name: " + config.dbUserName);
-			System.out.println("Password: " + config.dbPassword);
-			
 			Properties props = new Properties();
 			props.setProperty("user",config.dbUserName);
 			props.setProperty("password",config.dbPassword);
