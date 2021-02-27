@@ -24,6 +24,7 @@ import passwordmanager.util.StringExtensions;
 /**
  * 
  * @author Erik Wahlberger
+ * @author yemeri
  *
  */
 public class PasswordServer implements Runnable {
@@ -164,9 +165,6 @@ public class PasswordServer implements Runnable {
 					
 					responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
 					break;
-				case VerifyUser:
-					returnValue = isUserAuthorized(userAccount);
-					break;
 				case ForgotPassword:
 					result = forgotPassword(userAccount);
 					returnValue = result;
@@ -209,11 +207,21 @@ public class PasswordServer implements Runnable {
 	}
 	
 	private boolean deleteAllPasswords(UserAccount account) {
-		return true;
+		try {
+			database.deleteAllCredentials(account);
+			return true;
+		} catch (SQLException eAll) {
+			return false;
+		}
 	}
 	
 	private boolean deleteCredential(Credential credential) {
+		try {
+			database.deleteCredential(credential);
+			return true;
+		} catch (SQLException exdel) {
 		return false;
+		}
 	}
 	
 	private boolean forgotPassword(UserAccount account) {
@@ -275,24 +283,28 @@ public class PasswordServer implements Runnable {
 	}
 	
 	private Credential[] getCredentials(UserAccount account) throws SQLException {
-		return new Credential[] {
-				new Credential("", "", "", ""),
-				new Credential("", "", "", ""),
-				new Credential("", "", "", "")
-		};
-	}
+		return null;
+	
+ 	}
 	
 	private boolean updateAccount(UserAccount account) {
-		return false;
+		try {
+			database.changeAccountPassword(account, account.getPassword());
+			return true;
+		} catch (SQLException eAcc) {
+			return false;
+		}	
 	}
 	
 	private boolean updateCredential(Credential credential) {
-		return false;
+		try {
+			database.changeCredential(credential, credential.getPassword());
+			return true;
+		} catch (SQLException eCred) {
+			return false;
+		}
 	}
 	
-	private boolean isUserAuthorized(UserAccount account) {
-		return false;
-	}
 
 	@Override
 	public void run() {

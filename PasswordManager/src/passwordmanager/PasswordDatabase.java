@@ -112,12 +112,12 @@ public class PasswordDatabase {
 		s.executeUpdate("DELETE FROM public.\"Accounts\" WHERE \"Email\"='"+a.getEmail()+"'");
 	}
 	
-	public void ChangeAccountPassword(UserAccount a, String newPass) throws SQLException {
+	public void changeAccountPassword(UserAccount a, String newPass) throws SQLException {
 		this.s=c.createStatement();
 		s.executeUpdate("UPDATE public.\"Accounts\" SET \"Password\"='"+newPass+"' WHERE \"Email\"='"+a.getEmail()+"'");
 	}
 	
-	public void ChangeCredential(Credential cred, String newPass) throws SQLException {
+	public void changeCredential(Credential cred, String newPass) throws SQLException {
 		this.s=c.createStatement();
 		s.executeUpdate("UPDATE public.\"Credentials\" SET \"Password\"='"+newPass+"' WHERE \"User\"='"+cred.getUser()+"' AND \"URL\"='"+cred.getURL()+"' AND \"Username\"='"+cred.getUsername()+"'");
 	}
