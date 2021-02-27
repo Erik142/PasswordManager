@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 public class Configuration {
 	public enum AppMode {
 		Client,
+		DatabaseTest,
 		Server,
 		ServerTest,
 		RSATest,
@@ -28,7 +29,10 @@ public class Configuration {
 	public InetAddress serverIp;
 	public int serverPort;
 	public boolean useDummyData;
-	public String dbPath;
+	public String dbHostName;
+	public int dbPort;
+	public String dbUserName;
+	public String dbPassword;
 	
 	/**
 	 * Loads a Configuration from a File object

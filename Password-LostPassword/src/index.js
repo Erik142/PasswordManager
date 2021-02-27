@@ -8,7 +8,7 @@ const fs = require('fs')
 const upload = multer()
 const app = express()
 
-const relativeConfigPath = '../../PasswordManager/resources/config.json'
+const relativeConfigPath = '../config.json'
 
 const configPath = path.join(__dirname, relativeConfigPath)
 
@@ -22,6 +22,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); 
 // for parsing multipart/form-data
 app.use(upload.array()); 
+
+app.get('/', function(req, res) {
+    res.render('welcome');
+});
 
 app.get('/:requestId', async function(req, res) {
     try {
@@ -97,10 +101,11 @@ app.post('/:requestId', async function(req, res) {
         })
     }
 })
+try {
+    db.openConnection(config)
 
-db.openConnection(path.join(__dirname, '../../', config.dbPath)).then(() => {
     app.listen(config.webPort, config.serverIp)
-}).catch(err => {
+} catch(err) {
     console.log(err)
     return
-})
+}
