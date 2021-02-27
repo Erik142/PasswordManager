@@ -29,6 +29,11 @@ import passwordmanager.communication.Response.ResponseCode;
  *
  */
 public class CommunicationProtocol implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -222451491800802999L;
+
 	public enum CommunicationOperation {
 		AddCredential,
 		DeleteCredential,
