@@ -24,7 +24,7 @@ public class PasswordDatabase {
 	Connection c =null;
 	Statement s=null;
 	
-	PasswordDatabase(Configuration config){
+	public PasswordDatabase(Configuration config){
 		// Try to connect to Database
 		try {
 			String url = "jdbc:postgresql://" + config.dbHostName + ":" + config.dbPort + "/passwordmanager";

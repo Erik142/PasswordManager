@@ -408,7 +408,6 @@ public class CommunicationProtocol implements Serializable {
 					case AddUser:
 					case DeleteUser:
 					case UpdateUser:
-					case GetCredential:
 					case GetAllCredentials:
 					case GetUser:
 					case VerifyUser:

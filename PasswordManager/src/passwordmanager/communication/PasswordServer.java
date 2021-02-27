@@ -28,7 +28,7 @@ public class PasswordServer implements Runnable {
 	
 	public PasswordServer(Configuration config) {
 		this.config = config;
-		this.database = new PasswordDatabase();
+		this.database = new PasswordDatabase(config);
 	}
 	
 	protected void finalize() {
