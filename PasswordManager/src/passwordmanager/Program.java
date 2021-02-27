@@ -3,10 +3,7 @@ package passwordmanager;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 import net.sourceforge.argparse4j.ArgumentParsers;
@@ -110,6 +107,8 @@ public class Program {
 			System.out.println("Starting new debug configuration...");
 			System.out.println(config.toString());
 			break;
+		default:
+			System.out.println("" + config.appMode.toString() + " is not a a valid app mode, exiting...");
 		}
 	}
 }

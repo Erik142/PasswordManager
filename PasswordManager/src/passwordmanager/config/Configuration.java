@@ -1,12 +1,10 @@
 package passwordmanager.config;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.Properties;
 
 import com.google.gson.Gson;
 
@@ -33,6 +31,9 @@ public class Configuration {
 	public int dbPort;
 	public String dbUserName;
 	public String dbPassword;
+	public String serverEmail;
+	public String serverPassword;
+	public String publicDomainName;
 	
 	/**
 	 * Loads a Configuration from a File object

@@ -13,7 +13,6 @@ import java.net.Socket;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
-import java.util.ArrayList;
 import java.util.Random;
 
 import javax.crypto.BadPaddingException;
@@ -30,6 +29,11 @@ import passwordmanager.communication.Response.ResponseCode;
  *
  */
 public class CommunicationProtocol implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -222451491800802999L;
+
 	public enum CommunicationOperation {
 		AddCredential,
 		DeleteCredential,
@@ -42,7 +46,8 @@ public class CommunicationProtocol implements Serializable {
 		VerifyUser,
 		ExchangeKeys,
 		InitiateConnection,
-		VerifyApplication
+		VerifyApplication,
+		ForgotPassword
 	}
 	
 	public enum ProtocolMode {
@@ -411,6 +416,7 @@ public class CommunicationProtocol implements Serializable {
 					case GetAllCredentials:
 					case GetUser:
 					case VerifyUser:
+					case ForgotPassword:
 						eventListener.onUserAccountEvent((UserAccount)object, operation);
 						break;
 					case AddCredential:
