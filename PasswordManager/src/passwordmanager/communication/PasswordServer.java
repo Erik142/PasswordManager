@@ -182,7 +182,12 @@ public class PasswordServer implements Runnable {
 	}
 	
 	private boolean addCredential(Credential credential) {
+		try {
+			database.addCredential(credential);
+			return true;
+		} catch (SQLException exadd) {
 		return false;
+		}
 	}
 	
 	private boolean deleteAccount(UserAccount account) {
