@@ -192,19 +192,19 @@ public class PasswordDatabase {
 		}
 		
 		this.s = c.createStatement();
-		s.executeUpdate("INSERT INTO ResetRequests (email) VALUES('" + account.getEmail() + "')");
+		s.executeUpdate("INSERT INTO public.\"ResetRequests\" (\"email\") VALUES('" + account.getEmail() + "')");
 	}
 	
 	public int getResetRequestId(UserAccount account) throws SQLException {
 		this.s = c.createStatement();
-		ResultSet rs = s.executeQuery("SELECT id FROM ResetRequests where email='" + account.getEmail() + "'");
+		ResultSet rs = s.executeQuery("SELECT \"id\" FROM public.\"ResetRequests\" where \"email\"='" + account.getEmail() + "'");
 		
 		return rs.getInt("id");
 	}
 	
 	public void deleteResetRequestId(UserAccount account) throws SQLException {
 		this.s = c.createStatement();
-		s.executeUpdate("DELETE FROM ResetRequests where email='" + account.getEmail() + "'");
+		s.executeUpdate("DELETE FROM public.\"ResetRequests\" where \"email\"='" + account.getEmail() + "'");
 	}
 		
 	public void closeConnection() {
