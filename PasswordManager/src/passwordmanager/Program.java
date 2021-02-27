@@ -38,16 +38,6 @@ public class Program {
             parser.handleError(e);
             System.exit(1);
         }
-        /*
-        MessageDigest digest = null;
-        try {
-            digest = MessageDigest.getInstance(ns.getString("config"));
-        } catch (NoSuchAlgorithmException e) {
-            System.err.printf("Could not get instance of algorithm %s: %s",
-                    ns.getString("config"), e.getMessage());
-            System.exit(1);
-        }
-        */
 		
         try {
         	String configFilePath = ns.getString("config");
