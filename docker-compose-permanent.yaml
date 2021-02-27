@@ -6,8 +6,7 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: postgresql
-    networks:
-      - backend
+    network_mode: bridge
     volumes:
       - postgres-data:/var/lib/postgresql/data:rw
   web:
@@ -19,9 +18,7 @@ services:
       - "3000:3000"
     volumes:
       - ./Docker/config.json:/root/passwordmanager-ui/config.json
-    networks:
-      - frontend
-      - backend
+    network_mode: bridge
   server:
     build:
       context: .
@@ -31,16 +28,7 @@ services:
       - "50000:50000"
     volumes:
       - ./Docker/config.json:/opt/passwordmanager/config.json
-    networks:
-      - frontend
-      - backend
-networks:
-  frontend:
-    name: frontend_network
-    driver: bridge
-  backend:
-    name: backend_network
-    driver: bridge
+    network_mode: bridge
 volumes:
   postgres-data:
     name: postgres-passwordmanager-data
