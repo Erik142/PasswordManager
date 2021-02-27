@@ -3,10 +3,7 @@ package passwordmanager;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 import net.sourceforge.argparse4j.ArgumentParsers;
