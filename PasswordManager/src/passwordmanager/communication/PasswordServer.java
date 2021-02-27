@@ -6,6 +6,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Properties;
 
 import javax.mail.Authenticator;
@@ -283,9 +284,12 @@ public class PasswordServer implements Runnable {
 	}
 	
 	private Credential[] getCredentials(UserAccount account) throws SQLException {
-		return null;
-	
- 	}
+		List<Credential> credentials = database.listAllCredentials(account);
+		credentials.add(new Credential("", "", "", ""));
+		Credential[] returnValue = credentials.toArray(new Credential[credentials.size()]);
+		
+		return returnValue;
+	}
 	
 	private boolean updateAccount(UserAccount account) {
 		try {
