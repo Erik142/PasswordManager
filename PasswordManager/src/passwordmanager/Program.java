@@ -106,6 +106,8 @@ public class Program {
 			System.out.println("Starting new debug configuration...");
 			System.out.println(config.toString());
 			break;
+		default:
+			System.out.println("" + config.appMode.toString() + " is not a a valid app mode, exiting...");
 		}
 	}
 }

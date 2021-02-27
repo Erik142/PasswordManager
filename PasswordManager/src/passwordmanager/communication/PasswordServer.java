@@ -112,10 +112,6 @@ public class PasswordServer implements Runnable {
 
 			@Override
 			public void onUserAccountEvent(UserAccount userAccount, CommunicationOperation operation) {
-				// TODO Auto-generated method stub
-				
-				Response<Object> response;
-				
 				Object returnValue = null;
 				
 				switch (operation) {
