@@ -101,6 +101,7 @@ public class Program {
 			break;
 		case Client:
 			System.out.println("Starting new client...");
+			//Lite mer kod här
 			break;
 		case Debug:
 			System.out.println("Starting new debug configuration...");

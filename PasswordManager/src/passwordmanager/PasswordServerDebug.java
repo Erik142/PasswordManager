@@ -33,38 +33,43 @@ public class PasswordServerDebug {
 			clientSocket = new Socket(config.serverIp, config.serverPort);
 			CommunicationProtocol protocol = new CommunicationProtocol(clientSocket, CommunicationProtocol.ProtocolMode.Client);
 			
-			UserAccount testAccount = new UserAccount("", "");
-			System.out.println("Retrieving single credential!!");
+			UserAccount testAccount = new UserAccount("eriktest@test.se", "password123");
+			System.out.println("Adding user account to database!!");
 			
-			Query<UserAccount> singleCredentialQuery = new Query<UserAccount>("", CommunicationOperation.GetCredential, testAccount); 
+			Query<UserAccount> addUserQuery = new Query<UserAccount>("", CommunicationOperation.AddUser, testAccount); 
 			
-			Response<Credential> credentialResponse = protocol.sendAndReceive(singleCredentialQuery);
+			Response<Boolean> addUserResponse = protocol.sendAndReceive(addUserQuery);
 			
-			System.out.println("Response code: " + credentialResponse.getResponseCode().toString());
-			System.out.println("Response data: " + credentialResponse.getData());
+			System.out.println("Response code: " + addUserResponse.getResponseCode().toString());
+			System.out.println("Response data: " + addUserResponse.getData());
 			
-			Credential credential = credentialResponse.getData();
+			Boolean addUserResult = addUserResponse.getData();
 			
-			if (credential != null) {
-				System.out.println("MAIN: Received credential! " + credential);
+			if (addUserResult != null) {
+				System.out.println("MAIN: Received credential! " + addUserResult);
 			}
 			
-			Query<UserAccount> multiCredentialQuery = new Query<UserAccount>("", CommunicationOperation.GetAllCredentials, testAccount); 
+			Query<UserAccount> getUserAccountQuery = new Query<UserAccount>("", CommunicationOperation.GetUser, testAccount); 
 			
-			System.out.println("Retrieving multiple credentials!!");
-			Response<Credential[]> multiCredentialResponse = protocol.sendAndReceive(multiCredentialQuery);
-			System.out.println("Credentials received!");
+			System.out.println("Retrieving user account!!");
+			Response<UserAccount> getUserAccountResponse = protocol.sendAndReceive(getUserAccountQuery);
+			System.out.println("User account received!");
+			System.out.println("Response code: " + getUserAccountResponse.getResponseCode().toString());
 			
-			Credential[] credentials = multiCredentialResponse.getData();
 			
-			System.out.println("Main program Length of Credentials: " + credentials.length);
-			if (credentials != null) {
-				System.out.println("MAIN: Received credentials!");
-				
-				for (Credential cred : credentials) {
-					System.out.println(cred);
-				}
-			}
+			UserAccount userFromDb = getUserAccountResponse.getData();
+			
+			System.out.println("User email: " + userFromDb.getEmail() + ", user password: " + userFromDb.getPassword());
+			
+			Query<UserAccount> deleteUserAccountQuery = new Query<UserAccount>("", CommunicationOperation.DeleteUser, testAccount);
+			
+			System.out.println("Deleting user account!!");
+			Response<Boolean> deleteUserAccountResponse = protocol.sendAndReceive(deleteUserAccountQuery);
+			System.out.println("User account deleted!");
+			System.out.println("Response code: " + getUserAccountResponse.getResponseCode().toString());
+			
+			Boolean isUserDeleted = deleteUserAccountResponse.getData();
+			System.out.println("Is user deleted: " + isUserDeleted);
 			
 			clientSocket.close();
 		} catch (Exception e) {

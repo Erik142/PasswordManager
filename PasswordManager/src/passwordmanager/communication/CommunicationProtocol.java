@@ -38,7 +38,6 @@ public class CommunicationProtocol implements Serializable {
 		AddCredential,
 		DeleteCredential,
 		UpdateCredential,
-		GetCredential,
 		GetAllCredentials,
 		AddUser,
 		DeleteUser,
@@ -252,7 +251,7 @@ public class CommunicationProtocol implements Serializable {
 			}
 			else {
 				if (!isKeyValid()) {
-					Response<Boolean> response = new Response<Boolean>(ResponseCode.InvalidKey, message.operation,false);
+					Response<T> response = new Response<T>(ResponseCode.InvalidKey, message.operation, message.data);
 					send(response);
 				}
 			}
@@ -414,7 +413,6 @@ public class CommunicationProtocol implements Serializable {
 					case AddUser:
 					case DeleteUser:
 					case UpdateUser:
-					case GetCredential:
 					case GetAllCredentials:
 					case GetUser:
 					case VerifyUser:
