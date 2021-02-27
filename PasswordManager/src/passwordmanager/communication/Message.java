@@ -5,6 +5,10 @@ import java.io.Serializable;
 import passwordmanager.communication.CommunicationProtocol.CommunicationOperation;
 
 public abstract class Message<T> implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3037518128810042924L;
 	protected final T data;
 	protected final CommunicationOperation operation;
 	

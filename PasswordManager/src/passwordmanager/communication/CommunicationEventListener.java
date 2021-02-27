@@ -1,7 +1,5 @@
 package passwordmanager.communication;
 
-import java.net.Socket;
-
 import passwordmanager.Credential;
 import passwordmanager.UserAccount;
 
