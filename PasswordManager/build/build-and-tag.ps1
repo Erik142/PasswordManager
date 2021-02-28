@@ -15,6 +15,7 @@ $OLD_SNAPSHOT = "$VERSION-SNAPSHOT"
 $POM_CLIENT = Get-Content ..\pom-deploy-client.xml
 $POM_SERVER = Get-Content ..\pom-deployment.xml
 $POM_DEV = Get-Content ..\pom.xml
+$DOCKERFILE_SERVER = Get-Content ..\..\Dockerfile-server
 
 $SET_VERSION=$VERSION
 
@@ -41,6 +42,9 @@ Out-File -InputObject $POM_SERVER -FilePath ..\pom-deployment.xml
 
 $POM_DEV = $POM_DEV -replace $OLD_SNAPSHOT,$NEXT_SNAPSHOT
 Out-File -InputObject $POM_DEV -FilePath ..\pom.xml
+
+$DOCKERFILE_SERVER = $DOCKERFILE_SERVER -replace $OLD_SNAPSHOT,$NEXT_SNAPSHOT
+Out-File -InputObject $DOCKERFILE_SERVER -FilePath ..\..\Dockerfile-server
 
 $COMMIT_MESSAGE="Update pom files to version $NEXT_SNAPSHOT."
 
