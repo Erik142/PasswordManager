@@ -23,9 +23,9 @@ jobs:
       with:
         java-version: 15
     - name: Build with Maven
-      run: mvn -B clean build --file pom.xml
+      run: mvn -B clean build --file PasswordManager/pom.xml
     - name: Package jar with Maven
-      run: mvn -B clean package --file pom-deployment.xml
+      run: mvn -B clean package --file PasswordManager/pom-deployment.xml
     - name: Package exe on Windows
       if: matrix.os == 'windows-latest'
-      run: mvn -B clean package --file pom-deploy-client.xml
+      run: mvn -B clean package --file PasswordManager/pom-deploy-client.xml
