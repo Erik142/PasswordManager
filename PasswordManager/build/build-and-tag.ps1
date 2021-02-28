@@ -26,7 +26,7 @@ $POM_SERVER = $POM_SERVER -replace $OLD_SNAPSHOT,$SET_VERSION
 Out-File -InputObject $POM_SERVER -FilePath ..\pom-deployment.xml
 
 $DOCKERFILE_SERVER = $DOCKERFILE_SERVER -replace $OLD_SNAPSHOT,$SET_VERSION
-Out-File -InputObject $DOCKERFILE_SERVER -FilePath ..\..\Dockerfile-server
+Out-File -Encoding utf8 -InputObject $DOCKERFILE_SERVER -FilePath ..\..\Dockerfile-server
 
 $COMMIT_MESSAGE="Release version $VERSION."
 
@@ -47,7 +47,7 @@ $POM_DEV = $POM_DEV -replace $OLD_SNAPSHOT,$NEXT_SNAPSHOT
 Out-File -InputObject $POM_DEV -FilePath ..\pom.xml
 
 $DOCKERFILE_SERVER = $DOCKERFILE_SERVER -replace $SET_VERSION,$NEXT_SNAPSHOT
-Out-File -InputObject $DOCKERFILE_SERVER -FilePath ..\..\Dockerfile-server
+Out-File -Encoding utf8 -InputObject $DOCKERFILE_SERVER -FilePath ..\..\Dockerfile-server
 
 $COMMIT_MESSAGE="Update pom files to version $NEXT_SNAPSHOT."
 
