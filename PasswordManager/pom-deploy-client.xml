@@ -7,13 +7,7 @@
     <sourceDirectory>src</sourceDirectory>
     <resources>
       <resource>
-        <directory>resources</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </resource>
-      <resource>
-        <directory>resources</directory>
+        <directory>release</directory>
         <targetPath>..</targetPath>
       </resource>
     </resources>
@@ -26,32 +20,9 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.0.0</version>
-        <configuration>
-        <descriptorRefs>
-          <!--<descriptorRef>jar-with-dependencies</descriptorRef>-->
-          <descriptorRef>jar-with-dependencies</descriptorRef>
-        </descriptorRefs>
-        <archive>
-          <manifest>
-          <mainClass>passwordmanager.Program</mainClass>
-          </manifest>
-        </archive>
-        </configuration>
-        <executions>
-        <execution>
-          <phase>package</phase>
-          <goals>
-          <goal>single</goal>
-          </goals>
-        </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <groupId>com.akathist.maven.plugins.launch4j</groupId>
         <artifactId>launch4j-maven-plugin</artifactId>
+        <version>1.7.25</version>
         <executions>
           <execution>
             <id>client-gui</id>
@@ -59,8 +30,8 @@
             <goals><goal>launch4j</goal></goals>
             <configuration>
               <headerType>console</headerType>
-              <outfile>target/Passwordmanager.exe</outfile>
-              <jar>target/PasswordManager-0.0.1-SNAPSHOT-jar-with-dependencies.jar</jar>
+              <outfile>target/${project.artifactId}-${project.version}.exe</outfile>
+              <jar>target/PasswordManager-0.0.1-SNAPSHOT.jar</jar>
               <errTitle>PasswordManager</errTitle>
               <classPath>
                 <mainClass>passwordmanager.Program</mainClass>
@@ -86,6 +57,44 @@
               </versionInfo>
               <cmdLine>--config config.json</cmdLine>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.3.0</version>
+        <configuration>
+        <descriptorRefs>
+          <!--<descriptorRef>jar-with-dependencies</descriptorRef>-->
+          <descriptorRef>jar-with-dependencies</descriptorRef>
+        </descriptorRefs>
+        <archive>
+          <manifest>
+          <mainClass>passwordmanager.Program</mainClass>
+          </manifest>
+        </archive>
+        </configuration>
+        <executions>
+          <execution>
+            <id>build-jar</id>
+            <phase>compiler</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+          <execution>
+              <id>zip-exe</id>
+              <phase>package</phase>
+              <goals>
+                  <goal>single</goal>
+              </goals>
+              <configuration>
+                  <appendAssemblyId>false</appendAssemblyId>
+                  <descriptors>
+                      <descriptor>build/zip.xml</descriptor>
+                  </descriptors>
+              </configuration>
           </execution>
         </executions>
       </plugin>
