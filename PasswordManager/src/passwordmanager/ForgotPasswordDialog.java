@@ -5,13 +5,13 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-public class ForgotDialog extends JDialog{
+public class ForgotPasswordDialog extends JDialog{
 	private JLabel lbEmail;
 	private JTextField tfEmail;
     private JButton btnSend;
     private JButton btnCancel;
     
-    public ForgotDialog(Frame parent) {
+    public ForgotPasswordDialog(Frame parent) {
     	JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints cs = new GridBagConstraints();
  
@@ -37,7 +37,7 @@ public class ForgotDialog extends JDialog{
         		
         		
         		//Then show up a message to the user that she will receive an email if her there is an account with such email.
-        		JOptionPane.showMessageDialog(ForgotDialog.this,
+        		JOptionPane.showMessageDialog(ForgotPasswordDialog.this,
                         "You will receive an email to change your password if there is such an account.",
                         "Forgot password",
                         JOptionPane.INFORMATION_MESSAGE);
