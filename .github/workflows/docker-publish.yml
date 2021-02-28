@@ -1,0 +1,33 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Docker publish
+
+on:
+  push:
+    tags: 'v*'
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    env: 
+      $REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
+      $REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: tenhaus/get-release-or-tag@v2
+      id: tag
+    - name: Login to private Docker registry
+      run: docker login registry.docker.wahlberger.dev -u $REGISTRY_USER -p $REGISTRY_PASSWORD
+    - name: Build PasswordManager server with Docker
+      run: docker build . -t registry.docker.wahlberger.dev/passwordmanager_server:${{ steps.tag.outputs.tag }} --file Dockerfile-server
+    - name: Build Node.js web UI with Docker
+      run: docker build . -t registry.docker.wahlberger.dev/passwordmanager_webui:${{ steps.tag.outputs.tag }} --file Dockerfile-webui
+    - name: Build PostgreSQL with Docker
+      run: docker build . -t registry.docker.wahlberger.dev/passwordmanager_postgres:${{ steps.tag.outputs.tag }} --file Dockerfile-postgres
+    - name: Push Docker images to registry
+      run: |
+        docker push registry.docker.wahlberger.dev/passwordmanager_server:latest
+        docker push registry.docker.wahlberger.dev/passwordmanager_webui:latest
+        docker push registry.docker.wahlberger.dev/passwordmanager_postgres:latest
