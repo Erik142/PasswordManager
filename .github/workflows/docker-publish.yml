@@ -38,7 +38,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./PasswordManager-${{ steps.tag.outputs.tag }}.zip
+        asset_path: PasswordManager/target/PasswordManager-${{ steps.tag.outputs.tag }}-zip.zip
         asset_name: PasswordManager-${{ steps.tag.outputs.tag }}.zip
         asset_content_type: application/zip
   build-docker:
