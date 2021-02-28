@@ -4,18 +4,28 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Properties;
+
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
 
 import passwordmanager.Credential;
 import passwordmanager.PasswordDatabase;
 import passwordmanager.UserAccount;
 import passwordmanager.communication.CommunicationProtocol.CommunicationOperation;
+import passwordmanager.communication.Response.ResponseCode;
 import passwordmanager.config.Configuration;
+import passwordmanager.util.EmailUtil;
 import passwordmanager.util.StringExtensions;
 
 /**
  * 
  * @author Erik Wahlberger
+ * @author yemeri
  *
  */
 public class PasswordServer implements Runnable {
@@ -27,6 +37,7 @@ public class PasswordServer implements Runnable {
 	
 	public PasswordServer(Configuration config) {
 		this.config = config;
+		this.database = new PasswordDatabase(config);
 	}
 	
 	protected void finalize() {
@@ -75,116 +86,229 @@ public class PasswordServer implements Runnable {
 	}
 	
 	private void processClient(Socket client) {
-		CommunicationProtocol communicationProtocol = new CommunicationProtocol(client);
+		CommunicationProtocol communicationProtocol = new CommunicationProtocol(client, CommunicationProtocol.ProtocolMode.Server);
 		
 		communicationProtocol.subscribeOnSocket(new CommunicationEventListener() {
 			@Override
 			public void onCredentialEvent(Credential credential, CommunicationOperation operation) {
+				ResponseCode responseCode = ResponseCode.OK;
+				
 				Object returnValue = null;
+				Boolean result = false;
 				
 				switch (operation) {
 				case AddCredential:
-					returnValue = addCredential(credential);
+					result = addCredential(credential);
+					returnValue = result;
+					
+					responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
 					break;
 				case DeleteCredential:
-					returnValue = deleteCredential(credential);
+					result = deleteCredential(credential);
+					returnValue = result;
+					
+					responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
 					break;
 				case UpdateCredential:
-					returnValue = updateCredential(credential);
+					result = updateCredential(credential);
+					returnValue = result;
+					
+					responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
+					break;
+				default:
+					responseCode = ResponseCode.Fail;
+					break;
 				}
 				
-				if (returnValue != null) {
-					communicationProtocol.send(returnValue, operation);
-				}
+				Response<Object> serverResponse = new Response<Object>(responseCode, operation, returnValue);
+				communicationProtocol.send(serverResponse);
 			}
 
 			@Override
 			public void onUserAccountEvent(UserAccount userAccount, CommunicationOperation operation) {
-				// TODO Auto-generated method stub
-				Object[] returnValue = new Object[1];
+				ResponseCode responseCode = ResponseCode.OK;
+				
+				Object returnValue = null;
+				Boolean result = true;
 				
 				switch (operation) {
 				case AddUser:
-					returnValue[0] = addAccount(userAccount);
+					returnValue = addAccount(userAccount);
+					
+					responseCode = (boolean)returnValue == true ? ResponseCode.OK : ResponseCode.Fail;
+					
 					break;
 				case DeleteUser:
-					boolean result = true;
 					result &= deleteAllPasswords(userAccount);
 					result &= deleteAccount(userAccount);
-					returnValue[0] = result;
-					break;
-				case GetCredential:
-					returnValue[0] = getCredential(userAccount);
+					returnValue = result;
+					
+					responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
 					break;
 				case GetAllCredentials:
-					returnValue = getCredentials(userAccount);
+					try {
+						returnValue = getCredentials(userAccount);
+					} catch (SQLException e) {
+						responseCode = ResponseCode.Fail;
+					}
 					break;
 				case GetUser:
-					// TODO: Implement this method with actual user name and password values
-					returnValue[0] = getAccount(null, null);
+					try {
+						returnValue = getAccount(userAccount.getEmail());
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						responseCode = ResponseCode.Fail;
+					}
 					break;
 				case UpdateUser:
-					returnValue[0] = updateAccount(userAccount);
+					result = updateAccount(userAccount);
+					returnValue = result;
+					
+					responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
 					break;
-				case VerifyUser:
-					returnValue[0] = isUserAuthorized(userAccount);
+				case ForgotPassword:
+					result = forgotPassword(userAccount);
+					returnValue = result;
+				default:
+					responseCode = ResponseCode.Fail;
 					break;
 				}
 				
-				if (returnValue != null) {
-					communicationProtocol.send(returnValue, operation);
-				}
+				Response<Object> serverResponse = new Response<Object>(responseCode, operation, returnValue);
+				communicationProtocol.send(serverResponse);
 			}
 		});
 	}
 	
 	private boolean addAccount(UserAccount account) {
-		return false;
+		try {
+			database.addAccount(account);
+			return true;
+		} catch (SQLException e) {
+			return false;
+		}
 	}
 	
 	private boolean addCredential(Credential credential) {
+		try {
+			database.addCredential(credential);
+			return true;
+		} catch (SQLException exadd) {
 		return false;
+		}
 	}
 	
 	private boolean deleteAccount(UserAccount account) {
-		return false;
+		try {
+			database.deleteAccount(account);
+			return true;
+		} catch (SQLException e) {
+			return false;
+		}
 	}
 	
 	private boolean deleteAllPasswords(UserAccount account) {
-		return true;
+		try {
+			database.deleteAllCredentials(account);
+			return true;
+		} catch (SQLException eAll) {
+			return false;
+		}
 	}
 	
 	private boolean deleteCredential(Credential credential) {
+		try {
+			database.deleteCredential(credential);
+			return true;
+		} catch (SQLException exdel) {
+		return false;
+		}
+	}
+	
+	private boolean forgotPassword(UserAccount account) {
+		try {
+			database.insertResetRequest(account);
+			int requestId = database.getResetRequestId(account);
+			
+			if (requestId <= 0) {
+				return false;
+			}
+			
+			System.out.println("Reset password request id: " + requestId);
+			
+			// Configure smtp properties with ssl authentication
+			Properties props = new Properties();
+			props.put("mail.smtp.host", "smtp.gmail.com");
+			props.put("mail.smtp.socketFactory.port", "465");
+			props.put("mail.smtp.socketFactory.class",
+					"javax.net.ssl.SSLSocketFactory");
+			props.put("mail.smtp.auth", "true");
+			props.put("mail.smtp.port", "465");
+			
+			System.out.println("Server e-mail: " + config.serverEmail);
+			System.out.println("Server e-mail password: " + config.serverPassword);
+			
+			Authenticator auth = new Authenticator() {
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(config.serverEmail, config.serverPassword);
+				}
+			};
+			
+			String publicDomainName = config.publicDomainName;
+			
+			System.out.println("Public domain name: " + publicDomainName);
+			
+			if (StringExtensions.isNullOrEmpty(publicDomainName)) {
+				System.out.println("Public domain name is empty!");
+				return false;
+			}
+			
+			URL baseUrl = new URL("https://" + publicDomainName);
+			URL finalUrl = new URL(baseUrl, "" + requestId);
+			
+			Session session = Session.getDefaultInstance(props, auth);
+			EmailUtil.sendEmail(session, config.serverEmail, account.getEmail(), "PasswordManager: Reset password", "A password reset was requested for this user account. Press the following link to reset your password:\r\n\r\n" + finalUrl.toString());
+			
+			System.out.println("Recipient e-mail: " + account.getEmail());
+			
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return false;
 	}
 	
-	private UserAccount getAccount(String username, String passwordHash) {
-		return null;
+	private UserAccount getAccount(String email) throws SQLException {
+		return database.getAccount(email);
 	}
 	
-	private Credential getCredential(UserAccount userAccount) {
-		return new Credential("", "", "", "");
-	}
-	
-	private Credential[] getCredentials(UserAccount account) {
-		return new Credential[] {
-				new Credential("", "", "", ""),
-				new Credential("", "", "", ""),
-				new Credential("", "", "", "")
-		};
+	private Credential[] getCredentials(UserAccount account) throws SQLException {
+		List<Credential> credentials = database.listAllCredentials(account);
+		credentials.add(new Credential("", "", "", ""));
+		Credential[] returnValue = credentials.toArray(new Credential[credentials.size()]);
+		
+		return returnValue;
 	}
 	
 	private boolean updateAccount(UserAccount account) {
-		return false;
+		try {
+			database.changeAccountPassword(account, account.getPassword());
+			return true;
+		} catch (SQLException eAcc) {
+			return false;
+		}	
 	}
 	
 	private boolean updateCredential(Credential credential) {
-		return false;
+		try {
+			database.changeCredential(credential, credential.getPassword());
+			return true;
+		} catch (SQLException eCred) {
+			return false;
+		}
 	}
 	
-	private boolean isUserAuthorized(UserAccount account) {
-		return false;
-	}
 
 	@Override
 	public void run() {

@@ -1,12 +1,13 @@
 package passwordmanager;
 
 import java.net.Socket;
-import java.util.ArrayList;
 
 import passwordmanager.communication.CommunicationProtocol;
+import passwordmanager.communication.CommunicationProtocol.CommunicationOperation;
 import passwordmanager.communication.PasswordServer;
+import passwordmanager.communication.Query;
+import passwordmanager.communication.Response;
 import passwordmanager.config.Configuration;
-import passwordmanager.config.Configuration.AppMode;
 
 public class PasswordServerDebug {
 	public PasswordServerDebug(Configuration config) {
@@ -25,33 +26,52 @@ public class PasswordServerDebug {
 		
 		System.out.println("Server test!!");
 		
-		Socket clientSocket;
+		Socket clientSocket = null;
+		
 		try {
 			Thread.sleep(1000);
 			clientSocket = new Socket(config.serverIp, config.serverPort);
-			CommunicationProtocol protocol = new CommunicationProtocol(clientSocket);
+			CommunicationProtocol protocol = new CommunicationProtocol(clientSocket, CommunicationProtocol.ProtocolMode.Client);
 			
-			UserAccount testAccount = new UserAccount("", "");
-			System.out.println("Retrieving single credential!!");
-			Credential credential = protocol.sendAndReceive(testAccount, CommunicationProtocol.CommunicationOperation.GetCredential);
+			UserAccount testAccount = new UserAccount("eriktest@test.se", "password123");
+			System.out.println("Adding user account to database!!");
 			
-			if (credential != null) {
-				System.out.println("Received credential! " + credential);
+			Query<UserAccount> addUserQuery = new Query<UserAccount>("", CommunicationOperation.AddUser, testAccount); 
+			
+			Response<Boolean> addUserResponse = protocol.sendAndReceive(addUserQuery);
+			
+			System.out.println("Response code: " + addUserResponse.getResponseCode().toString());
+			System.out.println("Response data: " + addUserResponse.getData());
+			
+			Boolean addUserResult = addUserResponse.getData();
+			
+			if (addUserResult != null) {
+				System.out.println("MAIN: Received credential! " + addUserResult);
 			}
 			
-			System.out.println("Retrieving multiple credentials!!");
-			ArrayList<Credential> credentials = protocol.sendAndReceiveMultiple(testAccount, CommunicationProtocol.CommunicationOperation.GetAllCredentials);
-			System.out.println("Credentials received!");
+			Query<UserAccount> getUserAccountQuery = new Query<UserAccount>("", CommunicationOperation.GetUser, testAccount); 
+			
+			System.out.println("Retrieving user account!!");
+			Response<UserAccount> getUserAccountResponse = protocol.sendAndReceive(getUserAccountQuery);
+			System.out.println("User account received!");
+			System.out.println("Response code: " + getUserAccountResponse.getResponseCode().toString());
 			
 			
-			System.out.println("Main program Length of Credentials: " + credentials.size());
-			if (credentials != null) {
-				System.out.println("Received credentials!");
-				
-				for (Credential cred : credentials) {
-					System.out.println(cred.toString());
-				}
-			}
+			UserAccount userFromDb = getUserAccountResponse.getData();
+			
+			System.out.println("User email: " + userFromDb.getEmail() + ", user password: " + userFromDb.getPassword());
+			
+			Query<UserAccount> deleteUserAccountQuery = new Query<UserAccount>("", CommunicationOperation.DeleteUser, testAccount);
+			
+			System.out.println("Deleting user account!!");
+			Response<Boolean> deleteUserAccountResponse = protocol.sendAndReceive(deleteUserAccountQuery);
+			System.out.println("User account deleted!");
+			System.out.println("Response code: " + getUserAccountResponse.getResponseCode().toString());
+			
+			Boolean isUserDeleted = deleteUserAccountResponse.getData();
+			System.out.println("Is user deleted: " + isUserDeleted);
+			
+			clientSocket.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -59,6 +79,6 @@ public class PasswordServerDebug {
 		
 		server.close();
 		System.out.println("PasswordServerDebug finished executing!");
-	
+		
 	}
 }

@@ -1,0 +1,47 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Docker publish
+
+on:
+  push:
+    tags: 'v*'
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: dawidd6/action-get-tag@v1
+      id: tag
+    - name: Login to private Docker registry
+      uses: docker/login-action@v1.8.0
+      with:
+        # Server address of Docker registry. If not set then will default to Docker Hub
+        registry: registry.docker.wahlberger.dev
+        # Username used to log against the Docker registry
+        username: ${{ secrets.REGISTRY_USER }}
+        # Password or personal access token used to log against the Docker registry
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+        # Log out from the Docker registry at the end of a job
+        logout: true
+    - name: Build PasswordManager server with Docker
+      run: docker build . -t registry.docker.wahlberger.dev/passwordmanager_server:${{ steps.tag.outputs.tag }} --file Dockerfile-server
+    - name: Build Node.js web UI with Docker
+      run: docker build . -t registry.docker.wahlberger.dev/passwordmanager_webui:${{ steps.tag.outputs.tag }} --file Dockerfile-webui
+    - name: Build PostgreSQL with Docker
+      run: docker build . -t registry.docker.wahlberger.dev/passwordmanager_postgres:${{ steps.tag.outputs.tag }} --file Dockerfile-postgres
+    - name: Tag Docker images with "latest" tag
+      run: |
+        docker image tag registry.docker.wahlberger.dev/passwordmanager_server:${{ steps.tag.outputs.tag }} registry.docker.wahlberger.dev/passwordmanager_server:latest
+        docker image tag registry.docker.wahlberger.dev/passwordmanager_webui:${{ steps.tag.outputs.tag }} registry.docker.wahlberger.dev/passwordmanager_webui:latest
+        docker image tag registry.docker.wahlberger.dev/passwordmanager_postgres:${{ steps.tag.outputs.tag }} registry.docker.wahlberger.dev/passwordmanager_postgres:latest
+    - name: Push Docker images to registry
+      run: |
+        docker push registry.docker.wahlberger.dev/passwordmanager_server:${{ steps.tag.outputs.tag }}
+        docker push registry.docker.wahlberger.dev/passwordmanager_server:latest
+        docker push registry.docker.wahlberger.dev/passwordmanager_webui:${{ steps.tag.outputs.tag }}
+        docker push registry.docker.wahlberger.dev/passwordmanager_webui:latest
+        docker push registry.docker.wahlberger.dev/passwordmanager_postgres:${{ steps.tag.outputs.tag }}
+        docker push registry.docker.wahlberger.dev/passwordmanager_postgres:latest
