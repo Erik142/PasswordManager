@@ -1,17 +1,24 @@
 package passwordmanager;
 
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.border.*;
 
 public class ForgotPasswordDialog extends JDialog{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1191660850628433498L;
 	private JLabel lbEmail;
-	private JTextField tfEmail;
     private JButton btnSend;
     private JButton btnCancel;
     
-    public ForgotPasswordDialog(Frame parent) {
+    protected JTextField tfEmail;
+    
+    private ForgotPasswordDialogController controller;
+    
+    public ForgotPasswordDialog(Frame parent, PasswordClient client) {
+    	controller = new ForgotPasswordDialogController(this, client);
+    	
     	JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints cs = new GridBagConstraints();
  
@@ -30,29 +37,10 @@ public class ForgotPasswordDialog extends JDialog{
         panel.add(tfEmail, cs);
         
         btnSend = new JButton("Send new password to my email");
-        btnSend.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		
-        		//TODO-Code to send the email written in the text field to database and compare it
-        		
-        		
-        		//Then show up a message to the user that she will receive an email if her there is an account with such email.
-        		JOptionPane.showMessageDialog(ForgotPasswordDialog.this,
-                        "You will receive an email to change your password if there is such an account.",
-                        "Forgot password",
-                        JOptionPane.INFORMATION_MESSAGE);
-        		dispose();
-        	}
-        	
-        });
+        btnSend.addActionListener(controller.forgotPassword());
         
         btnCancel = new JButton("Cancel");
-        btnCancel.addActionListener(new ActionListener() {
- 
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
+        btnCancel.addActionListener(controller.cancelButtonClick());
         
         JPanel bp = new JPanel();
         bp.add(btnSend);
