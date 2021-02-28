@@ -8,6 +8,7 @@ import passwordmanager.communication.CommunicationProtocol.CommunicationOperatio
 import passwordmanager.communication.CommunicationProtocol.ProtocolMode;
 import passwordmanager.communication.Query;
 import passwordmanager.communication.Response;
+import passwordmanager.communication.Response.ResponseCode;
 import passwordmanager.config.Configuration;
 
 
@@ -117,5 +118,15 @@ public boolean verifyUser (UserAccount account) {
 	}
 	
 	
+	public boolean forgotPassword(String email) throws Exception {
+		Query<UserAccount> query = new Query<UserAccount>("", CommunicationOperation.ForgotPassword, new UserAccount(email, ""));
+		Response<Boolean> response = protocol.sendAndReceive(query);
+		
+		if (response.getResponseCode() != ResponseCode.OK) {
+			throw new Exception("The query did not complete successfully!");
+		}
+		
+		return response.getData();
+	}
 
 }
