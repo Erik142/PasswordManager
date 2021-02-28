@@ -23,7 +23,7 @@ jobs:
       with:
         java-version: 15
     - name: Build with Maven
-      run: mvn -B clean build --file PasswordManager/pom.xml
+      run: mvn -B clean compile --file PasswordManager/pom.xml
     - name: Package jar with Maven
       run: mvn -B clean package --file PasswordManager/pom-deployment.xml
     - name: Package exe on Windows
