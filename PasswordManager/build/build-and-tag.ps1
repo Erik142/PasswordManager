@@ -45,4 +45,4 @@ Out-File -InputObject $POM_DEV -FilePath ..\pom.xml
 $COMMIT_MESSAGE="Update pom files to version $NEXT_SNAPSHOT."
 
 git commit -a -m $COMMIT_MESSAGE
-git push origin/$CURRENT_BRANCH
+git push origin $CURRENT_BRANCH
