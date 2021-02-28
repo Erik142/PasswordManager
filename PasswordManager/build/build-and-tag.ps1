@@ -18,10 +18,6 @@ $POM_DEV = Get-Content ..\pom.xml
 
 $SET_VERSION=$VERSION
 
-. .\update-version-number.ps1
-
-$NEXT_SNAPSHOT = "$VERSION-SNAPSHOT"
-
 $POM_CLIENT = $POM_CLIENT -replace $OLD_SNAPSHOT,$SET_VERSION
 Out-File -InputObject $POM_CLIENT -FilePath ..\pom-deploy-client.xml
 
@@ -32,6 +28,10 @@ $COMMIT_MESSAGE="Release version $VERSION."
 
 git commit -a -m $COMMIT_MESSAGE
 git tag -a v$VERSION -m $COMMIT_MESSAGE
+
+. .\update-version-number.ps1
+
+$NEXT_SNAPSHOT = "$VERSION-SNAPSHOT"
 
 $POM_CLIENT = $POM_CLIENT -replace $SET_VERSION,$NEXT_SNAPSHOT
 Out-File -InputObject $POM_CLIENT -FilePath ..\pom-deploy-client.xml
