@@ -31,7 +31,7 @@ Out-File -Encoding utf8 -InputObject $DOCKERFILE_SERVER -FilePath ..\..\Dockerfi
 $COMMIT_MESSAGE="Release version $VERSION."
 
 git commit -a -m $COMMIT_MESSAGE
-git tag -a v$VERSION -m $COMMIT_MESSAGE
+git tag -a v$VERSION HEAD -m $COMMIT_MESSAGE
 
 . .\update-version-number.ps1
 
