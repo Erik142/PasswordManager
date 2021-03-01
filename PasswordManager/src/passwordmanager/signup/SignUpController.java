@@ -1,4 +1,4 @@
-package passwordmanager;
+package passwordmanager.signup;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
+import passwordmanager.PasswordClient;
 import passwordmanager.config.Configuration;
 
 public class SignUpController {

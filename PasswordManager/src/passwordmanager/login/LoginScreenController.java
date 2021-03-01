@@ -4,16 +4,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-import passwordmanager.MainView;
 import passwordmanager.LoginDialog;
-import passwordmanager.Observer;
 import passwordmanager.PasswordClient;
-import passwordmanager.SignUpDialog;
-import passwordmanager.config.Configuration;
 import passwordmanager.forgotpassword.ForgotPasswordDialog;
 import passwordmanager.forgotpassword.ForgotPasswordDialogController;
 import passwordmanager.forgotpassword.ForgotPasswordModel;
 import passwordmanager.forgotpassword.ForgotPasswordWindowController;
+import passwordmanager.mainview.MainView;
+import passwordmanager.signup.SignUpDialog;
 
 public class LoginScreenController implements ActionListener {
 	private LoginScreen parentView;

@@ -1,4 +1,4 @@
-package passwordmanager;
+package passwordmanager.mainview;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,6 +7,12 @@ import java.io.IOException;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
+import passwordmanager.AddDialog;
+import passwordmanager.ChangeDialog;
+import passwordmanager.ChangePasswordDialog;
+import passwordmanager.Credential;
+import passwordmanager.PasswordClient;
+import passwordmanager.UserAccount;
 import passwordmanager.config.Configuration;
 
 public class MainViewController {

@@ -1,4 +1,4 @@
-package passwordmanager;
+package passwordmanager.signup;
 
 import java.awt.*;
 import java.awt.event.*;

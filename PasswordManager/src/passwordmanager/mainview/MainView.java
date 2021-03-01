@@ -1,4 +1,4 @@
-package passwordmanager;
+package passwordmanager.mainview;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -6,6 +6,8 @@ import java.io.IOException;
 
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
+
+import passwordmanager.PasswordClient;
 
 
 public class MainView {
