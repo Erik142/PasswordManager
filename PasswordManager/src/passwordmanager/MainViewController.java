@@ -141,6 +141,17 @@ public class MainViewController {
 		Object[][] data=null;
 		//TODO Retrieve passwords for account acc from database
 		
+		Credential[] credentials = client.getCredentials(acc);
+		
+		data = new Object[credentials.length][3];
+		
+		for (int i = 0; i < credentials.length; i++) {
+			Credential credential = credentials[i];
+			
+			Object[] credentialData = new Object[] { credential.getURL(), credential.getUsername(), credential.getPassword() };
+			data[i] = credentialData;
+		}
+		
 		return data;
 	}
 
