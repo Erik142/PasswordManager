@@ -7,16 +7,28 @@ import javax.swing.border.*;
 
 public class LoginDialog extends JDialog {
 	 
-    private JTextField tfUsername;
-    private JPasswordField pfPassword;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public JTextField tfUsername;
+    public JPasswordField pfPassword;
     private JLabel lbUsername;
     private JLabel lbPassword;
     private JButton btnLogin;
     private JButton btnCancel;
-    private boolean succeeded;
- 
+    public boolean succeeded;
+    private LoginDialogController controller;
+    
     public LoginDialog(Frame parent) {
-        super(parent, "Login", true);
+    	super(parent, "Login", true);
+    	controller = new LoginDialogController(this);
+    	
+    	showLoginDialog();
+    }
+    
+    private void showLoginDialog() {
+        
         //
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints cs = new GridBagConstraints();
@@ -50,36 +62,10 @@ public class LoginDialog extends JDialog {
  
         btnLogin = new JButton("Login");
  
-        btnLogin.addActionListener(new ActionListener() {
- 
-            public void actionPerformed(ActionEvent e) {
-                if (Login.authenticate(getUsername(), getPassword())) {
-                    JOptionPane.showMessageDialog(LoginDialog.this,
-                            "Hi " + getUsername() + "! You have successfully logged in.",
-                            "Login",
-                            JOptionPane.INFORMATION_MESSAGE);
-                    succeeded = true;
-                    dispose();
-                } else {
-                    JOptionPane.showMessageDialog(LoginDialog.this,
-                            "Invalid username or password",
-                            "Login",
-                            JOptionPane.ERROR_MESSAGE);
-                    // reset username and password
-                    tfUsername.setText("");
-                    pfPassword.setText("");
-                    succeeded = false;
- 
-                }
-            }
-        });
+        btnLogin.addActionListener(controller.afterLoginTry());
         btnCancel = new JButton("Cancel");
-        btnCancel.addActionListener(new ActionListener() {
+        btnCancel.addActionListener(controller.cancelB());
  
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
         JPanel bp = new JPanel();
         bp.add(btnLogin);
         bp.add(btnCancel);
