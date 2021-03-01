@@ -378,6 +378,7 @@ public class CommunicationProtocol implements Serializable {
 				return response;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		
@@ -451,6 +452,7 @@ public class CommunicationProtocol implements Serializable {
 					}
 				} catch (Exception e) {
 					System.out.println("Exception while retrieving query on server");
+					e.printStackTrace();
 				}
 			}
 		});
@@ -481,7 +483,7 @@ public class CommunicationProtocol implements Serializable {
 		try {
 			obj = (T)ois.readObject();
 		} catch (EOFException e) {
-			
+			e.printStackTrace();
 		}
 		
 		return obj;
