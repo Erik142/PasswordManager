@@ -36,9 +36,9 @@ public class LoginScreenController {
                 SignUpDialog signUpDlg = new SignUpDialog(parentView.frame);
                 signUpDlg.setVisible(true);
                 // if Sign up is successful then save and send the information forward to the database
-                if(signUpDlg.isSucceeded()){
+               // if(signUpDlg.controller.isSucceeded()){
                     // TODO - send information to databse
-                }
+               // }
             }
         };
 	}
