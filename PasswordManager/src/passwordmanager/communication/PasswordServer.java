@@ -91,91 +91,101 @@ public class PasswordServer implements Runnable {
 		communicationProtocol.subscribeOnSocket(new CommunicationEventListener() {
 			@Override
 			public void onCredentialEvent(Credential credential, CommunicationOperation operation) {
-				ResponseCode responseCode = ResponseCode.OK;
-				
-				Object returnValue = null;
-				Boolean result = false;
-				
-				switch (operation) {
-				case AddCredential:
-					result = addCredential(credential);
-					returnValue = result;
+				try {
+					ResponseCode responseCode = ResponseCode.OK;
 					
-					responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
-					break;
-				case DeleteCredential:
-					result = deleteCredential(credential);
-					returnValue = result;
+					Object returnValue = null;
+					Boolean result = false;
 					
-					responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
-					break;
-				case UpdateCredential:
-					result = updateCredential(credential);
-					returnValue = result;
+					switch (operation) {
+					case AddCredential:
+						result = addCredential(credential);
+						returnValue = result;
+						
+						responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
+						break;
+					case DeleteCredential:
+						result = deleteCredential(credential);
+						returnValue = result;
+						
+						responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
+						break;
+					case UpdateCredential:
+						result = updateCredential(credential);
+						returnValue = result;
+						
+						responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
+						break;
+					default:
+						responseCode = ResponseCode.Fail;
+						break;
+					}
 					
-					responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
-					break;
-				default:
-					responseCode = ResponseCode.Fail;
-					break;
+					Response<Object> serverResponse = new Response<Object>(responseCode, operation, returnValue);
+					communicationProtocol.send(serverResponse);
+				} catch (Exception e) {
+					e.printStackTrace();
+					Response<Object> failedResponse = new Response<Object>(ResponseCode.Fail, operation, null);
 				}
-				
-				Response<Object> serverResponse = new Response<Object>(responseCode, operation, returnValue);
-				communicationProtocol.send(serverResponse);
 			}
 
 			@Override
 			public void onUserAccountEvent(UserAccount userAccount, CommunicationOperation operation) {
-				ResponseCode responseCode = ResponseCode.OK;
-				
-				Object returnValue = null;
-				Boolean result = true;
-				
-				switch (operation) {
-				case AddUser:
-					returnValue = addAccount(userAccount);
+				try {
+					ResponseCode responseCode = ResponseCode.OK;
 					
-					responseCode = (boolean)returnValue == true ? ResponseCode.OK : ResponseCode.Fail;
+					Object returnValue = null;
+					Boolean result = true;
 					
-					break;
-				case DeleteUser:
-					result &= deleteAllPasswords(userAccount);
-					result &= deleteAccount(userAccount);
-					returnValue = result;
-					
-					responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
-					break;
-				case GetAllCredentials:
-					try {
-						returnValue = getCredentials(userAccount);
-					} catch (SQLException e) {
+					switch (operation) {
+					case AddUser:
+						returnValue = addAccount(userAccount);
+						
+						responseCode = (boolean)returnValue == true ? ResponseCode.OK : ResponseCode.Fail;
+						
+						break;
+					case DeleteUser:
+						result &= deleteAllPasswords(userAccount);
+						result &= deleteAccount(userAccount);
+						returnValue = result;
+						
+						responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
+						break;
+					case GetAllCredentials:
+						try {
+							returnValue = getCredentials(userAccount);
+						} catch (SQLException e) {
+							responseCode = ResponseCode.Fail;
+						}
+						break;
+					case GetUser:
+						try {
+							returnValue = getAccount(userAccount.getEmail());
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							responseCode = ResponseCode.Fail;
+						}
+						break;
+					case UpdateUser:
+						result = updateAccount(userAccount);
+						returnValue = result;
+						
+						responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
+						break;
+					case ForgotPassword:
+						result = forgotPassword(userAccount);
+						returnValue = result;
+					default:
 						responseCode = ResponseCode.Fail;
+						break;
 					}
-					break;
-				case GetUser:
-					try {
-						returnValue = getAccount(userAccount.getEmail());
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						responseCode = ResponseCode.Fail;
-					}
-					break;
-				case UpdateUser:
-					result = updateAccount(userAccount);
-					returnValue = result;
 					
-					responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
-					break;
-				case ForgotPassword:
-					result = forgotPassword(userAccount);
-					returnValue = result;
-				default:
-					responseCode = ResponseCode.Fail;
-					break;
+					Response<Object> serverResponse = new Response<Object>(responseCode, operation, returnValue);
+					communicationProtocol.send(serverResponse);
+				} catch (Exception e) {
+					e.printStackTrace();
+					Response<Object> failedResponse = new Response<Object>(ResponseCode.Fail, operation, null);
 				}
-				
-				Response<Object> serverResponse = new Response<Object>(responseCode, operation, returnValue);
-				communicationProtocol.send(serverResponse);
 			}
 		});
 	}
