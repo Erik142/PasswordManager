@@ -94,7 +94,7 @@ public class MainViewController {
 	public ActionListener changePasswordButton() {
 		return new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-            	ChangePasswordDialog changePasswordDlg = new ChangePasswordDialog(this.frame);
+            	ChangePasswordDialog changePasswordDlg = new ChangePasswordDialog(parentView.getFrame());
                 changePasswordDlg.setVisible(true);
             
                 
