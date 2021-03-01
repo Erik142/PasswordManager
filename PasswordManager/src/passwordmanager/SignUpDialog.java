@@ -14,7 +14,8 @@ public class SignUpDialog extends JDialog{
     private JLabel lbPassword2;
     private JButton btnSignUp;
     private JButton btnCancel;
-    private boolean succeeded;
+
+    private SignUpController controller;
     
     public SignUpDialog(Frame parent) {
         //
@@ -45,7 +46,7 @@ public class SignUpDialog extends JDialog{
         cs.gridx = 1;
         cs.gridy = 1;
         cs.gridwidth = 2;
-        panel.add(pfPassword1, cs);
+        panel.add(getPfPassword1(), cs);
         panel.setBorder(new LineBorder(Color.GRAY));
         
         lbPassword2 = new JLabel("Repeat Password: ");
@@ -58,47 +59,14 @@ public class SignUpDialog extends JDialog{
         cs.gridx = 2;
         cs.gridy = 2;
         cs.gridwidth = 2;
-        panel.add(pfPassword2, cs);
+        panel.add(getPfPassword2(), cs);
         panel.setBorder(new LineBorder(Color.GRAY));
  
         btnSignUp = new JButton("Sign Up");
  
-        btnSignUp.addActionListener(new ActionListener() {
- 
-            public void actionPerformed(ActionEvent e) {
-            	if (comparePassword() && checkEmpty()) {
-            		
-                	JOptionPane.showMessageDialog(SignUpDialog.this,
-                            "Success",
-                            "Sign Up",
-                            JOptionPane.INFORMATION_MESSAGE);
-                	succeeded = true;
-                	dispose();
-            		
-                }
-                else {
-                	
-                    JOptionPane.showMessageDialog(SignUpDialog.this,
-                            "Passwords don't match or password field is empty",
-                            "Sign Up",
-                            JOptionPane.ERROR_MESSAGE);
-                    // reset username and password
-                    pfPassword1.setText("");
-                    pfPassword2.setText("");
-                    succeeded = false;
-                	
-                	
-                }
-                
-            }
-        });
+        btnSignUp.addActionListener(controller.signUpButton());
         btnCancel = new JButton("Cancel");
-        btnCancel.addActionListener(new ActionListener() {
- 
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
+        btnCancel.addActionListener(controller.cancelButton());
         JPanel bp = new JPanel();
         bp.add(btnSignUp);
         bp.add(btnCancel);
@@ -111,27 +79,14 @@ public class SignUpDialog extends JDialog{
         setLocationRelativeTo(parent);
     }
     
-    public boolean isSucceeded() {
-        return succeeded;
-    }
-    
-    public boolean comparePassword() {
-    	if(new String(pfPassword1.getPassword()).trim().equals(new String(pfPassword2.getPassword()).trim()) && new String(pfPassword1.getPassword()).trim() != "") {
-    		return true;
-    		
-    		
-    	}else {	return false;}
-    	
-    }
-    
-    public boolean checkEmpty() {
-    	if(new String(pfPassword1.getPassword()).length()==0){
-    		return false;
-    	}
-    	
-		return true;
-    	
-    }
+
+	public JPasswordField getPfPassword1() {
+		return pfPassword1;
+	}
+
+	public JPasswordField getPfPassword2() {
+		return pfPassword2;
+	}
     
 
 }
