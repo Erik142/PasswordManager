@@ -17,12 +17,19 @@ public class PasswordServerDebug {
 	private void run(Configuration config) {
 		System.out.println("Starting new server...");
 		
-		PasswordServer server = new PasswordServer(config);
+		PasswordServer server;
 		
-		Thread serverThread = new Thread(server);
-		serverThread.start();
-		
-		System.out.println("Server started!");
+		try {
+			server = new PasswordServer(config);
+			
+			Thread serverThread = new Thread(server);
+			serverThread.start();
+			
+			System.out.println("Server started!");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
 		
 		System.out.println("Server test!!");
 		
