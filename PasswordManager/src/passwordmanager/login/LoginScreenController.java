@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-import passwordmanager.CreateFrame;
+import passwordmanager.MainView;
 import passwordmanager.LoginDialog;
 import passwordmanager.Observer;
 import passwordmanager.PasswordClient;
@@ -44,7 +44,12 @@ public class LoginScreenController implements ActionListener {
                 // if Login is successful then send the user to the main page where they can see their stuff
                 if(loginDlg.isSucceeded()) {
                 	parentView.frame.dispose();
-                	CreateFrame.createFrame();
+                	try {
+						new MainView().createFrame();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
                 }
             }
         };
@@ -56,9 +61,6 @@ public class LoginScreenController implements ActionListener {
                 SignUpDialog signUpDlg = new SignUpDialog(parentView.frame);
                 signUpDlg.setVisible(true);
                 // if Sign up is successful then save and send the information forward to the database
-                if(signUpDlg.isSucceeded()){
-                    // TODO - send information to databse
-                }
             }
         };
 	}
