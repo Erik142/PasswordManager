@@ -1,0 +1,5 @@
+{
+    "appMode": "Client",
+    "serverIp": "passwordserver.wahlberger.dev",
+    "serverPort": 50000
+}
