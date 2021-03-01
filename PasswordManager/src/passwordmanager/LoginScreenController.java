@@ -23,7 +23,7 @@ public class LoginScreenController {
                 // if Login is successful then send the user to the main page where they can see their stuff
                 if(loginDlg.isSucceeded()) {
                 	parentView.frame.dispose();
-                	CreateFrame.createFrame();
+                	MainView.createFrame();
                 }
                 
             }
