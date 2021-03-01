@@ -107,7 +107,7 @@ public class Program {
 		case Client:
 			System.out.println("Starting new client...");
 			try {
-				new LoginScreen(config);
+				new ClientWindow(config);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return;
