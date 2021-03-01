@@ -19,6 +19,7 @@ public class ForgotPasswordDialog extends JDialog implements Observer<ForgotPass
     private Frame parent;
     
     public ForgotPasswordDialog(Frame parent, ForgotPasswordModel model) {
+    	super(parent);
     	this.parent = parent;
     	
     	JPanel panel = new JPanel(new GridBagLayout());
@@ -55,6 +56,7 @@ public class ForgotPasswordDialog extends JDialog implements Observer<ForgotPass
         setLocationRelativeTo(parent);
         
         this.setVisible(model.getIsViewVisible());
+        this.setModal(model.getIsViewVisible());
     }
     
     public void registerListener(ForgotPasswordDialogController controller, ForgotPasswordWindowController windowController) {
@@ -84,5 +86,6 @@ public class ForgotPasswordDialog extends JDialog implements Observer<ForgotPass
 		tfEmail.setText(observable.getEmail());
 		
 		this.setVisible(observable.getIsViewVisible());
+		this.setModal(observable.getIsViewVisible());
 	}
 }
