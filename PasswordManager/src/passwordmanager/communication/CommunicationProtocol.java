@@ -10,6 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
+import java.net.SocketException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
@@ -377,8 +378,16 @@ public class CommunicationProtocol implements Serializable {
 				
 				return response;
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				if (e instanceof SocketException) {
+					try {
+						System.out.println("SocketException! CommunicationProtocol receive: Closing socket.");
+						socket.close();
+						System.out.println("Socket closed!");
+					} catch (IOException e1) {
+						System.out.println("Error while trying to close socket!");
+						e1.printStackTrace();
+					}
+				}
 			}
 		}
 		
@@ -451,8 +460,19 @@ public class CommunicationProtocol implements Serializable {
 						}
 					}
 				} catch (Exception e) {
-					System.out.println("Exception while retrieving query on server");
-					e.printStackTrace();
+					if (e instanceof SocketException) {
+						try {
+							System.out.println("SocketException! CommunicationProtocol receive: Closing socket.");
+							socket.close();
+							System.out.println("Socket closed!");
+						} catch (IOException e1) {
+							System.out.println("Error while trying to close socket!");
+							e1.printStackTrace();
+						}
+					} else {
+						System.out.println("Exception while retrieving query on server");
+						e.printStackTrace();
+					}
 				}
 			}
 		});
