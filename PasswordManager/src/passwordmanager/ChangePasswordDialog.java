@@ -20,7 +20,10 @@ public class ChangePasswordDialog  extends JDialog{
     private JButton btnCancel;
     private ChangePasswordDialogController controller;
     
+    private final Frame parent;
+    
     public ChangePasswordDialog(Frame parent) {
+    	this.parent = parent;
     	controller = new  ChangePasswordDialogController(this);
     	showChangePasswordDialog();
     }

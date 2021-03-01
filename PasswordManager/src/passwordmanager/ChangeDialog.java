@@ -21,12 +21,15 @@ public class ChangeDialog extends JDialog{
     private JButton cancelButton;
     private ChangeDialogController controller;
     
+    private Frame parent;
+    
     public ChangeDialog(Frame parent, Credential c) {
+    	this.parent = parent;
     	controller = new  ChangeDialogController(this);
-    	showChangeDialog();
+    	showChangeDialog(c);
     }
         
-    public void showChangeDialog() {
+    public void showChangeDialog(Credential c) {
     	JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints cs = new GridBagConstraints();
  

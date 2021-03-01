@@ -20,8 +20,13 @@ public class LoginDialog extends JDialog {
     public boolean succeeded;
     private LoginDialogController controller;
     
+    private final Frame parent;
+    
     public LoginDialog(Frame parent) {
     	super(parent, "Login", true);
+    	
+    	this.parent = parent;
+    	
     	controller = new LoginDialogController(this);
     	
     	showLoginDialog();
