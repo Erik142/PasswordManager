@@ -7,7 +7,11 @@ import javax.swing.border.*;
 
 public class ChangeDialog extends JDialog{
 	
-    private JLabel lbWebsite;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JLabel lbWebsite;
     private JLabel lbEmail;
     private JLabel lbPassword;
 	private JTextField tfWebsite;
@@ -15,9 +19,18 @@ public class ChangeDialog extends JDialog{
     private JPasswordField pfPassword;
     private JButton changeButton;
     private JButton cancelButton;
+    private ChangeDialogController controller;
+    
+    private Frame parent;
     
     public ChangeDialog(Frame parent, Credential c) {
-        JPanel panel = new JPanel(new GridBagLayout());
+    	this.parent = parent;
+    	controller = new  ChangeDialogController(this);
+    	showChangeDialog(c);
+    }
+        
+    public void showChangeDialog(Credential c) {
+    	JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints cs = new GridBagConstraints();
  
         cs.fill = GridBagConstraints.HORIZONTAL;
@@ -66,32 +79,13 @@ public class ChangeDialog extends JDialog{
         panel.setBorder(new LineBorder(Color.GRAY));
  
         changeButton = new JButton("Change");
-    changeButton.addActionListener(new ActionListener() {
+    changeButton.addActionListener(controller.pleaseFill()); 
     	 
-        public void actionPerformed(ActionEvent e) {
-        	if (getWebsite().isBlank() || getEmail().isBlank() || getPassword().isBlank()){
-        		
-            	JOptionPane.showMessageDialog(ChangeDialog.this,
-                        "Please fill all the credentials",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-        		
-            }
-            else{
-            	//TODO-Send the credentials forward and update.
-            	dispose();
-            	
-            }
-            
-        }
-    });
+        
     cancelButton = new JButton("Cancel");
-    cancelButton.addActionListener(new ActionListener() {
+    cancelButton.addActionListener(controller.cancelB()); 
 
-        public void actionPerformed(ActionEvent e) {
-            dispose();
-        }
-    });
+        
     JPanel bp = new JPanel();
     bp.add(changeButton);
     bp.add(cancelButton);
@@ -117,4 +111,5 @@ public class ChangeDialog extends JDialog{
     }
 	
 }
+    
 

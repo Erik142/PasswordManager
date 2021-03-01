@@ -6,6 +6,10 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 public class ChangePasswordDialog  extends JDialog{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JLabel lbOld;
 	private JLabel lbNew;
 	private JLabel lbConfirm;
@@ -14,8 +18,17 @@ public class ChangePasswordDialog  extends JDialog{
 	private JPasswordField pfPasswordConfirm;
     private JButton btnChange;
     private JButton btnCancel;
+    private ChangePasswordDialogController controller;
+    
+    private final Frame parent;
     
     public ChangePasswordDialog(Frame parent) {
+    	this.parent = parent;
+    	controller = new  ChangePasswordDialogController(this);
+    	showChangePasswordDialog();
+    }
+    
+    public void showChangePasswordDialog() {
     	JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints cs = new GridBagConstraints();
  
@@ -62,40 +75,10 @@ public class ChangePasswordDialog  extends JDialog{
         
         btnChange = new JButton("Change my password");
         
-        
-        
-        btnChange.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-            	if (getPasswordOld().isBlank() || getPasswordNew().isBlank() || getPasswordConfirm().isBlank()){
-            		
-                	JOptionPane.showMessageDialog(ChangePasswordDialog.this,
-                            "Please fill all the the Password fields",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
-                }else if(!(getPasswordNew().equals(getPasswordConfirm()))){
-                	
-                	JOptionPane.showMessageDialog(ChangePasswordDialog.this,
-                            "Your repeated password is wrong",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
-                	
-                }
-                /*  TODO - check the written old password with the actual password save in the database
-                 *  else if(getPasswordOld(.equals()))) {
-                	
-                }
-                */
-        	}
+        btnChange.addActionListener(controller.errorChangingPassword()); 
         	
-        });
-        
         btnCancel = new JButton("Cancel");
-        btnCancel.addActionListener(new ActionListener() {
- 
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
+        btnCancel.addActionListener(controller.cancelB());
         
         JPanel bp = new JPanel();
         bp.add(btnChange);

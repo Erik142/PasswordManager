@@ -6,6 +6,7 @@ import java.util.Random;
 public class PasswordGenerator {        
     public static String generatePassword (int length, boolean lower,boolean upper, boolean num, boolean symb) {
         boolean pinCode=false;
+     
     if(lower==false &&upper==false&&num==false&&symb==false) //if nothing is picked, then everything will be included. 
     {
         lower=true; upper=true; num=true; symb=true;
@@ -18,24 +19,23 @@ public class PasswordGenerator {
     if (length < 6 && pinCode==false) {
         length = 6;
     }
-
+    
     String lowercase = "abcdefghijklmnopqrstuvwxyz";
     if(lower==false){lowercase="";}
-    String uppercase = "ABCDEFGJKLMNPRSTUVWXYZ";
+    String uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     if(upper==false){uppercase="";}
     String numbers = "0123456789";
     if(num==false){numbers="";}
     String symbols = "^$?!@#%&_-.,;:*)(][}{<>|";
     if(symb==false) {symbols="";}
     String allStr = lowercase+uppercase+numbers+symbols; //printing every type of character
-    System.out.println(allStr);
-
+    
     Random r = new SecureRandom(); //making it (more) secure. 
 
     StringBuilder pw = new StringBuilder();
 
     for (int i= 0; i < length; i++) {
-    int k = r.nextInt(allStr.length()-1);   // random number between 0 and set.length()-1 inklusive
+    int k = r.nextInt(allStr.length()-1);   // random number between 0 and set.length()-1 
     pw.append(allStr.charAt(k));
     }
     String password = pw.toString();
