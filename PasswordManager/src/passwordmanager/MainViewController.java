@@ -138,7 +138,7 @@ public class MainViewController {
 	}
 	
 	public Object[][] getData(UserAccount acc){
-		Object[][] data;
+		Object[][] data=null;
 		//TODO Retrieve passwords for account acc from database
 		
 		return data;

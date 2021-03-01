@@ -24,7 +24,7 @@ public class MainView {
 		 this.getFrame().setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		 
 		 this.controller=new MainViewController(this, this.client);
-		 this.data=controller.getData(this.client.account);
+		 //this.data=controller.getData(this.client.account);
 		
 		 createFrame();
 	}
@@ -44,7 +44,7 @@ public class MainView {
                 }
 
                 
-                 this.data = this.controller.getData(this.client.account);
+                 //this.data = this.controller.getData(this.client.account);
                 
                 
                 
