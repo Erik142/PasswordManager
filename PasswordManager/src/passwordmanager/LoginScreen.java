@@ -21,7 +21,7 @@ public class LoginScreen {
 		showLoginScreen();
 	}
 	
-	private void showLoginScreen() {
+	private void showLoginScreen() throws IOException {
 	        final JButton btnLogin = new JButton("Login");
 	        final JButton btnSignUp = new JButton("Sign Up");
 	        final JButton btnForgot = new JButton("Forgot my password");

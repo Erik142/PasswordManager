@@ -15,7 +15,7 @@ public class LoginScreenController {
 		this.client = new PasswordClient(config);
 	}
 	
-	public ActionListener performLogin() {
+	public ActionListener performLogin() throws IOException {
 		return new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 LoginDialog loginDlg = new LoginDialog(parentView.frame);
@@ -23,7 +23,11 @@ public class LoginScreenController {
                 // if Login is successful then send the user to the main page where they can see their stuff
                 if(loginDlg.isSucceeded()) {
                 	parentView.frame.dispose();
-                	CreateFrame.createFrame();
+                	try {
+						MainView mainView= new MainView();
+					} catch (IOException e1) {
+						
+					}
                 }
                 
             }
