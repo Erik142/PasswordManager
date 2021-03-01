@@ -2,6 +2,7 @@ package passwordmanager;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
@@ -9,28 +10,30 @@ import javax.swing.text.DefaultCaret;
 
 public class MainView {
 	
-	private static JTable table = null;
+	private JTable table = null;
 	private final String[] columns = {"Website", "Email", "Password" };
 	private Object[][] data;
 	
 	private PasswordClient client;
 	
-	private final JFrame frame;
+	private JFrame frame;
 	private MainViewController controller;
 	
+	public MainView() throws IOException {
+		 this.setFrame(new JFrame("Password Manager"));
+		 this.getFrame().setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		 
+		 this.controller=new MainViewController(this, this.client);
+		 this.data=controller.getData(this.client.account);
+		
+		 createFrame();
+	}
 	
-	
-	public static void createFrame()
+	public void createFrame()
 	
     {
-        EventQueue.invokeLater(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                this.frame = new JFrame("Password Manager");
-                this.frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                controller=new MainViewController(this, this.client);
+       
+                
 
                 
                 try 
@@ -41,7 +44,7 @@ public class MainView {
                 }
 
                 
-                 this.data = controller.getData(this.client.account);
+                 this.data = this.controller.getData(this.client.account);
                 
                 
                 
@@ -54,9 +57,9 @@ public class MainView {
                 	        return false;
                 	   }
                 	};
-                JScrollPane scrollPane = new JScrollPane(this.table);
-                this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-                this.table.setFillsViewportHeight(true); 
+                JScrollPane scrollPane = new JScrollPane(this.getTable());
+                this.getTable().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                this.getTable().setFillsViewportHeight(true); 
                 
                 
                 JPanel inputpanel = new JPanel();
@@ -93,16 +96,37 @@ public class MainView {
                 accountpanel.add(signOutButton);
                 accountpanel.add(deleteAccountButton);
 
-                this.frame.getContentPane().add(scrollPane,BorderLayout.CENTER);
-                this.frame.getContentPane().add(BorderLayout.NORTH, inputpanel);
-                this.frame.getContentPane().add(BorderLayout.SOUTH, accountpanel);
-                this.frame.pack();
-                this.frame.setLocationByPlatform(true);
-                this.frame.setVisible(true);
-                this.frame.setResizable(true);
+                this.getFrame().getContentPane().add(scrollPane,BorderLayout.CENTER);
+                this.getFrame().getContentPane().add(BorderLayout.NORTH, inputpanel);
+                this.getFrame().getContentPane().add(BorderLayout.SOUTH, accountpanel);
+                this.getFrame().pack();
+                this.getFrame().setLocationByPlatform(true);
+                this.getFrame().setVisible(true);
+                this.getFrame().setResizable(true);
                 
             }
-       });
+
+	/**
+	 * @return the table
+	 */
+	public JTable getTable() {
+		return table;
+	}
+
+	/**
+	 * @return the frame
+	 */
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	/**
+	 * @param frame the frame to set
+	 */
+	public void setFrame(JFrame frame) {
+		this.frame = frame;
+	}
+       
     }
 	
-}
+

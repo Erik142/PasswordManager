@@ -1,5 +1,12 @@
 package passwordmanager;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+
 import passwordmanager.config.Configuration;
 
 public class MainViewController {
@@ -14,7 +21,7 @@ public class MainViewController {
 	public ActionListener addButton() {
 		return new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-            	AddDialog addDlg = new AddDialog(this.frame);
+            	AddDialog addDlg = new AddDialog(parentView.getFrame());
                 addDlg.setVisible(true);
             
                 
@@ -25,7 +32,7 @@ public class MainViewController {
 	public ActionListener changeButton() {
 		return new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-            	if(parentView.table.getSelectedRow()==-1) {
+            	if(parentView.getTable().getSelectedRow()==-1) {
             		JOptionPane.showMessageDialog(null,
                             "Please select a row",
                             "Error",
@@ -33,7 +40,7 @@ public class MainViewController {
             		return;
             		
             	}
-                ChangeDialog changeDlg = new ChangeDialog(this.frame, getCred(parentView.table));
+                ChangeDialog changeDlg = new ChangeDialog(parentView.getFrame(), getCred(parentView.getTable()));
                 changeDlg.setVisible(true);
 
             
@@ -44,7 +51,7 @@ public class MainViewController {
 	public ActionListener removeButton() {
 		return new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-            	if(parentView.table.getSelectedRow()==-1) {
+            	if(parentView.getTable().getSelectedRow()==-1) {
             		JOptionPane.showMessageDialog(null,
                             "Please select a row",
                             "Error",
@@ -53,7 +60,7 @@ public class MainViewController {
             		
             	}
             	int reply = JOptionPane.showConfirmDialog(null,
-                        "Are you sure you want to delete the password for " +parentView.table.getValueAt(parentView.table.getSelectedRow(),0).toString() + "?" ,
+                        "Are you sure you want to delete the password for " +parentView.getTable().getValueAt(parentView.getTable().getSelectedRow(),0).toString() + "?" ,
                         "Remove",
                         JOptionPane.YES_NO_OPTION);
             	if (reply == JOptionPane.YES_OPTION) {
@@ -110,6 +117,8 @@ public class MainViewController {
             
                 
             }
+
+			
         };
 	}
 	
