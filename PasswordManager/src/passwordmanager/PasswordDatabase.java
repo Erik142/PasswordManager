@@ -20,20 +20,16 @@ public class PasswordDatabase {
 	Connection c =null;
 	Statement s=null;
 	
-	public PasswordDatabase(Configuration config){
+	public PasswordDatabase(Configuration config) throws Exception {
 		// Try to connect to Database
-		try {
-			String url = "jdbc:postgresql://" + config.dbHostName + ":" + config.dbPort + "/passwordmanager";
-			
-			Properties props = new Properties();
-			props.setProperty("user",config.dbUserName);
-			props.setProperty("password",config.dbPassword);
-			
-			this.c = DriverManager.getConnection(url, props);
-			System.out.println("Database connected!");
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		String url = "jdbc:postgresql://" + config.dbHostName + ":" + config.dbPort + "/passwordmanager";
+		
+		Properties props = new Properties();
+		props.setProperty("user",config.dbUserName);
+		props.setProperty("password",config.dbPassword);
+		
+		this.c = DriverManager.getConnection(url, props);
+		System.out.println("Database connected!");
 	}
 	
 

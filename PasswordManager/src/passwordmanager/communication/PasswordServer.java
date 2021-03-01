@@ -35,7 +35,7 @@ public class PasswordServer implements Runnable {
 	private PasswordDatabase database;
 	private ServerSocket serverSocket;
 	
-	public PasswordServer(Configuration config) {
+	public PasswordServer(Configuration config) throws Exception {
 		this.config = config;
 		this.database = new PasswordDatabase(config);
 	}

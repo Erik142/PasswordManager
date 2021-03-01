@@ -71,12 +71,17 @@ public class Program {
 		case Server:
 			System.out.println("Starting new server...");
 			
+			try {
 			PasswordServer server = new PasswordServer(config);
 			
 			Thread serverThread = new Thread(server);
 			serverThread.start();
 			
 			System.out.println("Server started!");
+			} catch (Exception e) {
+				System.out.println("An error occured when starting the server...");
+				e.printStackTrace();
+			}
 			break;
 		case ServerTest:
 			new PasswordServerDebug(config);
@@ -115,5 +120,7 @@ public class Program {
 		default:
 			System.out.println("" + config.appMode.toString() + " is not a a valid app mode, exiting...");
 		}
+		
+		System.out.println("Exiting...");
 	}
 }
