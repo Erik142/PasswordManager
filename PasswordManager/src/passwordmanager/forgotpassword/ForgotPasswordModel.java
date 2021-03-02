@@ -6,6 +6,7 @@ import java.util.List;
 import passwordmanager.Observable;
 import passwordmanager.Observer;
 import passwordmanager.PasswordClient;
+import passwordmanager.util.EmailUtil;
 import passwordmanager.util.StringExtensions;
 
 public class ForgotPasswordModel implements Observable<ForgotPasswordModel> {
@@ -40,35 +41,13 @@ public class ForgotPasswordModel implements Observable<ForgotPasswordModel> {
 		return isViewVisible;
 	}
 	
-	private boolean isValidEmail(String email) {
-		boolean containsDomain = email.contains("@") && (email.split("@").length >= 2);
-		
-		if (!containsDomain) {
-			return false;
-		}
-		
-		String domain = email.split("@")[1];
-		
-		boolean containsDot = domain.contains(".");
-		
-		if (!containsDot) {
-			return false;
-		}
-		
-		boolean lastCharacterIsDot = domain.lastIndexOf(".") == (domain.length() - 1);
-		boolean firstCharacterIsDot = domain.indexOf(".") == 0;
-		boolean domainContainsAt = domain.contains("@");
-		
-		return !lastCharacterIsDot && !firstCharacterIsDot && !domainContainsAt;
-	}
-	
 	public void sendEmail(String email) {
 		String dialogMessage = "";
 		
 		if (StringExtensions.isNullOrEmpty(email)) {
 			dialogMessage = "E-mail field cannot be empty!";
 		}
-		else if (!isValidEmail(email)) {
+		else if (!EmailUtil.isValidEmail(email)) {
 			dialogMessage = "The value is not a valid e-mail address.";
 		}
 		else {
