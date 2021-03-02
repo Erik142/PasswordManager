@@ -59,8 +59,7 @@ public class LoginDialogModel implements Observable<LoginDialogModel> {
 		if (isValidEmail && !isPasswordEmpty) {
 			UserAccount account = client.getUserAccount(email);
 			
-			if (account != null) {
-				//dialogMessage = "Hi " + email + "! You have successfully logged in.";
+			if (account != null && account.getPassword().equals(password)) {
 				isLoggedIn = true;
 			}
 			else {
