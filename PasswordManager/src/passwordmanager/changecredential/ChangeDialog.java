@@ -1,11 +1,15 @@
-package passwordmanager;
+package passwordmanager.changecredential;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-public class ChangeDialog extends JDialog{
+import passwordmanager.Credential;
+import passwordmanager.Observer;
+import passwordmanager.util.StringExtensions;
+
+public class ChangeDialog extends JDialog implements Observer<ManipulateCredentialModel> {
 	
     /**
 	 * 
@@ -19,17 +23,15 @@ public class ChangeDialog extends JDialog{
     private JPasswordField pfPassword;
     private JButton changeButton;
     private JButton cancelButton;
-    private ChangeDialogController controller;
     
     private Frame parent;
     
-    public ChangeDialog(Frame parent, Credential c) {
+    public ChangeDialog(Frame parent) {
     	this.parent = parent;
-    	controller = new  ChangeDialogController(this);
-    	showChangeDialog(c);
+    	showChangeDialog();
     }
         
-    public void showChangeDialog(Credential c) {
+    public void showChangeDialog() {
     	JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints cs = new GridBagConstraints();
  
@@ -49,7 +51,6 @@ public class ChangeDialog extends JDialog{
         panel.add(lbPassword, cs);
  
         pfPassword = new JPasswordField(20);
-        pfPassword.setText(c.getPassword());
         cs.gridx = 1;
         cs.gridy = 1;
         cs.gridwidth = 2;
@@ -63,7 +64,6 @@ public class ChangeDialog extends JDialog{
         panel.add(lbEmail, cs);
         
         tfWebsite = new JTextField(20);
-        tfWebsite.setText(c.getURL());
         cs.gridx = 1;
         cs.gridy = 0;
         cs.gridwidth = 2;
@@ -71,7 +71,6 @@ public class ChangeDialog extends JDialog{
         panel.setBorder(new LineBorder(Color.GRAY));
  
         tfEmail = new JTextField(20);
-        tfEmail.setText(c.getUsername());
         cs.gridx = 2;
         cs.gridy = 2;
         cs.gridwidth = 2;
@@ -79,24 +78,21 @@ public class ChangeDialog extends JDialog{
         panel.setBorder(new LineBorder(Color.GRAY));
  
         changeButton = new JButton("Change");
-    changeButton.addActionListener(controller.pleaseFill()); 
-    	 
-        
-    cancelButton = new JButton("Cancel");
-    cancelButton.addActionListener(controller.cancelB()); 
-
-        
-    JPanel bp = new JPanel();
-    bp.add(changeButton);
-    bp.add(cancelButton);
-
-    getContentPane().add(panel, BorderLayout.CENTER);
-    getContentPane().add(bp, BorderLayout.PAGE_END);
-
-    pack();
-    setResizable(false);
-    setLocationRelativeTo(parent);
-}
+	    cancelButton = new JButton("Cancel");
+	
+	        
+	    JPanel bp = new JPanel();
+	    bp.add(changeButton);
+	    bp.add(cancelButton);
+	
+	    getContentPane().add(panel, BorderLayout.CENTER);
+	    getContentPane().add(bp, BorderLayout.PAGE_END);
+	
+	    pack();
+	    setResizable(false);
+	    setLocationRelativeTo(parent);
+	    setVisible(false);
+	}
 
     public String getWebsite() {
         return tfWebsite.getText().trim();
@@ -105,10 +101,37 @@ public class ChangeDialog extends JDialog{
         return tfEmail.getText().trim();
     }
 
-    
     public String getPassword() {
         return new String(pfPassword.getPassword());
     }
+
+    public void registerListener(ChangeCredentialController controller, ChangeCredentialComponentListener componentListener) {
+    	changeButton.setActionCommand(controller.CHANGE_COMMAND);
+    	changeButton.addActionListener(controller);
+    	cancelButton.setActionCommand(controller.CANCEL_COMMAND);
+    	cancelButton.addActionListener(controller);
+    	this.addComponentListener(componentListener);
+    }
+    
+	@Override
+	public void update(ManipulateCredentialModel observable) {
+		String dialogMessage = observable.getDialogMessage();
+		int dialogType = observable.getIsDialogError() ? JOptionPane.ERROR_MESSAGE : JOptionPane.INFORMATION_MESSAGE;
+		
+		if (!StringExtensions.isNullOrEmpty(dialogMessage)) {
+			JOptionPane.showMessageDialog(this,
+                    dialogMessage,
+                    "Change credential",
+                    dialogType);
+		}
+		
+		setModal(observable.getChangeViewVisibilityStatus());
+		setVisible(observable.getChangeViewVisibilityStatus());
+		
+		this.tfWebsite.setText(observable.getUrl());
+		this.tfEmail.setText(observable.getUserName());
+		this.pfPassword.setText(observable.getPassword());
+	}
 	
 }
     
