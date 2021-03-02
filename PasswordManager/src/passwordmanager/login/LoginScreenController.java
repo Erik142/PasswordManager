@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-import passwordmanager.LoginDialog;
 import passwordmanager.PasswordClient;
 import passwordmanager.forgotpassword.ForgotPasswordDialog;
 import passwordmanager.forgotpassword.ForgotPasswordDialogController;

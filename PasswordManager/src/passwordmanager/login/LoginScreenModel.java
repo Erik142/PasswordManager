@@ -1,25 +1,50 @@
 package passwordmanager.login;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 import passwordmanager.Observable;
 import passwordmanager.Observer;
-import passwordmanager.PasswordClient;
 
-public class LoginScreenModel implements Observable<LoginScreenModel> {
-	private final PasswordClient client;
+public class LoginScreenModel implements Observable<LoginScreenModel>, Observer<LoginDialogModel> {
+	private boolean isViewVisible = false;
 	
-	public LoginScreenModel(PasswordClient client) {
-		this.client = client;
+	private final Collection<Observer<LoginScreenModel>> observers;
+	
+	public LoginScreenModel() {
+		this.observers = new HashSet<Observer<LoginScreenModel>>();
+	}
+	
+	public boolean getViewVisibility() {
+		return this.isViewVisible;
+	}
+	
+	public void setViewVisibility(boolean isVisible) {
+		this.isViewVisible = isVisible;
+		
+		updateObservers();
 	}
 
+	private void updateObservers() {
+		for (Observer<LoginScreenModel> observer : observers) {
+			observer.update(this);
+		}
+	}
+	
 	@Override
 	public void addObserver(Observer<LoginScreenModel> observer) {
-		// TODO Auto-generated method stub
-		
+		observers.add(observer);
 	}
 
 	@Override
 	public void removeObserver(Observer<LoginScreenModel> observer) {
-		// TODO Auto-generated method stub
-		
+		observers.remove(observer);
+	}
+
+	@Override
+	public void update(LoginDialogModel observable) {
+		if (observable.getLoggedInStatus()) {
+			setViewVisibility(false);
+		}
 	}
 }

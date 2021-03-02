@@ -1,11 +1,14 @@
-package passwordmanager;
+package passwordmanager.login;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-public class LoginDialog extends JDialog {
+import passwordmanager.Observer;
+import passwordmanager.util.StringExtensions;
+
+public class LoginDialog extends JDialog implements Observer<LoginDialogModel> {
 	 
     /**
 	 * 
@@ -18,7 +21,6 @@ public class LoginDialog extends JDialog {
     private JButton btnLogin;
     private JButton btnCancel;
     public boolean succeeded;
-    private LoginDialogController controller;
     
     private final Frame parent;
     
@@ -26,8 +28,6 @@ public class LoginDialog extends JDialog {
     	super(parent, "Login", true);
     	
     	this.parent = parent;
-    	
-    	controller = new LoginDialogController(this);
     	
     	showLoginDialog();
     }
@@ -66,10 +66,7 @@ public class LoginDialog extends JDialog {
         panel.setBorder(new LineBorder(Color.GRAY));
  
         btnLogin = new JButton("Login");
- 
-        btnLogin.addActionListener(controller.afterLoginTry());
         btnCancel = new JButton("Cancel");
-        btnCancel.addActionListener(controller.cancelB());
  
         JPanel bp = new JPanel();
         bp.add(btnLogin);
@@ -81,6 +78,13 @@ public class LoginDialog extends JDialog {
         pack();
         setResizable(false);
         setLocationRelativeTo(parent);
+    }
+    
+    public void registerListener(LoginDialogController controller) {
+    	btnLogin.setActionCommand(controller.LOGIN_COMMAND);
+    	btnLogin.addActionListener(controller);
+    	btnCancel.setActionCommand(controller.CANCEL_COMMAND);
+    	btnCancel.addActionListener(controller);
     }
  
     public String getUsername() {
@@ -94,4 +98,25 @@ public class LoginDialog extends JDialog {
     public boolean isSucceeded() {
         return succeeded;
     }
+
+	@Override
+	public void update(LoginDialogModel observable) {
+		this.tfUsername.setText(observable.getEmail());
+		this.pfPassword.setText(observable.getPassword());
+		
+		String dialogMessage = observable.getDialogMessage();
+		
+		if (!StringExtensions.isNullOrEmpty(dialogMessage)) {
+			int dialogType = observable.getLoggedInStatus() ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE;
+			
+			JOptionPane.showMessageDialog(this,
+                    dialogMessage,
+                    "Login",
+                    dialogType);
+		}
+		
+		this.setModal(observable.getViewVisibility());
+		this.setVisible(observable.getViewVisibility());
+		this.succeeded = observable.getLoggedInStatus();
+	}
 }

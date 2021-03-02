@@ -31,6 +31,8 @@ public class LoginScreen implements Observer<LoginScreenModel> {
         frame.getContentPane().add(btnSignUp);
         frame.getContentPane().add(btnForgot);
         frame.setVisible(true);
+        
+        centerFrame();
 	}
 	
 	public Frame getFrame() {
@@ -43,10 +45,17 @@ public class LoginScreen implements Observer<LoginScreenModel> {
         btnForgot.addActionListener(forgotPasswordController);
         btnSignUp.addActionListener(signupController); 
 	}
+	
+	private void centerFrame() {
+		
+	}
 
 	@Override
 	public void update(LoginScreenModel observable) {
-		// TODO Auto-generated method stub
+		frame.setVisible(observable.getViewVisibility());
 		
+		if (!observable.getViewVisibility()) {
+			frame.dispose();
+		}
 	}
 }
