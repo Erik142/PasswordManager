@@ -29,4 +29,26 @@ public class EmailUtil {
 	      e.printStackTrace();
 	    }
 	}
+	
+	public static boolean isValidEmail(String email) {
+		boolean containsDomain = email.contains("@") && (email.split("@").length >= 2);
+		
+		if (!containsDomain) {
+			return false;
+		}
+		
+		String domain = email.split("@")[1];
+		
+		boolean containsDot = domain.contains(".");
+		
+		if (!containsDot) {
+			return false;
+		}
+		
+		boolean lastCharacterIsDot = domain.lastIndexOf(".") == (domain.length() - 1);
+		boolean firstCharacterIsDot = domain.indexOf(".") == 0;
+		boolean domainContainsAt = domain.contains("@");
+		
+		return !lastCharacterIsDot && !firstCharacterIsDot && !domainContainsAt;
+	}
 }
