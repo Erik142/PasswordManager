@@ -295,7 +295,6 @@ public class PasswordServer implements Runnable {
 	
 	private Credential[] getCredentials(UserAccount account) throws SQLException {
 		List<Credential> credentials = database.listAllCredentials(account);
-		credentials.add(new Credential("", "", "", ""));
 		Credential[] returnValue = credentials.toArray(new Credential[credentials.size()]);
 		
 		return returnValue;
