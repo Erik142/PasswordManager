@@ -94,7 +94,7 @@ public boolean verifyUser (UserAccount account) {
 	} 
 	
 	
-	public boolean StoreUserAccount (UserAccount account) {
+	public boolean addUserAccount (UserAccount account) {
 		Query<UserAccount> query = new Query<UserAccount>("", CommunicationOperation.AddUser, account);
 		Response<Boolean> response = protocol.sendAndReceive(query);
 		return response.getData();
@@ -117,6 +117,13 @@ public boolean verifyUser (UserAccount account) {
 		
 	}
 	
+	public UserAccount getUserAccount(String email) {
+		UserAccount account = new UserAccount(email, "");
+		Query<UserAccount> query = new Query<UserAccount>("", CommunicationOperation.GetUser, account);
+		Response<UserAccount> response = protocol.sendAndReceive(query);
+		
+		return response.getData();
+	}
 	
 	public boolean forgotPassword(String email) throws Exception {
 		Query<UserAccount> query = new Query<UserAccount>("", CommunicationOperation.ForgotPassword, new UserAccount(email, ""));
