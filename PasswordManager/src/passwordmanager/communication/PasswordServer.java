@@ -237,6 +237,13 @@ public class PasswordServer implements Runnable {
 	
 	private boolean forgotPassword(UserAccount account) {
 		try {
+			UserAccount dbAccount = database.getAccount(account.getEmail());
+			
+			if (dbAccount == null) {
+				System.out.println("There is no user with the e-mail " + "'" + account.getEmail() + "' registered in the database!");
+				return false;
+			}
+			
 			database.insertResetRequest(account);
 			int requestId = database.getResetRequestId(account);
 			
