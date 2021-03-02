@@ -61,7 +61,7 @@ public class PasswordDatabase {
 	}
 	
 	public List<Credential> listAllCredentials(UserAccount acc) throws SQLException {
-		List<Credential> list=new ArrayList<>();
+		List<Credential> list=new ArrayList<Credential>();
 		
 		this.s=c.createStatement();
 		ResultSet rs=s.executeQuery("SELECT \"URL\", \"Username\", \"Password\" FROM public.\"Credentials\" WHERE \"User\"='"+acc.getEmail()+"'");
@@ -136,6 +136,7 @@ public class PasswordDatabase {
 	public int getResetRequestId(UserAccount account) throws SQLException {
 		this.s = c.createStatement();
 		ResultSet rs = s.executeQuery("SELECT \"id\" FROM public.\"ResetRequests\" where \"email\"='" + account.getEmail() + "'");
+		rs.next();
 		
 		return rs.getInt("id");
 	}
