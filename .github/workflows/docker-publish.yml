@@ -70,12 +70,12 @@ jobs:
       run: |
         docker image tag registry.docker.wahlberger.dev/passwordmanager_server:${{ steps.tag.outputs.tag }} registry.docker.wahlberger.dev/passwordmanager_server:latest
         docker image tag registry.docker.wahlberger.dev/passwordmanager_webui:${{ steps.tag.outputs.tag }} registry.docker.wahlberger.dev/passwordmanager_webui:latest
-        docker image tag registry.docker.wahlberger.dev/passwordmanager_postgres:${{ steps.tag.outputs.tag }} registry.docker.wahlberger.dev/passwordmanager_postgres:latest
+       # docker image tag registry.docker.wahlberger.dev/passwordmanager_postgres:${{ steps.tag.outputs.tag }} registry.docker.wahlberger.dev/passwordmanager_postgres:latest
     - name: Push Docker images to registry
       run: |
         docker push registry.docker.wahlberger.dev/passwordmanager_server:${{ steps.tag.outputs.tag }}
         docker push registry.docker.wahlberger.dev/passwordmanager_server:latest
         docker push registry.docker.wahlberger.dev/passwordmanager_webui:${{ steps.tag.outputs.tag }}
         docker push registry.docker.wahlberger.dev/passwordmanager_webui:latest
-        docker push registry.docker.wahlberger.dev/passwordmanager_postgres:${{ steps.tag.outputs.tag }}
-        docker push registry.docker.wahlberger.dev/passwordmanager_postgres:latest
+       # docker push registry.docker.wahlberger.dev/passwordmanager_postgres:${{ steps.tag.outputs.tag }}
+       # docker push registry.docker.wahlberger.dev/passwordmanager_postgres:latest
