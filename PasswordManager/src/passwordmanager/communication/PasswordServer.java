@@ -175,6 +175,7 @@ public class PasswordServer implements Runnable {
 					case ForgotPassword:
 						result = forgotPassword(userAccount);
 						returnValue = result;
+						break;
 					default:
 						responseCode = ResponseCode.Fail;
 						break;
