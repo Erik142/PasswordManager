@@ -80,6 +80,7 @@ public class Program {
 			System.out.println("Server started!");
 			} catch (Exception e) {
 				System.out.println("An error occured when starting the server...");
+				System.out.println("Exiting...");
 				e.printStackTrace();
 			}
 			break;
@@ -107,9 +108,10 @@ public class Program {
 		case Client:
 			System.out.println("Starting new client...");
 			try {
-				new LoginScreen(config);
+				new ClientWindow(config);
 			} catch (Exception e) {
 				e.printStackTrace();
+				System.out.println("Exiting...");
 				return;
 			}
 			break;
@@ -120,7 +122,5 @@ public class Program {
 		default:
 			System.out.println("" + config.appMode.toString() + " is not a a valid app mode, exiting...");
 		}
-		
-		System.out.println("Exiting...");
 	}
 }

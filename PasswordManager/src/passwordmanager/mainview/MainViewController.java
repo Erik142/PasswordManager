@@ -1,4 +1,4 @@
-package passwordmanager;
+package passwordmanager.mainview;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,6 +7,12 @@ import java.io.IOException;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
+import passwordmanager.Credential;
+import passwordmanager.PasswordClient;
+import passwordmanager.UserAccount;
+import passwordmanager.addcredential.AddDialog;
+import passwordmanager.changecredential.ChangeDialog;
+import passwordmanager.changeuserpassword.ChangePasswordDialog;
 import passwordmanager.config.Configuration;
 
 public class MainViewController {
@@ -40,14 +46,13 @@ public class MainViewController {
             		return;
             		
             	}
-                ChangeDialog changeDlg = new ChangeDialog(parentView.getFrame(), getCred(parentView.getTable()));
-                changeDlg.setVisible(true);
-
-            
-                
+            	
+                //ChangeDialog changeDlg = new ChangeDialog(parentView.getFrame(), getCred(parentView.getTable()));
+                //changeDlg.setVisible(true);
             }
         };
 	}
+	
 	public ActionListener removeButton() {
 		return new ActionListener(){
             public void actionPerformed(ActionEvent e) {
@@ -68,8 +73,6 @@ public class MainViewController {
             	} else {
             		
             	} 
-        		
-                
             }
         };
 	}
@@ -139,17 +142,18 @@ public class MainViewController {
 	
 	public Object[][] getData(UserAccount acc){
 		Object[][] data=null;
-		//TODO Retrieve passwords for account acc from database
-		
+
 		Credential[] credentials = client.getCredentials(acc);
 		
-		data = new Object[credentials.length][3];
-		
-		for (int i = 0; i < credentials.length; i++) {
-			Credential credential = credentials[i];
+		if (credentials != null) {
+			data = new Object[credentials.length][3];
 			
-			Object[] credentialData = new Object[] { credential.getURL(), credential.getUsername(), credential.getPassword() };
-			data[i] = credentialData;
+			for (int i = 0; i < credentials.length; i++) {
+				Credential credential = credentials[i];
+				
+				Object[] credentialData = new Object[] { credential.getURL(), credential.getUsername(), credential.getPassword() };
+				data[i] = credentialData;
+			}
 		}
 		
 		return data;

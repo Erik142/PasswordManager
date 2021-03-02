@@ -1,11 +1,14 @@
-package passwordmanager;
+package passwordmanager.changeuserpassword;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-public class ChangePasswordDialog  extends JDialog{
+import passwordmanager.Observer;
+import passwordmanager.util.StringExtensions;
+
+public class ChangePasswordDialog  extends JDialog implements Observer<ChangeUserAccountModel> {
 	/**
 	 * 
 	 */
@@ -18,13 +21,11 @@ public class ChangePasswordDialog  extends JDialog{
 	private JPasswordField pfPasswordConfirm;
     private JButton btnChange;
     private JButton btnCancel;
-    private ChangePasswordDialogController controller;
     
     private final Frame parent;
     
     public ChangePasswordDialog(Frame parent) {
     	this.parent = parent;
-    	controller = new  ChangePasswordDialogController(this);
     	showChangePasswordDialog();
     }
     
@@ -74,11 +75,7 @@ public class ChangePasswordDialog  extends JDialog{
         panel.setBorder(new LineBorder(Color.GRAY));
         
         btnChange = new JButton("Change my password");
-        
-        btnChange.addActionListener(controller.errorChangingPassword()); 
-        	
         btnCancel = new JButton("Cancel");
-        btnCancel.addActionListener(controller.cancelB());
         
         JPanel bp = new JPanel();
         bp.add(btnChange);
@@ -90,6 +87,7 @@ public class ChangePasswordDialog  extends JDialog{
         pack();
         setResizable(false);
         setLocationRelativeTo(parent);
+        setVisible(false);
     }
     
     
@@ -105,4 +103,31 @@ public class ChangePasswordDialog  extends JDialog{
     public String getPasswordConfirm() {
         return new String(pfPasswordConfirm.getPassword()).trim();
     }
+
+    public void registerListener(ChangePasswordController controller) {
+    	this.btnChange.setActionCommand(controller.CHANGE_COMMAND);
+    	this.btnChange.addActionListener(controller);
+    	this.btnCancel.setActionCommand(controller.CANCEL_COMMAND);
+    	this.btnCancel.addActionListener(controller);
+    }
+    
+	@Override
+	public void update(ChangeUserAccountModel observable) {
+		String dialogMessage = observable.getDialogMessage();
+		int dialogType = observable.getIsDialogError() ? JOptionPane.ERROR_MESSAGE : JOptionPane.INFORMATION_MESSAGE;
+		
+		if (!StringExtensions.isNullOrEmpty(dialogMessage)) {
+			JOptionPane.showMessageDialog(this,
+                    dialogMessage,
+                    "Change user password",
+                    dialogType);
+		}
+		
+		this.setModal(observable.getIsViewVisible());
+		this.setVisible(observable.getIsViewVisible());
+		
+		this.pfPasswordOld.setText(observable.getOldPassword());
+		this.pfPasswordNew.setText(observable.getNewPassword());
+		this.pfPasswordConfirm.setText(observable.getConfirmPassword());
+	}
 }

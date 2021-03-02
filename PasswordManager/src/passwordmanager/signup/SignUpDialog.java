@@ -1,11 +1,14 @@
-package passwordmanager;
+package passwordmanager.signup;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-public class SignUpDialog extends JDialog{
+import passwordmanager.Observer;
+import passwordmanager.util.StringExtensions;
+
+public class SignUpDialog extends JDialog implements Observer<SignUpModel> {
     private JTextField tfUsername;
     private JPasswordField pfPassword1;
     private JPasswordField pfPassword2;
@@ -14,8 +17,6 @@ public class SignUpDialog extends JDialog{
     private JLabel lbPassword2;
     private JButton btnSignUp;
     private JButton btnCancel;
-
-    private SignUpController controller;
     
     public SignUpDialog(Frame parent) {
         //
@@ -46,7 +47,7 @@ public class SignUpDialog extends JDialog{
         cs.gridx = 1;
         cs.gridy = 1;
         cs.gridwidth = 2;
-        panel.add(getPfPassword1(), cs);
+        panel.add(pfPassword1, cs);
         panel.setBorder(new LineBorder(Color.GRAY));
         
         lbPassword2 = new JLabel("Repeat Password: ");
@@ -59,14 +60,12 @@ public class SignUpDialog extends JDialog{
         cs.gridx = 2;
         cs.gridy = 2;
         cs.gridwidth = 2;
-        panel.add(getPfPassword2(), cs);
+        panel.add(pfPassword2, cs);
         panel.setBorder(new LineBorder(Color.GRAY));
  
         btnSignUp = new JButton("Sign Up");
  
-        btnSignUp.addActionListener(controller.signUpButton());
         btnCancel = new JButton("Cancel");
-        btnCancel.addActionListener(controller.cancelButton());
         JPanel bp = new JPanel();
         bp.add(btnSignUp);
         bp.add(btnCancel);
@@ -77,15 +76,51 @@ public class SignUpDialog extends JDialog{
         pack();
         setResizable(false);
         setLocationRelativeTo(parent);
+        setModal(false);
+        setVisible(false);
     }
     
 
-	public JPasswordField getPfPassword1() {
-		return pfPassword1;
+    public String getEmail() {
+    	return tfUsername.getText();
+    }
+    
+	public String getPassword() {
+		return new String(pfPassword1.getPassword());
 	}
 
-	public JPasswordField getPfPassword2() {
-		return pfPassword2;
+	public String getConfirmPassword() {
+		return new String(pfPassword2.getPassword());
+	}
+
+	public void registerListener(SignUpController controller, SignUpWindowController windowController) {
+		btnSignUp.setActionCommand(controller.SIGNUP_COMMAND);
+		btnSignUp.addActionListener(controller);
+		btnCancel.setActionCommand(controller.CANCEL_COMMAND);
+		btnCancel.addActionListener(controller);
+		
+		this.addWindowListener(windowController);
+	}
+	
+	@Override
+	public void update(SignUpModel observable) {
+		String dialogMessage = observable.getDialogMessage();
+		boolean success = observable.getStatus();
+		
+		if (!StringExtensions.isNullOrEmpty(dialogMessage)) {
+			int messageType = success ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE;
+			
+			JOptionPane.showMessageDialog(this,
+				dialogMessage,
+                "Sign Up",
+                messageType);
+		}
+		
+		pfPassword1.setText(observable.getPassword());
+		pfPassword2.setText(observable.getConfirmPassword());
+		
+		this.setModal(observable.getIsViewVisible());
+		this.setVisible(observable.getIsViewVisible());
 	}
     
 

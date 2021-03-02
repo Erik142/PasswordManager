@@ -64,6 +64,7 @@ public class CommunicationProtocol implements Serializable {
 	
 	private final int INITIATE_NEW_CONNECTION = 1;
 	private final int EXCHANGE_KEYS = 2;
+	private final int INVALID_KEY = 3;
 	private final int USE_ESTABLISHED_CONNECTION = 0;
 	
 	private final int MAX_VALID_TRANSACTIONS = 10;
@@ -242,8 +243,17 @@ public class CommunicationProtocol implements Serializable {
 			serializeMethod = CryptographyMethod.AES;
 		}
 		
+		boolean isInvalidKey = false;
+		
+		if (message instanceof Response) {
+			Response<T> response = (Response<T>)message;
+			if (response.getResponseCode() == ResponseCode.InvalidKey) {
+				serializeMethod = CryptographyMethod.RSA;
+				isInvalidKey = true;
+			}
+		}
 		// Re-negotiate keys if key is not valid
-		if (serializeMethod == CryptographyMethod.AES && message.getOperation() != CommunicationOperation.ExchangeKeys) {
+		else if (serializeMethod == CryptographyMethod.AES && message.getOperation() != CommunicationOperation.ExchangeKeys) {
 			if (PROTO_MODE == ProtocolMode.Client) {
 				while (!isKeyValid()) {
 					System.out.println("AES keys need to be exchanged!");
@@ -260,12 +270,17 @@ public class CommunicationProtocol implements Serializable {
 		}
 		
 		try {
-			switch (message.getOperation()) {
-			case InitiateConnection:
+			switch (serializeMethod) {
+			case None:
 				outputStream.writeInt(INITIATE_NEW_CONNECTION);
 				break;
-			case ExchangeKeys:
-				outputStream.writeInt(EXCHANGE_KEYS);
+			case RSA:
+				if (isInvalidKey) {
+					outputStream.writeInt(INVALID_KEY);
+				}
+				else {
+					outputStream.writeInt(EXCHANGE_KEYS);
+				}
 				break;
 			default:
 				outputStream.writeInt(USE_ESTABLISHED_CONNECTION);
@@ -342,7 +357,7 @@ public class CommunicationProtocol implements Serializable {
 				if (connectionType == INITIATE_NEW_CONNECTION) {
 					deserializeMethod = CryptographyMethod.None;
 				}
-				else if (connectionType == EXCHANGE_KEYS) {
+				else if (connectionType == EXCHANGE_KEYS || connectionType == INVALID_KEY) {
 					deserializeMethod = CryptographyMethod.RSA;
 				}
 				else {
@@ -351,7 +366,7 @@ public class CommunicationProtocol implements Serializable {
 				
 				Message<T> response = null;
 				
-				if (deserializeMethod == CryptographyMethod.RSA) {
+				if (connectionType == EXCHANGE_KEYS) {
 					// Exchanging AES keys
 					int aesKeyLength = inputStream.readInt();
 					
@@ -523,7 +538,6 @@ public class CommunicationProtocol implements Serializable {
 		if (cryptographyMethod == CryptographyMethod.AES ) {
 			encryptedBytes = AES.encrypt(baos.toByteArray(), passwordKey, salt);
 		}
-		// It is an AES key request/response if the encryption method is RSA
 		else if (cryptographyMethod == CryptographyMethod.RSA) {
 			encryptedBytes = rsa.encrypt(baos.toByteArray());
 		}
