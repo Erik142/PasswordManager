@@ -115,7 +115,7 @@ public class PasswordDatabase {
 	
 	public void changeCredential(Credential cred, String newPass) throws SQLException {
 		this.s=c.createStatement();
-		s.executeUpdate("UPDATE public.\"Credentials\" SET \"Password\"='"+newPass+"' WHERE \"User\"='"+cred.getUser()+"' AND \"URL\"='"+cred.getURL()+"' AND \"Username\"='"+cred.getUsername()+"'");
+		s.executeUpdate("UPDATE public.\"Credentials\" SET \"Password\"='" + newPass + "', \"URL\"='" + cred.getURL() + "', \"Username\"='" + cred.getUsername() + "' WHERE \"User\"='" + cred.getUser() + "'");
 	}
 	
 	public void insertResetRequest(UserAccount account) throws SQLException {
