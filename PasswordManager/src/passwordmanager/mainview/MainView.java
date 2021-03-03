@@ -18,7 +18,7 @@ import passwordmanager.util.StringExtensions;
 public class MainView implements Observer<MainModel> {
 	
 	private JTable table = null;
-	private final String[] columns = {"Website", "Email", "Password" };
+	private final String[] columns = {"Service", "Username", "Password" };
 	
 
 	private JFrame frame;

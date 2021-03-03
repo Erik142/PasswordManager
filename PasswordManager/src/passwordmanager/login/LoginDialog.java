@@ -40,7 +40,7 @@ public class LoginDialog extends JDialog implements Observer<LoginDialogModel> {
  
         cs.fill = GridBagConstraints.HORIZONTAL;
  
-        lbUsername = new JLabel("Username: ");
+        lbUsername = new JLabel("E-mail: ");
         cs.gridx = 0;
         cs.gridy = 0;
         cs.gridwidth = 1;

@@ -25,7 +25,7 @@ public class SignUpDialog extends JDialog implements Observer<SignUpModel> {
  
         cs.fill = GridBagConstraints.HORIZONTAL;
  
-        lbUsername = new JLabel("Username: ");
+        lbUsername = new JLabel("E-mail: ");
         cs.gridx = 0;
         cs.gridy = 0;
         cs.gridwidth = 1;

@@ -28,7 +28,7 @@ public class AddDialog extends JDialog implements Observer<AddCredentialModel> {
  
         cs.fill = GridBagConstraints.HORIZONTAL;
  
-        lbWebsite = new JLabel("Website: ");
+        lbWebsite = new JLabel("Service: ");
         cs.gridx = 0;
         cs.gridy = 0;
         cs.gridwidth = 1;
@@ -42,26 +42,26 @@ public class AddDialog extends JDialog implements Observer<AddCredentialModel> {
  
         lbPassword = new JLabel("Password: ");
         cs.gridx = 0;
-        cs.gridy = 1;
+        cs.gridy = 2;
         cs.gridwidth = 1;
         panel.add(lbPassword, cs);
  
         pfPassword = new JPasswordField(20);
         cs.gridx = 1;
-        cs.gridy = 1;
+        cs.gridy = 2;
         cs.gridwidth = 2;
         panel.add(pfPassword, cs);
         panel.setBorder(new LineBorder(Color.GRAY));
         
-        lbEmail = new JLabel("Email: ");
+        lbEmail = new JLabel("Username: ");
         cs.gridx = 0;
-        cs.gridy = 2;
+        cs.gridy = 1;
         cs.gridwidth = 1;
         panel.add(lbEmail, cs);
  
         tfEmail = new JTextField(20);
-        cs.gridx = 2;
-        cs.gridy = 2;
+        cs.gridx = 1;
+        cs.gridy = 1;
         cs.gridwidth = 2;
         panel.add(tfEmail, cs);
         panel.setBorder(new LineBorder(Color.GRAY));
