@@ -57,6 +57,6 @@ public class Configuration {
 
 	@Override
 	public String toString() {
-		return "appMode: " + appMode.toString() + ", serverIp: " + serverIp.toString() + ", serverPort: " + serverPort + ", useDummyData: " + useDummyData;
+		return "appMode: " + appMode.toString() + ", serverIp: " + serverIp.toString() + ", serverPort: " + serverPort;
 	}
 }
