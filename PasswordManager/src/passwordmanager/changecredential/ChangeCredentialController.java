@@ -19,11 +19,11 @@ public class ChangeCredentialController implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand() == CHANGE_COMMAND) {
-			String url = view.getWebsite();
-			String username = view.getEmail();
+			String service = view.getService();
+			String username = view.getUserName();
 			String password = view.getPassword();
 			
-			model.updateCredential(url, username, password);
+			model.updateCredential(service, username, password);
 		} else if (e.getActionCommand() == CANCEL_COMMAND) {
 			model.setChangeViewVisibilityStatus(false);
 		}

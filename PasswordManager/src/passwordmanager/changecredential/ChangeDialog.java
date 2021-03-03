@@ -15,11 +15,11 @@ public class ChangeDialog extends JDialog implements Observer<ManipulateCredenti
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JLabel lbWebsite;
-    private JLabel lbEmail;
+	private JLabel lbService;
+    private JLabel lbUserName;
     private JLabel lbPassword;
-	private JTextField tfWebsite;
-    private JTextField tfEmail;
+	private JTextField tfService;
+    private JTextField tfUserName;
     private JPasswordField pfPassword;
     private JButton changeButton;
     private JButton cancelButton;
@@ -37,44 +37,44 @@ public class ChangeDialog extends JDialog implements Observer<ManipulateCredenti
  
         cs.fill = GridBagConstraints.HORIZONTAL;
  
-        lbWebsite = new JLabel("Website: ");
+        lbService = new JLabel("Service: ");
         cs.gridx = 0;
         cs.gridy = 0;
         cs.gridwidth = 1;
-        panel.add(lbWebsite, cs);
+        panel.add(lbService, cs);
  
  
         lbPassword = new JLabel("Password: ");
         cs.gridx = 0;
-        cs.gridy = 1;
+        cs.gridy = 2;
         cs.gridwidth = 1;
         panel.add(lbPassword, cs);
  
         pfPassword = new JPasswordField(20);
         cs.gridx = 1;
-        cs.gridy = 1;
+        cs.gridy = 2;
         cs.gridwidth = 2;
         panel.add(pfPassword, cs);
         panel.setBorder(new LineBorder(Color.GRAY));
         
-        lbEmail = new JLabel("Email: ");
+        lbUserName = new JLabel("Username: ");
         cs.gridx = 0;
-        cs.gridy = 2;
+        cs.gridy = 1;
         cs.gridwidth = 1;
-        panel.add(lbEmail, cs);
+        panel.add(lbUserName, cs);
         
-        tfWebsite = new JTextField(20);
+        tfService = new JTextField(20);
         cs.gridx = 1;
         cs.gridy = 0;
         cs.gridwidth = 2;
-        panel.add(tfWebsite, cs);
+        panel.add(tfService, cs);
         panel.setBorder(new LineBorder(Color.GRAY));
  
-        tfEmail = new JTextField(20);
-        cs.gridx = 2;
-        cs.gridy = 2;
+        tfUserName = new JTextField(20);
+        cs.gridx = 1;
+        cs.gridy = 1;
         cs.gridwidth = 2;
-        panel.add(tfEmail, cs);
+        panel.add(tfUserName, cs);
         panel.setBorder(new LineBorder(Color.GRAY));
  
         changeButton = new JButton("Change");
@@ -94,11 +94,11 @@ public class ChangeDialog extends JDialog implements Observer<ManipulateCredenti
 	    setVisible(false);
 	}
 
-    public String getWebsite() {
-        return tfWebsite.getText().trim();
+    public String getService() {
+        return tfService.getText().trim();
     }
-    public String getEmail() {
-        return tfEmail.getText().trim();
+    public String getUserName() {
+        return tfUserName.getText().trim();
     }
 
     public String getPassword() {
@@ -128,8 +128,8 @@ public class ChangeDialog extends JDialog implements Observer<ManipulateCredenti
 		setModal(observable.getChangeViewVisibilityStatus());
 		setVisible(observable.getChangeViewVisibilityStatus());
 		
-		this.tfWebsite.setText(observable.getUrl());
-		this.tfEmail.setText(observable.getUserName());
+		this.tfService.setText(observable.getService());
+		this.tfUserName.setText(observable.getUserName());
 		this.pfPassword.setText(observable.getPassword());
 	}
 	

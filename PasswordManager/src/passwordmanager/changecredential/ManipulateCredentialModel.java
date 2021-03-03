@@ -80,7 +80,7 @@ public class ManipulateCredentialModel implements Observable<ManipulateCredentia
 		return this.credential != null ? this.credential.getPassword() : "";
 	}
 	
-	public String getUrl() {
+	public String getService() {
 		return this.credential != null ? this.credential.getURL() : "";
 	}
 	

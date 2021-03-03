@@ -15,7 +15,7 @@ public class ChangeDialogController {
 	return new ActionListener() {
 	public void actionPerformed(ActionEvent e) {
 		
-    	if (parentView.getWebsite().isBlank() || parentView.getEmail().isBlank() || parentView.getPassword().isBlank()){
+    	if (parentView.getService().isBlank() || parentView.getUserName().isBlank() || parentView.getPassword().isBlank()){
     		
         	JOptionPane.showMessageDialog(parentView,
                     "Please fill all the credentials",
@@ -23,9 +23,7 @@ public class ChangeDialogController {
                     JOptionPane.ERROR_MESSAGE);
         }
         else{
-        	//TODO-Send the credentials forward and update.
         	parentView.dispose();
-        	
         }
         
     }
