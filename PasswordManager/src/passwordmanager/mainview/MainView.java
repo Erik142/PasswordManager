@@ -11,6 +11,7 @@ import javax.swing.text.DefaultCaret;
 
 import passwordmanager.Observer;
 import passwordmanager.PasswordClient;
+import passwordmanager.util.FrameUtil;
 import passwordmanager.util.StringExtensions;
 
 
@@ -93,6 +94,8 @@ public class MainView implements Observer<MainModel> {
         this.getFrame().setLocationByPlatform(true);
         this.getFrame().setVisible(false);
         this.getFrame().setResizable(false);
+        
+        FrameUtil.centerFrame(this.getFrame());
     }
 
 	public void registerListeners(MainViewTableController tableController, AddCredentialButtonController addCredentialController,

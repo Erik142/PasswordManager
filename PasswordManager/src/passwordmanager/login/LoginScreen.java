@@ -7,6 +7,7 @@ import javax.swing.*;
 
 import passwordmanager.Observer;
 import passwordmanager.config.Configuration;
+import passwordmanager.util.FrameUtil;
 
 
 public class LoginScreen implements Observer<LoginScreenModel> {
@@ -32,7 +33,7 @@ public class LoginScreen implements Observer<LoginScreenModel> {
         frame.getContentPane().add(btnForgot);
         frame.setVisible(true);
         
-        centerFrame();
+        FrameUtil.centerFrame(frame);
 	}
 	
 	public Frame getFrame() {
@@ -44,10 +45,6 @@ public class LoginScreen implements Observer<LoginScreenModel> {
         btnForgot.setActionCommand(forgotPasswordController.FORGOT_PASSWORD_EVENT);
         btnForgot.addActionListener(forgotPasswordController);
         btnSignUp.addActionListener(signupController); 
-	}
-	
-	private void centerFrame() {
-		
 	}
 
 	@Override
