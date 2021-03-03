@@ -26,7 +26,6 @@ public class Configuration {
 	public AppMode appMode;
 	public InetAddress serverIp;
 	public int serverPort;
-	public boolean useDummyData;
 	public String dbHostName;
 	public int dbPort;
 	public String dbUserName;
