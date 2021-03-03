@@ -34,12 +34,13 @@ public class ChangeUserAccountModel implements Observable<ChangeUserAccountModel
 	}
 	
 	public void changeUserPassword(String oldPassword, String newPassword, String confirmPassword) {
-		if (isValidPassword(newPassword) && isValidPassword(confirmPassword) && newPassword.equals(confirmPassword)) {
-			
+		if (isValidPassword(newPassword) && isValidPassword(confirmPassword) && newPassword.equals(confirmPassword) && !newPassword.equals(oldPassword)) {
 			if (oldPassword.equals(account.getPassword())) {
-				boolean success = client.modifyUserAccount(account);
+				UserAccount updatedAccount = new UserAccount(account.getEmail(), newPassword); 
+				boolean success = client.modifyUserAccount(updatedAccount);
 				
 				if (success) {
+					account = updatedAccount;
 					dialogMessage = "Successfully changed the user password!";
 					isDialogError = false;
 				} else {
@@ -50,6 +51,14 @@ public class ChangeUserAccountModel implements Observable<ChangeUserAccountModel
 				this.dialogMessage = "The old password is not correct!";
 				isDialogError = true;
 			}
+		}
+		else if (!newPassword.equals(confirmPassword)) {
+			this.dialogMessage = "The passwords do not match!";
+			this.isDialogError = true;
+		}
+		else if (oldPassword.equals(newPassword)) {
+			this.dialogMessage = "The new password cannot be the same as the old password!";
+			this.isDialogError = true;
 		}
 		else if (!isValidPassword(newPassword) || !isValidPassword(confirmPassword)) {
 			this.dialogMessage = "The password must be at least 8 characters long!";
