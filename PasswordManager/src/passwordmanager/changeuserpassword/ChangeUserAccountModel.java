@@ -34,6 +34,8 @@ public class ChangeUserAccountModel implements Observable<ChangeUserAccountModel
 	}
 	
 	public void changeUserPassword(String oldPassword, String newPassword, String confirmPassword) {
+		isViewVisible = true;
+		
 		if (isValidPassword(newPassword) && isValidPassword(confirmPassword) && newPassword.equals(confirmPassword) && !newPassword.equals(oldPassword)) {
 			if (oldPassword.equals(account.getPassword())) {
 				UserAccount updatedAccount = new UserAccount(account.getEmail(), newPassword); 
@@ -43,6 +45,7 @@ public class ChangeUserAccountModel implements Observable<ChangeUserAccountModel
 					account = updatedAccount;
 					dialogMessage = "Successfully changed the user password!";
 					isDialogError = false;
+					isViewVisible = false;
 				} else {
 					dialogMessage = "The user password could not be updated. Try again later.";
 					isDialogError = true;
