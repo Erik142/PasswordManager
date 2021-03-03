@@ -44,7 +44,26 @@ public class Program {
         	if (!configFile.exists()) {
         		configFile = null;
         	}
+        	else {
+        		System.out.println("Config file found from command line argument!");
+        	}
         } catch (Exception e) {
+        	System.out.println("No config file found from command line argument, trying default location...");
+        }
+        
+        try {
+        	if (configFile == null) {
+        		configFile = new File(CONFIG_PATH);
+        		
+        		if (!configFile.exists()) {
+        			configFile = null;
+        		}
+        		else {
+        			System.out.println("Config file found in default location!");
+        		}
+        	}
+        } catch (Exception e) {
+        	System.out.println("No config file found in default location, trying resources path...");
         }
         
 		try {
