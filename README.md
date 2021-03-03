@@ -65,7 +65,7 @@ The web UI will listen on port 3000 by default. This can however be specified in
 
 The program uses a configuration file named config.json. The config file is written in json and is used to configure the application mode, server IP address and port, as well as various server secrets. See below for a complete reference of the config file:
 
-### appmode
+### appMode
 
 Used to specify if the app should run in client or server mode. For client mode, specify
 
