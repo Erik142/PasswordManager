@@ -122,6 +122,9 @@ public class MainModel implements Observable<MainModel>, Observer {
 				
 				this.tableData = tableData;
 			}
+			else {
+				this.tableData = new Object[0][0];
+			}
 			
 			this.credentials = credentials;
 		}
