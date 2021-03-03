@@ -34,13 +34,12 @@ public class MainView implements Observer<MainModel> {
 	
 	public MainView() throws IOException {
 		this.setFrame(new JFrame("Password Manager"));
-		this.getFrame().setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		createFrame();
 	}
 	
 	public void createFrame()
-	
     {
         try 
         {
