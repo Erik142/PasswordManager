@@ -39,7 +39,7 @@ public class AddCredentialModel implements Observable<AddCredentialModel> {
 			boolean success = client.storeCredential(credential);
 			
 			isDialogError = !success;
-			dialogMessage = !isDialogError ? "Successfully added credential!" : "An error occured while adding the credential. Try again.";
+			dialogMessage = !isDialogError ? "" : "An error occured while adding the credential. Try again.";
 			isCredentialAdded = success;
 			isViewVisible = !success;
 			

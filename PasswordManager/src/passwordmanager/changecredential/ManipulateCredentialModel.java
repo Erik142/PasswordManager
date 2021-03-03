@@ -34,7 +34,7 @@ public class ManipulateCredentialModel implements Observable<ManipulateCredentia
 			this.isManipulateCredentialSuccessful = success;
 			
 			if (success) {
-				dialogMessage = "Successfully deleted credential!";
+				dialogMessage = "";
 				isDialogError = false;
 				
 				credential = null;
@@ -118,7 +118,7 @@ public class ManipulateCredentialModel implements Observable<ManipulateCredentia
 			boolean success = client.modifyCredential(credential);
 			
 			if (success) {
-				this.dialogMessage = "Successfully updated the credential!";
+				this.dialogMessage = "";
 				this.isDialogError = false;
 				this.isChangeViewVisible = false;
 			}
