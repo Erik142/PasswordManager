@@ -75,6 +75,10 @@ public class SignUpModel implements Observable<SignUpModel> {
 			this.dialogMessage = success ? "Success!" : "The server could not handle the request at this moment. Please try again.";
 			this.isViewVisible = !success;
 			this.status = success;
+			
+			if (success) {
+				resetFields();
+			}
 		}
 		else if (!isValidEmail) {
 			this.dialogMessage = "The entered email is not valid.";

@@ -15,7 +15,7 @@ public class SignupController implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		model.resetFields();
 		model.setIsViewVisible(true);
 	}
 

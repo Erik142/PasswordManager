@@ -93,13 +93,13 @@ public class SignUpDialog extends JDialog implements Observer<SignUpModel> {
 		return new String(pfPassword2.getPassword());
 	}
 
-	public void registerListener(SignUpController controller, SignUpWindowController windowController) {
+	public void registerListener(SignUpController controller, SignUpWindowController componentController) {
 		btnSignUp.setActionCommand(controller.SIGNUP_COMMAND);
 		btnSignUp.addActionListener(controller);
 		btnCancel.setActionCommand(controller.CANCEL_COMMAND);
 		btnCancel.addActionListener(controller);
 		
-		this.addWindowListener(windowController);
+		this.addComponentListener(componentController);
 	}
 	
 	@Override
@@ -116,6 +116,7 @@ public class SignUpDialog extends JDialog implements Observer<SignUpModel> {
                 messageType);
 		}
 		
+		tfUsername.setText(observable.getEmail());
 		pfPassword1.setText(observable.getPassword());
 		pfPassword2.setText(observable.getConfirmPassword());
 		
