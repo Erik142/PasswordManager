@@ -12,6 +12,8 @@ import passwordmanager.util.StringExtensions;
 public class ForgotPasswordModel implements Observable<ForgotPasswordModel> {
 	private String email = "";
 	private String dialogMessage = "";
+	
+	private boolean isDialogError = false;
 	private boolean isViewVisible = false;
 	
 	private List<Observer<ForgotPasswordModel>> observers;
@@ -37,12 +39,17 @@ public class ForgotPasswordModel implements Observable<ForgotPasswordModel> {
 		return email;
 	}
 	
+	public boolean getIsDialogError() {
+		return this.isDialogError;
+	}
+	
 	public boolean getIsViewVisible() {
 		return isViewVisible;
 	}
 	
 	public void sendEmail(String email) {
 		String dialogMessage = "";
+		isDialogError = true;
 		
 		if (StringExtensions.isNullOrEmpty(email)) {
 			dialogMessage = "E-mail field cannot be empty!";
@@ -56,6 +63,9 @@ public class ForgotPasswordModel implements Observable<ForgotPasswordModel> {
 				
 				if (result) {
 					dialogMessage = "You will receive an email with a link to change your password.";
+					setEmail("");
+					isDialogError = false;
+					isViewVisible = false;
 				}
 				else {
 					dialogMessage = "The account does not exist! Please sign up to create an account.";
@@ -65,7 +75,7 @@ public class ForgotPasswordModel implements Observable<ForgotPasswordModel> {
 			}
 		}
 		
-		if (!StringExtensions.isNullOrEmpty(dialogMessage)) {
+		if (!StringExtensions.isNullOrEmpty(dialogMessage) && isDialogError) {
 			setEmail(email);
 		}
 		

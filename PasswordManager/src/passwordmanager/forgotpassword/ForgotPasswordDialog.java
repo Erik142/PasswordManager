@@ -75,12 +75,13 @@ public class ForgotPasswordDialog extends JDialog implements Observer<ForgotPass
 	public void update(ForgotPasswordModel observable) {
 		// TODO Auto-generated method stub
 		String dialogMessage = observable.getDialogMessage();
+		int dialogType = observable.getIsDialogError() ? JOptionPane.ERROR_MESSAGE : JOptionPane.INFORMATION_MESSAGE;
 		
 		if (!StringExtensions.isNullOrEmpty(dialogMessage)) {
 			JOptionPane.showMessageDialog(parent,
 		            dialogMessage,
 		            "Forgot password",
-		            JOptionPane.INFORMATION_MESSAGE);
+		            dialogType);
 		}
 		
 		tfEmail.setText(observable.getEmail());
