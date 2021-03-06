@@ -15,17 +15,22 @@ import passwordmanager.model.SignUpModel;
 import passwordmanager.view.InitialView;
 
 /**
- * Used for creating the PasswordClient object and necessary models, views and controllers to create a GUI for the client
+ * Used for creating the PasswordClient object and necessary models, views and
+ * controllers to create a GUI for the client
+ * 
+ * @author Erik Wahlberger
  */
 public class ClientWindow {
 	/**
-	 * Creates a new instance of the ClientWindow class, with the parameters specified in the Configuration object
+	 * Creates a new instance of the ClientWindow class, with the parameters
+	 * specified in the Configuration object
+	 * 
 	 * @param config The Configuration object
 	 * @throws IOException
 	 */
 	public ClientWindow(Configuration config) throws IOException {
 		PasswordClient client = new PasswordClient(config);
-		
+
 		ForgotPasswordModel forgotPasswordModel = new ForgotPasswordModel(client);
 		LoginDialogModel loginDialogModel = new LoginDialogModel(client);
 		SignUpModel signUpModel = new SignUpModel(client);
@@ -35,11 +40,13 @@ public class ClientWindow {
 		ChangeUserAccountModel changeUserAccountModel = new ChangeUserAccountModel(client);
 
 		InitialView initialView = new InitialView();
-		
-		InitialViewActionListener authActionListener = new InitialViewActionListener(initialView, forgotPasswordModel, loginDialogModel, signUpModel, mainModel, manipulateCredentialModel, addCredentialModel, changeUserAccountModel);
+
+		InitialViewActionListener authActionListener = new InitialViewActionListener(initialView, forgotPasswordModel,
+				loginDialogModel, signUpModel, mainModel, manipulateCredentialModel, addCredentialModel,
+				changeUserAccountModel);
 
 		initialView.registerListener(authActionListener);
-		
+
 		loginDialogModel.addObserver(authActionListener);
 	}
 }
