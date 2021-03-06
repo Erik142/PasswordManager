@@ -5,6 +5,10 @@ import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 
+/**
+ * @author Erik Wahlberger
+ * Helper class used to center a frame on the screen, both horizontally and vertically
+ */
 public class FrameUtil {
 	/***
 	 * Positions the <code>JFrame</code> in the center of the screen.

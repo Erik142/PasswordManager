@@ -7,7 +7,19 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+/**
+ * @author Erik Wahlberger
+ * A utility class used to verify the validity of e-mail addresses as well as to send e-mails 
+ */
 public class EmailUtil {
+	/**
+	 * Send an e-mail from the specified e-mail address to the specified e-mail address with the specified subject and body strings
+	 * @param session The session used to send the e-mail
+	 * @param senderEmail The sender's e-mail address
+	 * @param recipientEmail The recipient's e-mail address
+	 * @param subject The subject String of the e-mail
+	 * @param body The body of the e-mail
+	 */
 	public static void sendEmail(Session session, String senderEmail, String recipientEmail, String subject, String body) {
 		try
 	    {
@@ -30,6 +42,11 @@ public class EmailUtil {
 	    }
 	}
 	
+	/**
+	 * Checks if the specified String is an e-mail address
+	 * @param email The String to be verified
+	 * @return true if the email parameter is an e-mail address, false otherwise
+	 */
 	public static boolean isValidEmail(String email) {
 		boolean containsDomain = email.contains("@") && (email.split("@").length >= 2);
 		
