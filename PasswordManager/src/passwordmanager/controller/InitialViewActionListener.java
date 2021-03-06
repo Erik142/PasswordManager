@@ -18,10 +18,23 @@ import passwordmanager.view.LoginDialog;
 import passwordmanager.view.MainView;
 import passwordmanager.view.SignUpDialog;
 
+/**
+ * @author Erik Wahlberger
+ * JButton ActionListener for the InitialView class
+ */
 public class InitialViewActionListener implements ActionListener, Observer<LoginDialogModel> {
 
+	/**
+	 * Action command used for the Log in button
+	 */
 	public final int LOG_IN = 0;
+	/**
+	 * Action command used for the Sign up button
+	 */
 	public final int SIGN_UP = 1;
+	/**
+	 * Action command used for the Forgot password button
+	 */
 	public final int FORGOT_PASSWORD = 2;
 
 	private final ForgotPasswordModel forgotPasswordModel;
@@ -36,6 +49,17 @@ public class InitialViewActionListener implements ActionListener, Observer<Login
 
 	private LoginDialog loginDialog;
 
+	/**
+	 * Creates a new instance of the InitialViewActionListener with the specified InitialView object and related models
+	 * @param initialView The InitialView object
+	 * @param forgotPasswordModel The ForgotPasswordModel
+	 * @param loginDialogModel The LoginDialogModel
+	 * @param signUpModel The SignupModel
+	 * @param mainModel The MainModel
+	 * @param manipulateCredentialModel The ManipulateCredentialModel
+	 * @param addCredentialModel The AddCredentialModel
+	 * @param changeUserAccountModel The ChangeUserAccountModel
+	 */
 	public InitialViewActionListener(InitialView initialView, ForgotPasswordModel forgotPasswordModel,
 			LoginDialogModel loginDialogModel, SignUpModel signUpModel, MainModel mainModel,
 			ManipulateCredentialModel manipulateCredentialModel, AddCredentialModel addCredentialModel, ChangeUserAccountModel changeUserAccountModel) {
@@ -50,6 +74,9 @@ public class InitialViewActionListener implements ActionListener, Observer<Login
 		this.initialView = initialView;
 	}
 
+	/**
+	 * Initializes and opens a new ForgotPasswordDialog
+	 */
 	private void forgotPassword() {
 		ForgotPasswordDialog forgotPasswordDialog = new ForgotPasswordDialog(initialView.getFrame(),
 				forgotPasswordModel);
@@ -62,6 +89,9 @@ public class InitialViewActionListener implements ActionListener, Observer<Login
 		forgotPasswordDialog.setVisible(true);
 	}
 
+	/**
+	 * Initializes and opens a new LoginDialog
+	 */
 	private void login() {
 		loginDialog = new LoginDialog(initialView.getFrame());
 		LoginDialogController loginDialogController = new LoginDialogController(loginDialog, loginDialogModel);
@@ -72,6 +102,9 @@ public class InitialViewActionListener implements ActionListener, Observer<Login
 		loginDialog.setVisible(true);
 	}
 
+	/**
+	 * Initializes and opens a new SignUpDialog
+	 */
 	private void signUp() {
 		SignUpDialog signUpDialog = new SignUpDialog(initialView.getFrame());
 		SignUpController signUpDialogController = new SignUpController(signUpDialog, signUpModel);
@@ -82,6 +115,9 @@ public class InitialViewActionListener implements ActionListener, Observer<Login
 		signUpDialog.setVisible(true);
 	}
 
+	/**
+	 * Initializes and opens a new MainView
+	 */
 	private void showMainView() {
 		MainView mainView = new MainView();
 		MainViewTableController mainViewTableController = new MainViewTableController(mainView, mainModel,
@@ -94,6 +130,9 @@ public class InitialViewActionListener implements ActionListener, Observer<Login
 		mainView.getFrame().setVisible(true);
 	}
 
+	/**
+	 * The ActionListener implementation used to listen on clicks from buttons with the specified action commands
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		switch (Integer.parseInt(e.getActionCommand())) {
@@ -110,6 +149,9 @@ public class InitialViewActionListener implements ActionListener, Observer<Login
 		}
 	}
 
+	/**
+	 * Implements the Observer interface, opens a new MainWindow on successful login
+	 */
 	@Override
 	public void update(LoginDialogModel observable) {
 		if (observable.getLoggedInStatus() && initialView.getFrame().isVisible()) {
