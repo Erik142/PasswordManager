@@ -9,11 +9,13 @@ import java.net.InetAddress;
 import com.google.gson.Gson;
 
 /**
- * 
  * @author Erik Wahlberger
- *
+ * Represents a configuration file
  */
 public class Configuration {
+	/**
+	 * Specifies the application mode, either Client or Server
+	 */
 	public enum AppMode {
 		Client,
 		Server,
