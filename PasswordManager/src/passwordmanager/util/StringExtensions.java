@@ -1,10 +1,10 @@
 package passwordmanager.util;
 
 /**
+ * StringExtensions class contains a helper method for Strings to check if
+ * Strings are null or empty
  * 
  * @author Erik Wahlberger
- *
- * StringExtensions class contains a helper method for Strings to check if Strings are null or empty
  */
 public class StringExtensions {
 	/**
