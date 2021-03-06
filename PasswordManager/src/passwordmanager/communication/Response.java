@@ -3,8 +3,9 @@ package passwordmanager.communication;
 import passwordmanager.communication.CommunicationProtocol.CommunicationOperation;
 
 /**
- * @author Erik Wahlberger
  * Represents a response from a server to a client
+ * 
+ * @author Erik Wahlberger
  */
 public class Response<T> extends Message<T> {
 	/**
@@ -16,26 +17,27 @@ public class Response<T> extends Message<T> {
 	 * Represents the possible responses codes a server can send back to a client
 	 */
 	public enum ResponseCode {
-		OK,
-		Fail,
-		InvalidKey
+		OK, Fail, InvalidKey
 	}
-	
+
 	private final ResponseCode responseCode;
-	
+
 	/**
-	 * Creates a new Response object with the specified ResponseCode, CommunicationOperation and data
+	 * Creates a new Response object with the specified ResponseCode,
+	 * CommunicationOperation and data
+	 * 
 	 * @param responseCode The ResponseCode
-	 * @param operation The CommunicationOperation
-	 * @param data The data
+	 * @param operation    The CommunicationOperation
+	 * @param data         The data
 	 */
 	public Response(ResponseCode responseCode, CommunicationOperation operation, T data) {
 		super(operation, data);
 		this.responseCode = responseCode;
 	}
-	
+
 	/**
 	 * Retrieves the ResponseCode
+	 * 
 	 * @return The ResponseCode
 	 */
 	public ResponseCode getResponseCode() {

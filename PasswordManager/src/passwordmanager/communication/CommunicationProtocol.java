@@ -25,8 +25,9 @@ import passwordmanager.model.Credential;
 import passwordmanager.model.UserAccount;
 
 /**
- * @author Erik Wahlberger
  * Implements the protocol used to communicate between the client and server
+ * 
+ * @author Erik Wahlberger
  */
 public class CommunicationProtocol implements Serializable {
 	/**
@@ -38,76 +39,66 @@ public class CommunicationProtocol implements Serializable {
 	 * Specifies the allowed operations to perform when communicating
 	 */
 	public enum CommunicationOperation {
-		AddCredential,
-		DeleteCredential,
-		UpdateCredential,
-		GetAllCredentials,
-		AddUser,
-		DeleteUser,
-		UpdateUser,
-		GetUser,
-		VerifyUser,
-		ExchangeKeys,
-		InitiateConnection,
-		VerifyApplication,
-		ForgotPassword
+		AddCredential, DeleteCredential, UpdateCredential, GetAllCredentials, AddUser, DeleteUser, UpdateUser, GetUser,
+		VerifyUser, ExchangeKeys, InitiateConnection, VerifyApplication, ForgotPassword
 	}
-	
+
 	/**
 	 * Specifies if the protocol should be run in Client or Server mode
 	 */
 	public enum ProtocolMode {
-		Client,
-		Server
+		Client, Server
 	}
-	
+
 	/**
 	 * Specifies different cryptography methods
 	 */
 	private enum CryptographyMethod {
-		RSA,
-		AES,
-		None
+		RSA, AES, None
 	}
-	
+
 	private final int INITIATE_NEW_CONNECTION = 1;
 	private final int EXCHANGE_KEYS = 2;
 	private final int INVALID_KEY = 3;
 	private final int USE_ESTABLISHED_CONNECTION = 0;
-	
+
 	private final int MAX_VALID_TRANSACTIONS = 10;
-	
+
 	private RSA rsa = null;
-	
+
 	private String passwordKey = "";
 	private String salt = "";
 	private String recipientPasswordKey = "";
 	private String recipientSalt = "";
 	private int validTransactionsRemaining = 0;
-	
+
 	private final ProtocolMode PROTO_MODE;
-	
+
 	private Socket socket;
 	private DataInputStream inputStream;
 	private DataOutputStream outputStream;
-	
+
 	/**
-	 * Initializes a new CommunicationProtocol instance for the specified socket and in the specified mode.
+	 * Initializes a new CommunicationProtocol instance for the specified socket and
+	 * in the specified mode.
+	 * 
 	 * @param socket The socket used to communicate
-	 * @param mode The mode for this instance. If the mode is Client, the instance will immediately start to exchange encryption keys. If the mode is Server, the instance will not do anything by itself.
+	 * @param mode   The mode for this instance. If the mode is Client, the instance
+	 *               will immediately start to exchange encryption keys. If the mode
+	 *               is Server, the instance will not do anything by itself.
 	 */
 	public CommunicationProtocol(Socket socket, ProtocolMode mode) {
 		this.socket = socket;
 		this.rsa = new RSA();
-		
+
 		this.PROTO_MODE = mode;
-		
+
 		if (PROTO_MODE == ProtocolMode.Client) {
 			initiateConnection();
 			negotiateKeys();
 		}
 	}
-	
+
 	/**
 	 * Initiates the connection by generating and exchanging RSA encryption keys
 	 */
@@ -118,28 +109,28 @@ public class CommunicationProtocol implements Serializable {
 		System.out.println();
 		System.out.println("Initiating connection on client side!");
 		System.out.println("Exchanging RSA keys...");
-		
+
 		PublicKey publicKey = rsa.getPublicKey();
 		if (publicKey == null) {
 			System.out.println("RSA Public key is null!");
 		}
-		
+
 		Query<PublicKey> rsaQuery = new Query<PublicKey>("", CommunicationOperation.InitiateConnection, publicKey);
-		
+
 		Response<PublicKey> serverResponse = sendAndReceive(rsaQuery);
-		
+
 		PublicKey remotePublicKey = serverResponse.getData();
-		
+
 		rsa.setRecipientPublicKey(remotePublicKey);
-		
+
 		System.out.println("Successfully exchanged RSA keys");
-		
+
 		System.out.println();
 		System.out.println();
 		System.out.println();
 		System.out.println();
 	}
-	
+
 	/**
 	 * Generates and exchanges AES encryption keys
 	 */
@@ -149,77 +140,77 @@ public class CommunicationProtocol implements Serializable {
 		System.out.println();
 		System.out.println();
 		System.out.println("Negotiating AES keys! " + PROTO_MODE);
-		
+
 		if (rsa.getRecipientPublicKey() == null) {
 			// Connection has not been initiated
 			System.out.println("RSA keys have not been exchanged!");
 			return;
 		}
-		
+
 		System.out.println("RSA keys are valid!");
-		
+
 		// Generate AES keys and send them to recipient
 		passwordKey = AES.generateKeyPassword();
 		salt = AES.generateSalt();
-		
+
 		if (PROTO_MODE == ProtocolMode.Server) {
 			StringBuilder builder = new StringBuilder();
-			
+
 			// Append the number of valid transactions
 			Random random = new Random();
 			int validTransactions = 1 + random.nextInt(MAX_VALID_TRANSACTIONS);
 			validTransactionsRemaining = validTransactions;
-			
+
 			builder.append(String.format("%02d", validTransactions));
-			
+
 			// Assume that password and salt has the same length, according to AES class
 			int length = passwordKey.length();
-			
+
 			for (int i = 0; i < length; i++) {
 				builder.append(passwordKey.charAt(i));
 				builder.append(salt.charAt(i));
 			}
-			
-			Response<String> aesResponse = new Response<String>(ResponseCode.OK, CommunicationOperation.ExchangeKeys, builder.toString());
-			
+
+			Response<String> aesResponse = new Response<String>(ResponseCode.OK, CommunicationOperation.ExchangeKeys,
+					builder.toString());
+
 			send(aesResponse);
-		}
-		else {
+		} else {
 			// Receive AES keys and decipher them
 			System.out.println("Client receiving AES keys...");
-			
+
 			Query<Object> keysQuery = new Query<Object>("", CommunicationOperation.ExchangeKeys, null);
-			
+
 			Response<String> keysResponse = sendAndReceive(keysQuery);
-			
+
 			if (keysResponse.getResponseCode() == ResponseCode.OK) {
 				System.out.println("Client: AES keys have been received!");
-				
+
 				String keys = keysResponse.getData();
-				
+
 				String transactionsString = keys.substring(0, 2);
 				int transactions = Integer.parseInt(transactionsString);
-				
+
 				validTransactionsRemaining = transactions;
-				
+
 				System.out.println("Valid transactions remaining: " + validTransactionsRemaining);
-				
+
 				keys = keys.substring(2);
-				
+
 				recipientPasswordKey = "";
 				recipientSalt = "";
-				
+
 				for (int i = 0; i < keys.length() - 1; i += 2) {
 					recipientPasswordKey += keys.charAt(i);
 					recipientSalt += keys.charAt(i + 1);
 				}
-			}
-			else {
+			} else {
 				// Something bad happened!
-				System.out.println("Something happened when AES keys were being received!! " + keysResponse.getResponseCode());
+				System.out.println(
+						"Something happened when AES keys were being received!! " + keysResponse.getResponseCode());
 			}
 		}
-		
+
 		System.out.println("Finished negotiating AES keys! " + PROTO_MODE);
 		System.out.println();
 		System.out.println();
@@ -228,7 +219,9 @@ public class CommunicationProtocol implements Serializable {
 	}
 
 	/**
-	 * Checks if the current AES keys are valid by using the value for remaining transactions as specified by the server
+	 * Checks if the current AES keys are valid by using the value for remaining
+	 * transactions as specified by the server
+	 * 
 	 * @return
 	 */
 	private boolean isKeyValid() {
@@ -236,8 +229,10 @@ public class CommunicationProtocol implements Serializable {
 	}
 
 	/**
-	 * Sends a message to the Socket used in this instance, re-negotiates AES keys if necessary
-	 * @param <T> The type of data in the Message
+	 * Sends a message to the Socket used in this instance, re-negotiates AES keys
+	 * if necessary
+	 * 
+	 * @param <T>     The type of data in the Message
 	 * @param message The Message to send
 	 */
 	public <T> void send(Message<T> message) {
@@ -247,17 +242,17 @@ public class CommunicationProtocol implements Serializable {
 					outputStream = new DataOutputStream(socket.getOutputStream());
 				}
 				break;
-			} catch(IOException ex) {
+			} catch (IOException ex) {
 				try {
 					Thread.sleep(500);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
-		} while(true);
-		
+		} while (true);
+
 		CryptographyMethod serializeMethod = null;
-		
+
 		switch (message.getOperation()) {
 		case ExchangeKeys:
 			serializeMethod = CryptographyMethod.RSA;
@@ -268,33 +263,33 @@ public class CommunicationProtocol implements Serializable {
 		default:
 			serializeMethod = CryptographyMethod.AES;
 		}
-		
+
 		boolean isInvalidKey = false;
-		
+
 		if (message instanceof Response) {
-			Response<T> response = (Response<T>)message;
+			Response<T> response = (Response<T>) message;
 			if (response.getResponseCode() == ResponseCode.InvalidKey) {
 				serializeMethod = CryptographyMethod.RSA;
 				isInvalidKey = true;
 			}
 		}
 		// Re-negotiate keys if key is not valid
-		else if (serializeMethod == CryptographyMethod.AES && message.getOperation() != CommunicationOperation.ExchangeKeys) {
+		else if (serializeMethod == CryptographyMethod.AES
+				&& message.getOperation() != CommunicationOperation.ExchangeKeys) {
 			if (PROTO_MODE == ProtocolMode.Client) {
 				while (!isKeyValid()) {
 					System.out.println("AES keys need to be exchanged!");
 					negotiateKeys();
 				}
-			}
-			else {
+			} else {
 				if (!isKeyValid()) {
 					Response<T> response = new Response<T>(ResponseCode.InvalidKey, message.operation, message.data);
 					send(response);
 				}
 			}
-			
+
 		}
-		
+
 		try {
 			switch (serializeMethod) {
 			case None:
@@ -303,41 +298,41 @@ public class CommunicationProtocol implements Serializable {
 			case RSA:
 				if (isInvalidKey) {
 					outputStream.writeInt(INVALID_KEY);
-				}
-				else {
+				} else {
 					outputStream.writeInt(EXCHANGE_KEYS);
 				}
 				break;
 			default:
 				outputStream.writeInt(USE_ESTABLISHED_CONNECTION);
 			}
-			
+
 			byte[] objectBytes = null;
-			
+
 			if (message.getOperation() == CommunicationOperation.ExchangeKeys) {
-				// Data length limitation in RSA encryption, cannot encrypt the entire Message object at once
+				// Data length limitation in RSA encryption, cannot encrypt the entire Message
+				// object at once
 				// Encrypt AES key with RSA, and the rest of the message with AES
 				byte[] aesKeyBytes = serializeObject(passwordKey, CryptographyMethod.RSA);
 				byte[] aesSaltBytes = serializeObject(salt, CryptographyMethod.RSA);
-				
+
 				int aesKeyLength = aesKeyBytes.length;
 				int aesSaltLength = aesSaltBytes.length;
-				
+
 				outputStream.writeInt(aesKeyLength);
 				outputStream.write(aesKeyBytes);
 				outputStream.writeInt(aesSaltLength);
 				outputStream.write(aesSaltBytes);
-				
+
 				objectBytes = serializeObject(message, CryptographyMethod.AES);
-			}
-			else {
+			} else {
 				objectBytes = serializeObject(message, serializeMethod);
 			}
-			
+
 			outputStream.writeInt(objectBytes.length);
 			outputStream.write(objectBytes);
-			
-			// If we serialized objects using the AES algorithm, decrease the amount of remaining valid transactions
+
+			// If we serialized objects using the AES algorithm, decrease the amount of
+			// remaining valid transactions
 			if (serializeMethod == CryptographyMethod.AES) {
 				validTransactionsRemaining -= 1;
 			}
@@ -346,22 +341,25 @@ public class CommunicationProtocol implements Serializable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 * Sends a Query object to the Socket in this instance and receives a Response object from the Socket
-	 * @param <T1> The expected data type in the Response
-	 * @param <T2> The data type used in the Query
+	 * Sends a Query object to the Socket in this instance and receives a Response
+	 * object from the Socket
+	 * 
+	 * @param <T1>  The expected data type in the Response
+	 * @param <T2>  The data type used in the Query
 	 * @param query The Query to send
 	 * @return The Response object
 	 */
 	@SuppressWarnings("unchecked")
-	public <T1,T2> Response<T1> sendAndReceive(Query<T2> query) {
+	public <T1, T2> Response<T1> sendAndReceive(Query<T2> query) {
 		send(query);
-		return (Response<T1>)receive();
+		return (Response<T1>) receive();
 	}
-	
+
 	/**
 	 * Receives a Message from the Socket in this instance
+	 * 
 	 * @param <T> The data type for the Message
 	 * @return The Message
 	 */
@@ -372,62 +370,59 @@ public class CommunicationProtocol implements Serializable {
 					inputStream = new DataInputStream(socket.getInputStream());
 				}
 				break;
-			} catch(IOException ex) {
+			} catch (IOException ex) {
 				try {
 					Thread.sleep(500);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
-		} while(true);
-		
+		} while (true);
+
 		while (!socket.isClosed()) {
 			try {
 				int connectionType = inputStream.readInt();
-				
+
 				if (connectionType < 0) {
 					continue;
 				}
-				
+
 				CryptographyMethod deserializeMethod = null;
-				
+
 				if (connectionType == INITIATE_NEW_CONNECTION) {
 					deserializeMethod = CryptographyMethod.None;
-				}
-				else if (connectionType == EXCHANGE_KEYS || connectionType == INVALID_KEY) {
+				} else if (connectionType == EXCHANGE_KEYS || connectionType == INVALID_KEY) {
 					deserializeMethod = CryptographyMethod.RSA;
-				}
-				else {
+				} else {
 					deserializeMethod = CryptographyMethod.AES;
 				}
-				
+
 				Message<T> response = null;
-				
+
 				if (connectionType == EXCHANGE_KEYS) {
 					// Exchanging AES keys
 					int aesKeyLength = inputStream.readInt();
-					
+
 					byte[] aesKeyBytes = inputStream.readNBytes(aesKeyLength);
 					int aesSaltKeyLength = inputStream.readInt();
-					
+
 					byte[] aesSaltBytes = inputStream.readNBytes(aesSaltKeyLength);
 					int responseLength = inputStream.readInt();
-					
+
 					recipientPasswordKey = deserializeObject(aesKeyBytes, CryptographyMethod.RSA);
 					recipientSalt = deserializeObject(aesSaltBytes, CryptographyMethod.RSA);
-					
+
 					response = deserializeObject(inputStream.readNBytes(responseLength), CryptographyMethod.AES);
-				}
-				else {
+				} else {
 					int responseLength = inputStream.readInt();
-					
+
 					if (responseLength <= 0) {
 						continue;
 					}
-					
+
 					response = deserializeObject(inputStream.readNBytes(responseLength), deserializeMethod);
 				}
-				
+
 				return response;
 			} catch (Exception e) {
 				if (e instanceof SocketException) {
@@ -442,12 +437,14 @@ public class CommunicationProtocol implements Serializable {
 				}
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
-	 * Subscribes on Events on the Socket in this instance. Used exclusively on the server to listen on received messages from clients
+	 * Subscribes on Events on the Socket in this instance. Used exclusively on the
+	 * server to listen on received messages from clients
+	 * 
 	 * @param eventListener The event listener instance
 	 */
 	public void subscribeOnSocket(CommunicationEventListener eventListener) {
@@ -458,23 +455,23 @@ public class CommunicationProtocol implements Serializable {
 						inputStream = new DataInputStream(socket.getInputStream());
 					}
 					break;
-				} catch(IOException ex) {
+				} catch (IOException ex) {
 					try {
 						Thread.sleep(500);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 				}
-			} while(true);
-			
+			} while (true);
+
 			while (!socket.isClosed()) {
 				try {
 					Message<Object> retrievedQuery = receive();
-					
+
 					CommunicationOperation operation = retrievedQuery.operation;
 					Object object = retrievedQuery.data;
-					
-					switch(operation) {
+
+					switch (operation) {
 					case AddUser:
 					case DeleteUser:
 					case UpdateUser:
@@ -482,31 +479,32 @@ public class CommunicationProtocol implements Serializable {
 					case GetUser:
 					case VerifyUser:
 					case ForgotPassword:
-						eventListener.onUserAccountEvent((UserAccount)object, operation);
+						eventListener.onUserAccountEvent((UserAccount) object, operation);
 						break;
 					case AddCredential:
 					case DeleteCredential:
 					case UpdateCredential:
-						eventListener.onCredentialEvent((Credential)object, operation);
+						eventListener.onCredentialEvent((Credential) object, operation);
 						break;
 					case ExchangeKeys:
 						negotiateKeys();
 						break;
 					case InitiateConnection:
 						PublicKey publicKey = rsa.getPublicKey();
-						PublicKey remotePublicKey = (PublicKey)object;
-						
+						PublicKey remotePublicKey = (PublicKey) object;
+
 						rsa.setRecipientPublicKey(remotePublicKey);
-						
-						Response<PublicKey> initiateConnectionResponse = new Response<PublicKey>(ResponseCode.OK, operation, publicKey);
-						
+
+						Response<PublicKey> initiateConnectionResponse = new Response<PublicKey>(ResponseCode.OK,
+								operation, publicKey);
+
 						send(initiateConnectionResponse);
 						break;
 					default:
 						break;
 					}
-					
-					switch(operation) {
+
+					switch (operation) {
 					case ExchangeKeys:
 						break;
 					default:
@@ -531,14 +529,15 @@ public class CommunicationProtocol implements Serializable {
 				}
 			}
 		});
-		
+
 		subscribeThread.start();
 	}
-	
+
 	/**
 	 * Deserializes an encrypted byte array to the corresponding Object
-	 * @param <T> The data type for the Object
-	 * @param bytes The encrypted byte array containing the Object
+	 * 
+	 * @param <T>                The data type for the Object
+	 * @param bytes              The encrypted byte array containing the Object
 	 * @param cryptographyMethod The method used to deserialize the Object
 	 * @return The Object
 	 * @throws ClassNotFoundException
@@ -550,39 +549,42 @@ public class CommunicationProtocol implements Serializable {
 	 * @throws BadPaddingException
 	 */
 	@SuppressWarnings("unchecked")
-	private <T> T deserializeObject(byte[] bytes, CryptographyMethod cryptographyMethod) throws ClassNotFoundException, IOException, InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException {
-		
-		byte[] decryptedData = null; 
-		
+	private <T> T deserializeObject(byte[] bytes, CryptographyMethod cryptographyMethod)
+			throws ClassNotFoundException, IOException, InvalidKeyException, NoSuchPaddingException,
+			NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException {
+
+		byte[] decryptedData = null;
+
 		if (cryptographyMethod == CryptographyMethod.AES) {
 			decryptedData = AES.decrypt(bytes, recipientPasswordKey, recipientSalt);
-		}
-		else if (cryptographyMethod == CryptographyMethod.RSA) {
+		} else if (cryptographyMethod == CryptographyMethod.RSA) {
 			decryptedData = rsa.decrypt(bytes);
-		}
-		else {
+		} else {
 			decryptedData = bytes;
 		}
-		
+
 		ByteArrayInputStream bis = new ByteArrayInputStream(decryptedData);
 		ObjectInputStream ois = new ObjectInputStream(bis);
-		
+
 		T obj = null;
-		
+
 		try {
-			obj = (T)ois.readObject();
+			obj = (T) ois.readObject();
 		} catch (EOFException e) {
 			e.printStackTrace();
 		}
-		
+
 		return obj;
 	}
-	
+
 	/**
-	 * Serializes an object to an encrypted byte array using the specified encryption method
-	 * @param <T> The data type for the Object
-	 * @param object The Object to be serialized
-	 * @param cryptographyMethod The cryptography method used to encrypt the serialized object
+	 * Serializes an object to an encrypted byte array using the specified
+	 * encryption method
+	 * 
+	 * @param <T>                The data type for the Object
+	 * @param object             The Object to be serialized
+	 * @param cryptographyMethod The cryptography method used to encrypt the
+	 *                           serialized object
 	 * @return The encrypted byte array containing the serialized object
 	 * @throws IOException
 	 * @throws InvalidKeyException
@@ -591,27 +593,27 @@ public class CommunicationProtocol implements Serializable {
 	 * @throws IllegalBlockSizeException
 	 * @throws BadPaddingException
 	 */
-	private <T> byte[] serializeObject(T object, CryptographyMethod cryptographyMethod) throws IOException, InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException {
+	private <T> byte[] serializeObject(T object, CryptographyMethod cryptographyMethod)
+			throws IOException, InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException,
+			IllegalBlockSizeException, BadPaddingException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(baos);
-		
+
 		if (object != null) {
 			oos.writeObject(object);
 			oos.close();
 		}
-		
+
 		byte[] encryptedBytes = null;
-		
-		if (cryptographyMethod == CryptographyMethod.AES ) {
+
+		if (cryptographyMethod == CryptographyMethod.AES) {
 			encryptedBytes = AES.encrypt(baos.toByteArray(), passwordKey, salt);
-		}
-		else if (cryptographyMethod == CryptographyMethod.RSA) {
+		} else if (cryptographyMethod == CryptographyMethod.RSA) {
 			encryptedBytes = rsa.encrypt(baos.toByteArray());
-		}
-		else {
+		} else {
 			encryptedBytes = baos.toByteArray();
 		}
-		
+
 		return encryptedBytes;
 	}
 }

@@ -29,52 +29,50 @@ import passwordmanager.util.StringExtensions;
  */
 public class PasswordServer implements Runnable {
 	private final int MAX_PENDING_CONNECTIONS = 10;
-	
+
 	private Configuration config;
 	private PasswordDatabase database;
 	private ServerSocket serverSocket;
-	
+
 	public PasswordServer(Configuration config) throws Exception {
 		this.config = config;
 		this.database = new PasswordDatabase(config);
 	}
-	
+
 	protected void finalize() {
 		close();
 	}
-	
+
 	public void listen() {
 		try {
 			serverSocket = new ServerSocket();
 			serverSocket.setReuseAddress(true);
-			
+
 			if (!StringExtensions.isNullOrEmpty(config.serverIp.getHostAddress())) {
 				serverSocket.bind(new InetSocketAddress(config.serverIp, config.serverPort), MAX_PENDING_CONNECTIONS);
-			}
-			else {
+			} else {
 				serverSocket.bind(new InetSocketAddress(config.serverPort), MAX_PENDING_CONNECTIONS);
 			}
-			
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;
 		}
-		
-		while(!serverSocket.isClosed()) {
+
+		while (!serverSocket.isClosed()) {
 			try {
 				Socket clientSocket = serverSocket.accept();
-				
+
 				Thread clientThread = new Thread(() -> {
 					processClient(clientSocket);
 				});
-				
+
 				clientThread.start();
 			} catch (IOException e) {
 			}
 		}
 	}
-	
+
 	public void close() {
 		try {
 			serverSocket.close();
@@ -83,43 +81,44 @@ public class PasswordServer implements Runnable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void processClient(Socket client) {
-		CommunicationProtocol communicationProtocol = new CommunicationProtocol(client, CommunicationProtocol.ProtocolMode.Server);
-		
+		CommunicationProtocol communicationProtocol = new CommunicationProtocol(client,
+				CommunicationProtocol.ProtocolMode.Server);
+
 		communicationProtocol.subscribeOnSocket(new CommunicationEventListener() {
 			@Override
 			public void onCredentialEvent(Credential credential, CommunicationOperation operation) {
 				try {
 					ResponseCode responseCode = ResponseCode.OK;
-					
+
 					Object returnValue = null;
 					Boolean result = false;
-					
+
 					switch (operation) {
 					case AddCredential:
 						result = addCredential(credential);
 						returnValue = result;
-						
+
 						responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
 						break;
 					case DeleteCredential:
 						result = deleteCredential(credential);
 						returnValue = result;
-						
+
 						responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
 						break;
 					case UpdateCredential:
 						result = updateCredential(credential);
 						returnValue = result;
-						
+
 						responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
 						break;
 					default:
 						responseCode = ResponseCode.Fail;
 						break;
 					}
-					
+
 					Response<Object> serverResponse = new Response<Object>(responseCode, operation, returnValue);
 					communicationProtocol.send(serverResponse);
 				} catch (Exception e) {
@@ -132,22 +131,22 @@ public class PasswordServer implements Runnable {
 			public void onUserAccountEvent(UserAccount userAccount, CommunicationOperation operation) {
 				try {
 					ResponseCode responseCode = ResponseCode.OK;
-					
+
 					Object returnValue = null;
 					Boolean result = true;
-					
+
 					switch (operation) {
 					case AddUser:
 						returnValue = addAccount(userAccount);
-						
-						responseCode = (boolean)returnValue == true ? ResponseCode.OK : ResponseCode.Fail;
-						
+
+						responseCode = (boolean) returnValue == true ? ResponseCode.OK : ResponseCode.Fail;
+
 						break;
 					case DeleteUser:
 						result &= deleteAllPasswords(userAccount);
 						result &= deleteAccount(userAccount);
 						returnValue = result;
-						
+
 						responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
 						break;
 					case GetAllCredentials:
@@ -168,7 +167,7 @@ public class PasswordServer implements Runnable {
 					case UpdateUser:
 						result = updateAccount(userAccount);
 						returnValue = result;
-						
+
 						responseCode = result == true ? ResponseCode.OK : ResponseCode.Fail;
 						break;
 					case ForgotPassword:
@@ -179,7 +178,7 @@ public class PasswordServer implements Runnable {
 						responseCode = ResponseCode.Fail;
 						break;
 					}
-					
+
 					Response<Object> serverResponse = new Response<Object>(responseCode, operation, returnValue);
 					communicationProtocol.send(serverResponse);
 				} catch (Exception e) {
@@ -189,7 +188,7 @@ public class PasswordServer implements Runnable {
 			}
 		});
 	}
-	
+
 	private boolean addAccount(UserAccount account) {
 		try {
 			database.addAccount(account);
@@ -198,17 +197,17 @@ public class PasswordServer implements Runnable {
 			return false;
 		}
 	}
-	
+
 	private boolean addCredential(Credential credential) {
 		try {
 			database.addCredential(credential);
 			return true;
 		} catch (SQLException exadd) {
 			exadd.printStackTrace();
-		return false;
+			return false;
 		}
 	}
-	
+
 	private boolean deleteAccount(UserAccount account) {
 		try {
 			database.deleteAccount(account);
@@ -217,7 +216,7 @@ public class PasswordServer implements Runnable {
 			return false;
 		}
 	}
-	
+
 	private boolean deleteAllPasswords(UserAccount account) {
 		try {
 			database.deleteAllCredentials(account);
@@ -226,97 +225,99 @@ public class PasswordServer implements Runnable {
 			return false;
 		}
 	}
-	
+
 	private boolean deleteCredential(Credential credential) {
 		try {
 			database.deleteCredential(credential);
 			return true;
 		} catch (SQLException exdel) {
-		return false;
+			return false;
 		}
 	}
-	
+
 	private boolean forgotPassword(UserAccount account) {
 		try {
 			UserAccount dbAccount = database.getAccount(account.getEmail());
-			
+
 			if (dbAccount == null) {
-				System.out.println("There is no user with the e-mail " + "'" + account.getEmail() + "' registered in the database!");
+				System.out.println("There is no user with the e-mail " + "'" + account.getEmail()
+						+ "' registered in the database!");
 				return false;
 			}
-			
+
 			database.insertResetRequest(account);
 			int requestId = database.getResetRequestId(account);
-			
+
 			if (requestId <= 0) {
 				return false;
 			}
-			
+
 			System.out.println("Reset password request id: " + requestId);
-			
+
 			// Configure smtp properties with ssl authentication
 			Properties props = new Properties();
 			props.put("mail.smtp.host", "smtp.gmail.com");
 			props.put("mail.smtp.socketFactory.port", "465");
-			props.put("mail.smtp.socketFactory.class",
-					"javax.net.ssl.SSLSocketFactory");
+			props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 			props.put("mail.smtp.auth", "true");
 			props.put("mail.smtp.port", "465");
-			
+
 			System.out.println("Server e-mail: " + config.serverEmail);
 			System.out.println("Server e-mail password: " + config.serverPassword);
-			
+
 			Authenticator auth = new Authenticator() {
 				protected PasswordAuthentication getPasswordAuthentication() {
 					return new PasswordAuthentication(config.serverEmail, config.serverPassword);
 				}
 			};
-			
+
 			String publicDomainName = config.publicDomainName;
-			
+
 			System.out.println("Public domain name: " + publicDomainName);
-			
+
 			if (StringExtensions.isNullOrEmpty(publicDomainName)) {
 				System.out.println("Public domain name is empty!");
 				return false;
 			}
-			
+
 			URL baseUrl = new URL("https://" + publicDomainName);
 			URL finalUrl = new URL(baseUrl, "" + requestId);
-			
+
 			Session session = Session.getDefaultInstance(props, auth);
-			EmailUtil.sendEmail(session, config.serverEmail, account.getEmail(), "PasswordManager: Reset password", "A password reset was requested for this user account. Press the following link to reset your password:\r\n\r\n" + finalUrl.toString());
-			
+			EmailUtil.sendEmail(session, config.serverEmail, account.getEmail(), "PasswordManager: Reset password",
+					"A password reset was requested for this user account. Press the following link to reset your password:\r\n\r\n"
+							+ finalUrl.toString());
+
 			System.out.println("Recipient e-mail: " + account.getEmail());
-			
+
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return false;
 	}
-	
+
 	private UserAccount getAccount(String email) throws SQLException {
 		return database.getAccount(email);
 	}
-	
+
 	private Credential[] getCredentials(UserAccount account) throws SQLException {
 		List<Credential> credentials = database.listAllCredentials(account);
 		Credential[] returnValue = credentials.toArray(new Credential[credentials.size()]);
-		
+
 		return returnValue;
 	}
-	
+
 	private boolean updateAccount(UserAccount account) {
 		try {
 			database.changeAccountPassword(account, account.getPassword());
 			return true;
 		} catch (SQLException eAcc) {
 			return false;
-		}	
+		}
 	}
-	
+
 	private boolean updateCredential(Credential credential) {
 		try {
 			database.changeCredential(credential);
@@ -326,7 +327,6 @@ public class PasswordServer implements Runnable {
 			return false;
 		}
 	}
-	
 
 	@Override
 	public void run() {
