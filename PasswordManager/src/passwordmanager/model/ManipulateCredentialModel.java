@@ -65,12 +65,10 @@ public class ManipulateCredentialModel implements Observable<ManipulateCredentia
 		}
 	
 		if (this.credential != null) {
-			System.out.println("Before changing data. User: " + credential.getUser() + ", Service: " + credential.getURL() + " , Username: " + credential.getUsername() + ", Password: " + credential.getPassword());
 			this.credential.setURL(url);
 			this.credential.setUsername(username);
 			this.credential.setPassword(password);
 			
-			System.out.println("After changing data. User: " + credential.getUser() + ", Service: " + credential.getURL() + " , Username: " + credential.getUsername() + ", Password: " + credential.getPassword());
 			boolean success = client.modifyCredential(credential);
 
 			if (!success) {

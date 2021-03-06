@@ -112,7 +112,6 @@ public class InitialViewActionListener implements ActionListener, Observer<Login
 
 	@Override
 	public void update(LoginDialogModel observable) {
-		System.out.println("Logged in status: " + observable.getLoggedInStatus());
 		if (observable.getLoggedInStatus() && initialView.getFrame().isVisible()) {
 			UserAccount account = new UserAccount(observable.getEmail(), observable.getPassword());
 			mainModel.setUserAccount(account);

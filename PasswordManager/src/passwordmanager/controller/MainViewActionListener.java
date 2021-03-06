@@ -136,7 +136,6 @@ public class MainViewActionListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("Pressed button: " + e.getActionCommand());
         switch (Integer.parseInt(e.getActionCommand())) {
         case ADD_CREDENTIAL:
             addCredential();
