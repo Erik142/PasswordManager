@@ -8,6 +8,7 @@ import passwordmanager.communication.PasswordServer;
 import passwordmanager.communication.Query;
 import passwordmanager.communication.Response;
 import passwordmanager.config.Configuration;
+import passwordmanager.model.UserAccount;
 
 public class PasswordServerDebug {
 	public PasswordServerDebug(Configuration config) {

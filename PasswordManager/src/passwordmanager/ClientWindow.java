@@ -2,43 +2,44 @@ package passwordmanager;
 
 import java.io.IOException;
 
-import passwordmanager.addcredential.AddCredentialController;
-import passwordmanager.addcredential.AddCredentialModel;
-import passwordmanager.addcredential.AddDialog;
-import passwordmanager.changecredential.ChangeCredentialController;
-import passwordmanager.changecredential.ChangeCredentialComponentListener;
-import passwordmanager.changecredential.ChangeDialog;
-import passwordmanager.changecredential.ManipulateCredentialModel;
-import passwordmanager.changeuserpassword.ChangePasswordController;
-import passwordmanager.changeuserpassword.ChangePasswordDialog;
-import passwordmanager.changeuserpassword.ChangeUserAccountModel;
+import passwordmanager.communication.PasswordClient;
 import passwordmanager.config.Configuration;
-import passwordmanager.forgotpassword.ForgotPasswordDialog;
-import passwordmanager.forgotpassword.ForgotPasswordDialogController;
-import passwordmanager.forgotpassword.ForgotPasswordModel;
-import passwordmanager.forgotpassword.ForgotPasswordWindowController;
-import passwordmanager.login.ForgotPasswordController;
-import passwordmanager.login.LoginController;
-import passwordmanager.login.LoginDialog;
-import passwordmanager.login.LoginDialogController;
-import passwordmanager.login.LoginDialogModel;
-import passwordmanager.login.LoginScreen;
-import passwordmanager.login.LoginScreenController;
-import passwordmanager.login.LoginScreenModel;
-import passwordmanager.login.SignupController;
-import passwordmanager.mainview.AddCredentialButtonController;
-import passwordmanager.mainview.ChangeAccountButtonController;
-import passwordmanager.mainview.ChangeCredentialButtonController;
-import passwordmanager.mainview.DeleteAccountButtonController;
-import passwordmanager.mainview.DeleteCredentialButtonController;
-import passwordmanager.mainview.MainModel;
-import passwordmanager.mainview.MainView;
-import passwordmanager.mainview.MainViewTableController;
-import passwordmanager.mainview.SignOutButtonController;
-import passwordmanager.signup.SignUpController;
-import passwordmanager.signup.SignUpDialog;
-import passwordmanager.signup.SignUpWindowController;
-import passwordmanager.signup.SignUpModel;
+import passwordmanager.controller.AddCredentialButtonController;
+import passwordmanager.controller.AddCredentialController;
+import passwordmanager.controller.ChangeAccountButtonController;
+import passwordmanager.controller.ChangeCredentialButtonController;
+import passwordmanager.controller.ChangeCredentialComponentListener;
+import passwordmanager.controller.ChangeCredentialController;
+import passwordmanager.controller.ChangePasswordController;
+import passwordmanager.controller.DeleteAccountButtonController;
+import passwordmanager.controller.DeleteCredentialButtonController;
+import passwordmanager.controller.ForgotPasswordController;
+import passwordmanager.controller.ForgotPasswordDialogController;
+import passwordmanager.controller.ForgotPasswordWindowController;
+import passwordmanager.controller.LoginController;
+import passwordmanager.controller.LoginDialogController;
+import passwordmanager.controller.LoginScreenController;
+import passwordmanager.controller.MainViewTableController;
+import passwordmanager.controller.SignOutButtonController;
+import passwordmanager.controller.SignUpController;
+import passwordmanager.controller.SignUpWindowController;
+import passwordmanager.controller.SignUpDialogController;
+import passwordmanager.model.AddCredentialModel;
+import passwordmanager.model.ChangeUserAccountModel;
+import passwordmanager.model.ForgotPasswordModel;
+import passwordmanager.model.LoginDialogModel;
+import passwordmanager.model.LoginScreenModel;
+import passwordmanager.model.MainModel;
+import passwordmanager.model.ManipulateCredentialModel;
+import passwordmanager.model.SignUpModel;
+import passwordmanager.view.AddDialog;
+import passwordmanager.view.ChangeDialog;
+import passwordmanager.view.ChangePasswordDialog;
+import passwordmanager.view.ForgotPasswordDialog;
+import passwordmanager.view.LoginDialog;
+import passwordmanager.view.LoginScreen;
+import passwordmanager.view.MainView;
+import passwordmanager.view.SignUpDialog;
 
 public class ClientWindow {
 	public ClientWindow(Configuration config) throws IOException {
@@ -55,7 +56,7 @@ public class ClientWindow {
 		ForgotPasswordDialogController forgotPasswordDialogController = new ForgotPasswordDialogController(forgotPasswordDialog, forgotPasswordModel);
 		ForgotPasswordWindowController forgotPasswordWindowController = new ForgotPasswordWindowController(forgotPasswordDialog, forgotPasswordModel);
 		
-		forgotPasswordDialog.registerListener(forgotPasswordDialogController, forgotPasswordWindowController);
+		forgotPasswordDialog.registerListener(forgotPasswordDialogController);
 		forgotPasswordModel.addObserver(forgotPasswordDialog);
 		
 		SignUpModel signupModel = new SignUpModel(client);
@@ -77,7 +78,7 @@ public class ClientWindow {
 		
 		LoginController loginController = new LoginController(loginDialogModel);
 		ForgotPasswordController forgotPasswordController = new ForgotPasswordController(forgotPasswordModel);
-		SignupController signupController = new SignupController(signupModel);
+		SignUpDialogController signupController = new SignUpDialogController(signupModel);
 		
 		loginScreen.registerListener(loginController, forgotPasswordController, signupController);
 		

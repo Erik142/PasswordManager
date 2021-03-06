@@ -20,9 +20,9 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import passwordmanager.Credential;
-import passwordmanager.UserAccount;
 import passwordmanager.communication.Response.ResponseCode;
+import passwordmanager.model.Credential;
+import passwordmanager.model.UserAccount;
 
 /**
  * 

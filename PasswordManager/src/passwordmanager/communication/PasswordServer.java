@@ -13,12 +13,11 @@ import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 
-import passwordmanager.Credential;
-import passwordmanager.PasswordDatabase;
-import passwordmanager.UserAccount;
 import passwordmanager.communication.CommunicationProtocol.CommunicationOperation;
 import passwordmanager.communication.Response.ResponseCode;
 import passwordmanager.config.Configuration;
+import passwordmanager.model.Credential;
+import passwordmanager.model.UserAccount;
 import passwordmanager.util.EmailUtil;
 import passwordmanager.util.StringExtensions;
 

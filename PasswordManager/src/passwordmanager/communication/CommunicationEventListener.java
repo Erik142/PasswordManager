@@ -1,7 +1,7 @@
 package passwordmanager.communication;
 
-import passwordmanager.Credential;
-import passwordmanager.UserAccount;
+import passwordmanager.model.Credential;
+import passwordmanager.model.UserAccount;
 
 public abstract class CommunicationEventListener {
 	public abstract void onCredentialEvent(Credential credential, CommunicationProtocol.CommunicationOperation operation);
