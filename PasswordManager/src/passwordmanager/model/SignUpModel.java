@@ -8,6 +8,9 @@ import passwordmanager.exception.ModelException;
 import passwordmanager.util.EmailUtil;
 import passwordmanager.util.StringExtensions;
 
+/**
+ * Used to sign up a user to the database
+ */
 public class SignUpModel implements Observable<SignUpModel> {
 
 	private final int minimumPasswordLength = 8;
@@ -22,27 +25,54 @@ public class SignUpModel implements Observable<SignUpModel> {
 	
 	private final PasswordClient client;
 	
+	/**
+	 * Creates a new instance of the SignUpModel class with the specified PasswordClient
+	 * @param client
+	 */
 	public SignUpModel(PasswordClient client) {
 		this.client = client;
 		observers = new HashSet<Observer<SignUpModel>>();
 	}
 	
+	/**
+	 * Get the sign up status
+	 * @return true if the sign up was successful, false otherwise
+	 */
 	public boolean getStatus() {
 		return status;
 	}
 	
+	/**
+	 * Get the e-mail address String
+	 * @return The e-mail address
+	 */
 	public String getEmail() {
 		return email;
 	}
 	
+	/**
+	 * Get the password String
+	 * @return The password String
+	 */
 	public String getPassword() {
 		return password;
 	}
 	
+	/**
+	 * Get the password String, confirmed
+	 * @return The password String, confirmed
+	 */
 	public String getConfirmPassword() {
 		return confirmPassword;
 	}
 	
+	/**
+	 * Add a new user to the database with the specified e-mail address, password and confirmed password Strings
+	 * @param email The e-mail address
+	 * @param password The password String
+	 * @param confirmPassword The password String, confirmed
+	 * @throws ModelException
+	 */
 	public void signup(String email, String password, String confirmPassword) throws ModelException {
 		this.password = password;
 		this.confirmPassword = confirmPassword;
@@ -82,6 +112,9 @@ public class SignUpModel implements Observable<SignUpModel> {
 		updateObservers();
 	}
 	
+	/**
+	 * Reset all text fields
+	 */
 	public void resetFields() {
 		this.email = "";
 		this.password = "";

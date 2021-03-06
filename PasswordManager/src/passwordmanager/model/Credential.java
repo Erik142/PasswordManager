@@ -3,8 +3,8 @@ package passwordmanager.model;
 import java.io.Serializable;
 /**
  * @author Ermin Fazlic
+ * Stores the credential data for a specified user
  */
-
 public class Credential implements Serializable {
 
 	private int id;
@@ -15,6 +15,14 @@ public class Credential implements Serializable {
 	private String password;
 	private static final long serialVersionUID = 5070481307938381662L;
 	
+	/**
+	 * Creates a new instance of the Credential class with the specified id, user, url, username and password
+	 * @param id The id used in the database
+	 * @param user The UserAccount e-mail that this Credential is for
+	 * @param URL The url for the service
+	 * @param username The username for the service
+	 * @param password The password for the service
+	 */
 	public Credential(int id, String user, String URL, String username, String password) {
 		this.id = id;
 		this.user=user;
@@ -25,6 +33,13 @@ public class Credential implements Serializable {
 		this.pictureURL=URL+"/favicon.ico";
 	}
 
+	/**
+	 * Creates a new instance of the Credential class with the specified user, url, username and password
+	 * @param user The UserAccount e-mail that this Credential is for
+	 * @param URL The url for the service
+	 * @param username The username for the service
+	 * @param password The password for the service
+	 */
 	public Credential(String user, String URL, String username, String password) {
 		this(0, user, URL, username, password);
 	}

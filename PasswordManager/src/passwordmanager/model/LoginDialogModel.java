@@ -8,6 +8,9 @@ import passwordmanager.exception.ModelException;
 import passwordmanager.util.EmailUtil;
 import passwordmanager.util.StringExtensions;
 
+/**
+ * Used to login and logout a UserAccount into/from the application
+ */
 public class LoginDialogModel implements Observable<LoginDialogModel> {
 
 	private final Collection<Observer<LoginDialogModel>> observers;
@@ -19,23 +22,45 @@ public class LoginDialogModel implements Observable<LoginDialogModel> {
 	
 	private final PasswordClient client;
 	
+	/**
+	 * Creates a new instance of the LoginDialogModel class with the specified PasswordClient
+	 * @param client The PasswordClient
+	 */
 	public LoginDialogModel(PasswordClient client) {
 		this.observers = new HashSet<Observer<LoginDialogModel>>();
 		this.client = client;
 	}
 	
+	/**
+	 * Get the e-mail address
+	 * @return The e-mail address
+	 */
 	public String getEmail() {
 		return this.email;
 	}
 	
+	/**
+	 * Get the current login status
+	 * @return true if the UserAccount is logged in, false otherwise
+	 */
 	public boolean getLoggedInStatus() {
 		return isLoggedIn;
 	}
 	
+	/**
+	 * Get the password
+	 * @return The password
+	 */
 	public String getPassword() {
 		return password;
 	}
 	
+	/**
+	 * Log in a UserAccount with the specified e-mail address and password into the application
+	 * @param email The e-mail address
+	 * @param password The password
+	 * @throws ModelException
+	 */
 	public void login(String email, String password) throws ModelException {
 		boolean isValidEmail = EmailUtil.isValidEmail(email);
 		boolean isPasswordEmpty = StringExtensions.isNullOrEmpty(password);
@@ -66,6 +91,9 @@ public class LoginDialogModel implements Observable<LoginDialogModel> {
 		updateObservers();
 	}
 	
+	/**
+	 * Logout the user from the application
+	 */
 	public void logout() {
 		this.isLoggedIn = false;
 		this.email = "";

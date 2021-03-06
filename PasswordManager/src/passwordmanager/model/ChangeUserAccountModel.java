@@ -7,7 +7,11 @@ import passwordmanager.communication.PasswordClient;
 import passwordmanager.exception.ModelException;
 import passwordmanager.util.StringExtensions;
 
-public class ChangeUserAccountModel implements Observable<ChangeUserAccountModel>, Observer<LoginDialogModel> {
+/**
+ * @author Erik Wahlberger
+ * Used to change the password for a UserAccount object
+ */
+public class ChangeUserAccountModel implements Observable<ChangeUserAccountModel> {
 
 	private final int MIN_PASSWORD_LENGTH = 8;
 	
@@ -20,11 +24,22 @@ public class ChangeUserAccountModel implements Observable<ChangeUserAccountModel
 	private String confirmPassword = "";
 	private String newPassword = "";
 	
+	/**
+	 * Creates a new instance of the ChangeUserAccountModel with the specified PasswordClient object
+	 * @param client The PasswordClient
+	 */
 	public ChangeUserAccountModel(PasswordClient client) {
 		this.observers = new HashSet<Observer<ChangeUserAccountModel>>();
 		this.client = client;
 	}
 	
+	/**
+	 * Changes the password for the UserAccount
+	 * @param oldPassword The old password String
+	 * @param newPassword The new password String
+	 * @param confirmPassword The new password String, confirmed
+	 * @throws ModelException
+	 */
 	public void changeUserPassword(String oldPassword, String newPassword, String confirmPassword) throws ModelException {
 		if (isValidPassword(newPassword) && isValidPassword(confirmPassword) && newPassword.equals(confirmPassword) && !newPassword.equals(oldPassword)) {
 			if (oldPassword.equals(account.getPassword())) {
@@ -56,6 +71,10 @@ public class ChangeUserAccountModel implements Observable<ChangeUserAccountModel
 		updateObservers();
 	}
 	
+	/**
+	 * Deletes the UserAccount from the database
+	 * @throws ModelException
+	 */
 	public void deleteAccount() throws ModelException {
 		if (account != null) {
 			boolean success = client.deleteUserAccount(account);
@@ -71,28 +90,52 @@ public class ChangeUserAccountModel implements Observable<ChangeUserAccountModel
 		updateObservers();
 	}
 	
+	/**
+	 * Get the new password String
+	 * @return The new password String
+	 */
 	public String getNewPassword() {
 		return this.newPassword;
 	}
 	
+	/**
+	 * Get the old password String
+	 * @return The old password String
+	 */
 	public String getOldPassword() {
 		return this.oldPassword;
 	}
 	
+	/**
+	 * Get the new password String, confirmed
+	 * @return The new password String, confirmed
+	 */
 	public String getConfirmPassword() {
 		return this.confirmPassword;
 	}
 	
+	/**
+	 * Checks if the specified String is a valid password
+	 * @param password The String to be verified
+	 * @return true if the String is a valid password, false otherwise
+	 */
 	private boolean isValidPassword(String password) {
 		return !StringExtensions.isNullOrEmpty(password) && password.trim().length() >= MIN_PASSWORD_LENGTH;
 	}
 	
+	/**
+	 * Set the UserAccount instance variable
+	 * @param account The UserAccount object
+	 */
 	public void setAccount(UserAccount account) {
 		this.account = account;
 		
 		updateObservers();
 	}
 	
+	/**
+	 * Resets the text fields
+	 */
 	public void reset() {
 		this.oldPassword = "";
 		this.newPassword = "";
@@ -115,14 +158,6 @@ public class ChangeUserAccountModel implements Observable<ChangeUserAccountModel
 	@Override
 	public void removeObserver(Observer<ChangeUserAccountModel> observer) {
 		this.observers.remove(observer);
-	}
-
-	@Override
-	public void update(LoginDialogModel observable) {
-		String email = observable.getEmail();
-		String password = observable.getPassword();
-		
-		setAccount(new UserAccount(email, password));
 	}
 
 }
