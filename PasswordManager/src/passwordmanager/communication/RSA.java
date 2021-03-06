@@ -14,6 +14,10 @@ import javax.crypto.NoSuchPaddingException;
 
 import java.security.Key;
 
+/**
+ * @author Erik Wahlberger
+ * The RSA class is used to encrypt and decrypt data using the RSA algorithm, as well as generating private/public RSA keypairs
+ */
 public class RSA {
 	private final String KEYPAIRALGO = "RSA";
 	private final String CIPHERTRANSFORMATION = "RSA/ECB/OAEPWITHSHA-512ANDMGF1PADDING";
@@ -23,11 +27,17 @@ public class RSA {
 	private PublicKey recipientPublicKey = null;
 	
 	private PrivateKey privateKey = null;
-	
+
+	/**
+	 * Creates a new instance of a RSA object and generates a new keypair
+	 */
 	public RSA() {
 		generateKeyPair();
 	}
 	
+	/**
+	 * Generates a new private/public keypair
+	 */
 	public void generateKeyPair() {
 		try {
 			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(KEYPAIRALGO);
@@ -43,26 +53,70 @@ public class RSA {
 		}
 	}
 	
+	/**
+	 * Retrieves the public RSA key
+	 * @return The public RSA key
+	 */
 	public PublicKey getPublicKey() {
 		return this.publicKey;
 	}
 	
+	/**
+	 * Get the public RSA key for the recipient
+	 * @return The public RSA key
+	 */
 	public PublicKey getRecipientPublicKey() {
 		return recipientPublicKey;
 	}
 	
+	/**
+	 * Sets the public RSA key for the recipient
+	 * @param publicKey The new RSA public key
+	 */
 	public void setRecipientPublicKey(PublicKey publicKey) {
 		recipientPublicKey = publicKey;
 	}
 	
+	/**
+	 * Encrypts the specified byte array with the public RSA key of the recipient
+	 * @param bytes The unencrypted byte array
+	 * @return The encrypted byte array
+	 * @throws NoSuchPaddingException
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidKeyException
+	 * @throws IllegalBlockSizeException
+	 * @throws BadPaddingException
+	 */
 	public byte[] encrypt(byte[] bytes) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 		return performCipherOperation(Cipher.ENCRYPT_MODE, recipientPublicKey, bytes);
 	}
 	
+	/**
+	 * Decrypts the specified byte array with the private RSA key generated in this instance
+	 * @param bytes The RSA-encrypted byte array
+	 * @return The decrypted byte array
+	 * @throws NoSuchPaddingException
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidKeyException
+	 * @throws IllegalBlockSizeException
+	 * @throws BadPaddingException
+	 */
 	public byte[] decrypt(byte[] bytes) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 		return performCipherOperation(Cipher.DECRYPT_MODE, privateKey, bytes);
 	}
 	
+	/**
+	 * Perform a cipher operation, e.g. an encryption or decryption of data
+	 * @param cipherOpMode The cipher operation mode. Cipher.DECRYPT_MODE for decryption, Cipher.ENCRYPT_MODE for encryption
+	 * @param key The key used to perform the cipher operation
+	 * @param bytes The byte array on which the cipher operation should be applied to
+	 * @return The ciphered byte array
+	 * @throws NoSuchPaddingException
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidKeyException
+	 * @throws IllegalBlockSizeException
+	 * @throws BadPaddingException
+	 */
 	private byte[] performCipherOperation(int cipherOpMode, Key key, byte[] bytes) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 		if (key == null) {
 			throw new NullPointerException("The key was null.");

@@ -319,7 +319,7 @@ public class PasswordServer implements Runnable {
 	
 	private boolean updateCredential(Credential credential) {
 		try {
-			database.changeCredential(credential, credential.getPassword());
+			database.changeCredential(credential);
 			return true;
 		} catch (SQLException eCred) {
 			eCred.printStackTrace();

@@ -25,9 +25,8 @@ import passwordmanager.model.Credential;
 import passwordmanager.model.UserAccount;
 
 /**
- * 
  * @author Erik Wahlberger
- *
+ * Implements the protocol used to communicate between the client and server
  */
 public class CommunicationProtocol implements Serializable {
 	/**
@@ -35,6 +34,9 @@ public class CommunicationProtocol implements Serializable {
 	 */
 	private static final long serialVersionUID = -222451491800802999L;
 
+	/**
+	 * Specifies the allowed operations to perform when communicating
+	 */
 	public enum CommunicationOperation {
 		AddCredential,
 		DeleteCredential,
@@ -51,11 +53,17 @@ public class CommunicationProtocol implements Serializable {
 		ForgotPassword
 	}
 	
+	/**
+	 * Specifies if the protocol should be run in Client or Server mode
+	 */
 	public enum ProtocolMode {
 		Client,
 		Server
 	}
 	
+	/**
+	 * Specifies different cryptography methods
+	 */
 	private enum CryptographyMethod {
 		RSA,
 		AES,
@@ -83,6 +91,11 @@ public class CommunicationProtocol implements Serializable {
 	private DataInputStream inputStream;
 	private DataOutputStream outputStream;
 	
+	/**
+	 * Initializes a new CommunicationProtocol instance for the specified socket and in the specified mode.
+	 * @param socket The socket used to communicate
+	 * @param mode The mode for this instance. If the mode is Client, the instance will immediately start to exchange encryption keys. If the mode is Server, the instance will not do anything by itself.
+	 */
 	public CommunicationProtocol(Socket socket, ProtocolMode mode) {
 		this.socket = socket;
 		this.rsa = new RSA();
@@ -95,8 +108,10 @@ public class CommunicationProtocol implements Serializable {
 		}
 	}
 	
+	/**
+	 * Initiates the connection by generating and exchanging RSA encryption keys
+	 */
 	private void initiateConnection() {
-		// TODO: Validate connection
 		System.out.println();
 		System.out.println();
 		System.out.println();
@@ -125,6 +140,9 @@ public class CommunicationProtocol implements Serializable {
 		System.out.println();
 	}
 	
+	/**
+	 * Generates and exchanges AES encryption keys
+	 */
 	private void negotiateKeys() {
 		System.out.println();
 		System.out.println();
@@ -208,11 +226,20 @@ public class CommunicationProtocol implements Serializable {
 		System.out.println();
 		System.out.println();
 	}
-	
+
+	/**
+	 * Checks if the current AES keys are valid by using the value for remaining transactions as specified by the server
+	 * @return
+	 */
 	private boolean isKeyValid() {
 		return validTransactionsRemaining > 0;
 	}
 
+	/**
+	 * Sends a message to the Socket used in this instance, re-negotiates AES keys if necessary
+	 * @param <T> The type of data in the Message
+	 * @param message The Message to send
+	 */
 	public <T> void send(Message<T> message) {
 		do {
 			try {
@@ -224,7 +251,6 @@ public class CommunicationProtocol implements Serializable {
 				try {
 					Thread.sleep(500);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -321,12 +347,24 @@ public class CommunicationProtocol implements Serializable {
 		}
 	}
 	
+	/**
+	 * Sends a Query object to the Socket in this instance and receives a Response object from the Socket
+	 * @param <T1> The expected data type in the Response
+	 * @param <T2> The data type used in the Query
+	 * @param query The Query to send
+	 * @return The Response object
+	 */
 	@SuppressWarnings("unchecked")
 	public <T1,T2> Response<T1> sendAndReceive(Query<T2> query) {
 		send(query);
 		return (Response<T1>)receive();
 	}
 	
+	/**
+	 * Receives a Message from the Socket in this instance
+	 * @param <T> The data type for the Message
+	 * @return The Message
+	 */
 	private <T> Message<T> receive() {
 		do {
 			try {
@@ -338,7 +376,6 @@ public class CommunicationProtocol implements Serializable {
 				try {
 					Thread.sleep(500);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -409,6 +446,10 @@ public class CommunicationProtocol implements Serializable {
 		return null;
 	}
 	
+	/**
+	 * Subscribes on Events on the Socket in this instance. Used exclusively on the server to listen on received messages from clients
+	 * @param eventListener The event listener instance
+	 */
 	public void subscribeOnSocket(CommunicationEventListener eventListener) {
 		Thread subscribeThread = new Thread(() -> {
 			do {
@@ -421,7 +462,6 @@ public class CommunicationProtocol implements Serializable {
 					try {
 						Thread.sleep(500);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -495,6 +535,20 @@ public class CommunicationProtocol implements Serializable {
 		subscribeThread.start();
 	}
 	
+	/**
+	 * Deserializes an encrypted byte array to the corresponding Object
+	 * @param <T> The data type for the Object
+	 * @param bytes The encrypted byte array containing the Object
+	 * @param cryptographyMethod The method used to deserialize the Object
+	 * @return The Object
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 * @throws InvalidKeyException
+	 * @throws NoSuchPaddingException
+	 * @throws NoSuchAlgorithmException
+	 * @throws IllegalBlockSizeException
+	 * @throws BadPaddingException
+	 */
 	@SuppressWarnings("unchecked")
 	private <T> T deserializeObject(byte[] bytes, CryptographyMethod cryptographyMethod) throws ClassNotFoundException, IOException, InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException {
 		
@@ -524,6 +578,19 @@ public class CommunicationProtocol implements Serializable {
 		return obj;
 	}
 	
+	/**
+	 * Serializes an object to an encrypted byte array using the specified encryption method
+	 * @param <T> The data type for the Object
+	 * @param object The Object to be serialized
+	 * @param cryptographyMethod The cryptography method used to encrypt the serialized object
+	 * @return The encrypted byte array containing the serialized object
+	 * @throws IOException
+	 * @throws InvalidKeyException
+	 * @throws NoSuchPaddingException
+	 * @throws NoSuchAlgorithmException
+	 * @throws IllegalBlockSizeException
+	 * @throws BadPaddingException
+	 */
 	private <T> byte[] serializeObject(T object, CryptographyMethod cryptographyMethod) throws IOException, InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(baos);

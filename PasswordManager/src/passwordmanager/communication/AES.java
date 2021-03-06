@@ -11,17 +11,40 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+/**
+ * @author Erik Wahlberger
+ * 
+ * The AES class is used for encryption/decryption using the AES algorithm.
+ * The class includes methods for encrypting/decrypting using AES as well as methods for generating passwords and salts
+ */
 public class AES {
+	/**
+	 * The length of the password and salt
+	 */
 	private static final int KEY_LENGTH = 128;
-	
+	/**
+	 * Generate a password with a fixed length for AES
+	 * @return The password as a String
+	 */
 	public static String generateKeyPassword() {
 		return RandomStringUtils.randomAlphanumeric(KEY_LENGTH);
 	}
 	
+	/**
+	 * Generate a salt with a fixed length
+	 * @return The salt as a String
+	 */
 	public static String generateSalt() {
 		return RandomStringUtils.randomAlphanumeric(KEY_LENGTH);
 	}
 	
+	/**
+	 * Encrypts a byte array with the specified password and salt
+	 * @param data The byte array to encrypt
+	 * @param keyPassword The password String
+	 * @param salt The salt String
+	 * @return The encrypted data as a byte array
+	 */
 	public static byte[] encrypt(byte[] data, String keyPassword, String salt) {
 		try
 	    {
@@ -45,6 +68,13 @@ public class AES {
 	    return null;
 	}
 	
+	/**
+	 * Decrypts an encrypted byte array with a specified password and salt 
+	 * @param encryptedData The encrypted data as a byte array
+	 * @param keyPassword The password String
+	 * @param salt The salt String
+	 * @return The decrypted data as a byte array
+	 */
 	public static byte[] decrypt(byte[] encryptedData, String keyPassword, String salt) {
 		try
 	    {
