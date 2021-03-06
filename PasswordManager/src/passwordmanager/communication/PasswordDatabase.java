@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 /*
  * 
@@ -77,7 +78,9 @@ public class PasswordDatabase {
 			Credential cred=new Credential(id, acc.getEmail(), URL, Username, Password);
 			list.add(cred);
 		}
-		
+		Comparator<Credential> compareById = (Credential c1, Credential c2) -> Integer.compare(c1.getId(), c2.getId());
+		list.sort(compareById);
+
 		return list;
 	}
 	
