@@ -1,21 +1,14 @@
 package passwordmanager.view;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.text.DefaultCaret;
 
-import passwordmanager.communication.PasswordClient;
 import passwordmanager.controller.MainViewActionListener;
 import passwordmanager.controller.MainViewTableController;
 import passwordmanager.model.MainModel;
 import passwordmanager.model.Observer;
 import passwordmanager.util.FrameUtil;
-import passwordmanager.util.StringExtensions;
 
 
 public class MainView implements Observer<MainModel> {

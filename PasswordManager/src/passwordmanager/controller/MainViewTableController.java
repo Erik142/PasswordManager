@@ -1,8 +1,5 @@
 package passwordmanager.controller;
 
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 

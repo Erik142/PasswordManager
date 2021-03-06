@@ -1,7 +1,6 @@
 package passwordmanager.view;
 
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
@@ -9,7 +8,6 @@ import passwordmanager.controller.AddCredentialController;
 import passwordmanager.controller.UpdateTableWindowListener;
 import passwordmanager.model.AddCredentialModel;
 import passwordmanager.model.Observer;
-import passwordmanager.util.StringExtensions;
 
 
 public class AddCredentialDialog extends JDialog implements Observer<AddCredentialModel> {

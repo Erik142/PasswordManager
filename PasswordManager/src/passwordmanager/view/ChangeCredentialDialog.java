@@ -1,16 +1,13 @@
 package passwordmanager.view;
 
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
 import passwordmanager.controller.ChangeCredentialController;
 import passwordmanager.controller.UpdateTableWindowListener;
-import passwordmanager.model.Credential;
 import passwordmanager.model.ManipulateCredentialModel;
 import passwordmanager.model.Observer;
-import passwordmanager.util.StringExtensions;
 
 public class ChangeCredentialDialog extends JDialog implements Observer<ManipulateCredentialModel> {
 	

@@ -1,14 +1,12 @@
 package passwordmanager.view;
 
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
 import passwordmanager.controller.LoginDialogController;
 import passwordmanager.model.LoginDialogModel;
 import passwordmanager.model.Observer;
-import passwordmanager.util.StringExtensions;
 
 public class LoginDialog extends JDialog implements Observer<LoginDialogModel> {
 	 

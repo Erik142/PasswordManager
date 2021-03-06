@@ -6,7 +6,6 @@ import javax.swing.*;
 import passwordmanager.controller.ForgotPasswordDialogController;
 import passwordmanager.model.ForgotPasswordModel;
 import passwordmanager.model.Observer;
-import passwordmanager.util.StringExtensions;
 
 public class ForgotPasswordDialog extends JDialog implements Observer<ForgotPasswordModel> {
 	/**
@@ -17,12 +16,9 @@ public class ForgotPasswordDialog extends JDialog implements Observer<ForgotPass
     private JButton btnSend;
     private JButton btnCancel;
     private JTextField tfEmail;
-
-    private Frame parent;
     
     public ForgotPasswordDialog(Frame parent, ForgotPasswordModel model) {
     	super(parent, true);
-    	this.parent = parent;
     	
     	JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints cs = new GridBagConstraints();

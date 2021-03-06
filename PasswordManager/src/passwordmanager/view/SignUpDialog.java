@@ -1,14 +1,12 @@
 package passwordmanager.view;
 
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
 import passwordmanager.controller.SignUpController;
 import passwordmanager.model.Observer;
 import passwordmanager.model.SignUpModel;
-import passwordmanager.util.StringExtensions;
 
 public class SignUpDialog extends JDialog implements Observer<SignUpModel> {
     private JTextField tfUsername;
