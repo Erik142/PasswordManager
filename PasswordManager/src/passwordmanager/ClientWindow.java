@@ -14,7 +14,15 @@ import passwordmanager.model.ManipulateCredentialModel;
 import passwordmanager.model.SignUpModel;
 import passwordmanager.view.InitialView;
 
+/**
+ * Used for creating the PasswordClient object and necessary models, views and controllers to create a GUI for the client
+ */
 public class ClientWindow {
+	/**
+	 * Creates a new instance of the ClientWindow class, with the parameters specified in the Configuration object
+	 * @param config The Configuration object
+	 * @throws IOException
+	 */
 	public ClientWindow(Configuration config) throws IOException {
 		PasswordClient client = new PasswordClient(config);
 		
