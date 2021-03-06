@@ -40,8 +40,6 @@ public class LoginDialogModel implements Observable<LoginDialogModel> {
 		boolean isValidEmail = EmailUtil.isValidEmail(email);
 		boolean isPasswordEmpty = StringExtensions.isNullOrEmpty(password);
 		
-		System.out.println("Is valid email: " + isValidEmail + ", is password empty: " + isPasswordEmpty);
-
 		if (isValidEmail && !isPasswordEmpty) {
 			UserAccount account = client.getUserAccount(email);
 			

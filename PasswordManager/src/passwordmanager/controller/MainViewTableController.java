@@ -31,7 +31,6 @@ public class MainViewTableController implements ListSelectionListener {
 		if (selectedRow >= 0) {
 			try {
 				Credential credential = mainModel.getCredentials()[selectedRow];
-				System.out.println("User pressed credential with url: " + credential.getURL());
 				model.setCredential(credential);
 			} catch (Exception ex) {
 				model.setCredential(null);

@@ -49,7 +49,6 @@ public class MainModel implements Observable<MainModel> {
 				
 				for (int i = 0; i < credentials.length; i++) {
 					Credential cred = credentials[i];
-					System.out.println("Setting credential: " + cred.getURL());
 					
 					Object[] credObj = new Object[3];
 					credObj[0] = cred.getURL();

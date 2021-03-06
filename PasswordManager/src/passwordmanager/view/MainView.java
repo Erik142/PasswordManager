@@ -135,7 +135,6 @@ public class MainView implements Observer<MainModel> {
 		Object[][] tableData = observable.getTableData();
 		
 		for (Object[] row : tableData) {
-			System.out.println("Adding table row: " + row);
 			this.tableModel.addRow(row);
 		}
 		
