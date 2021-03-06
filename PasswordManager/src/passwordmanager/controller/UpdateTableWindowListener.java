@@ -6,15 +6,19 @@ import java.awt.event.WindowListener;
 import passwordmanager.model.MainModel;
 
 /**
+ * A generic WindowListener used to update the MainView table when the specified
+ * window is closed
+ * 
  * @author Erik Wahlberger
- * A generic WindowListener used to update the MainView table when the specified window is closed
  */
 public class UpdateTableWindowListener implements WindowListener {
 
     private final MainModel model;
 
     /**
-     * Creates a new instance of the UpdateTableWindowListener class with the specified MainModel
+     * Creates a new instance of the UpdateTableWindowListener class with the
+     * specified MainModel
+     * 
      * @param model The MainModel
      */
     public UpdateTableWindowListener(MainModel model) {
@@ -49,5 +53,5 @@ public class UpdateTableWindowListener implements WindowListener {
     @Override
     public void windowDeactivated(WindowEvent e) {
     }
-    
+
 }

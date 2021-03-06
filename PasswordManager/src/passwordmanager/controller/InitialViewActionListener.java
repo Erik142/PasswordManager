@@ -19,8 +19,9 @@ import passwordmanager.view.MainView;
 import passwordmanager.view.SignUpDialog;
 
 /**
- * @author Erik Wahlberger
  * JButton ActionListener for the InitialView class
+ * 
+ * @author Erik Wahlberger
  */
 public class InitialViewActionListener implements ActionListener, Observer<LoginDialogModel> {
 
@@ -50,19 +51,22 @@ public class InitialViewActionListener implements ActionListener, Observer<Login
 	private LoginDialog loginDialog;
 
 	/**
-	 * Creates a new instance of the InitialViewActionListener with the specified InitialView object and related models
-	 * @param initialView The InitialView object
-	 * @param forgotPasswordModel The ForgotPasswordModel
-	 * @param loginDialogModel The LoginDialogModel
-	 * @param signUpModel The SignupModel
-	 * @param mainModel The MainModel
+	 * Creates a new instance of the InitialViewActionListener with the specified
+	 * InitialView object and related models
+	 * 
+	 * @param initialView               The InitialView object
+	 * @param forgotPasswordModel       The ForgotPasswordModel
+	 * @param loginDialogModel          The LoginDialogModel
+	 * @param signUpModel               The SignupModel
+	 * @param mainModel                 The MainModel
 	 * @param manipulateCredentialModel The ManipulateCredentialModel
-	 * @param addCredentialModel The AddCredentialModel
-	 * @param changeUserAccountModel The ChangeUserAccountModel
+	 * @param addCredentialModel        The AddCredentialModel
+	 * @param changeUserAccountModel    The ChangeUserAccountModel
 	 */
 	public InitialViewActionListener(InitialView initialView, ForgotPasswordModel forgotPasswordModel,
 			LoginDialogModel loginDialogModel, SignUpModel signUpModel, MainModel mainModel,
-			ManipulateCredentialModel manipulateCredentialModel, AddCredentialModel addCredentialModel, ChangeUserAccountModel changeUserAccountModel) {
+			ManipulateCredentialModel manipulateCredentialModel, AddCredentialModel addCredentialModel,
+			ChangeUserAccountModel changeUserAccountModel) {
 		this.forgotPasswordModel = forgotPasswordModel;
 		this.loginDialogModel = loginDialogModel;
 		this.signUpModel = signUpModel;
@@ -122,8 +126,9 @@ public class InitialViewActionListener implements ActionListener, Observer<Login
 		MainView mainView = new MainView();
 		MainViewTableController mainViewTableController = new MainViewTableController(mainView, mainModel,
 				manipulateCredentialModel);
-		MainViewActionListener actionListener = new MainViewActionListener(mainView, mainModel, addCredentialModel, manipulateCredentialModel, loginDialogModel, changeUserAccountModel);
-				
+		MainViewActionListener actionListener = new MainViewActionListener(mainView, mainModel, addCredentialModel,
+				manipulateCredentialModel, loginDialogModel, changeUserAccountModel);
+
 		mainModel.addObserver(mainView);
 		mainView.registerListeners(mainViewTableController, actionListener);
 
@@ -131,7 +136,8 @@ public class InitialViewActionListener implements ActionListener, Observer<Login
 	}
 
 	/**
-	 * The ActionListener implementation used to listen on clicks from buttons with the specified action commands
+	 * The ActionListener implementation used to listen on clicks from buttons with
+	 * the specified action commands
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
