@@ -44,6 +44,24 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE public."Accounts" TO passwordmanag
 
 GRANT ALL ON TABLE public."Accounts" TO postgres;
 
+-- SEQUENCE: public.Credentials_id_seq
+
+-- DROP SEQUENCE public."Credentials_id_seq";
+
+CREATE SEQUENCE public."Credentials_id_seq"
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+ALTER SEQUENCE public."Credentials_id_seq"
+    OWNER TO postgres;
+
+GRANT ALL ON SEQUENCE public."Credentials_id_seq" TO passwordmanager;
+
+GRANT ALL ON SEQUENCE public."Credentials_id_seq" TO postgres;
+
 -- Table: public.Credentials
 
 -- DROP TABLE public."Credentials";
@@ -54,7 +72,9 @@ CREATE TABLE public."Credentials"
     "URL" text COLLATE pg_catalog."default" NOT NULL,
     "Username" text COLLATE pg_catalog."default" NOT NULL,
     "Password" text COLLATE pg_catalog."default",
-    CONSTRAINT "Credentials_pkey" PRIMARY KEY ("User", "URL", "Username"),
+    id integer NOT NULL DEFAULT nextval('"Credentials_id_seq"'::regclass),
+    CONSTRAINT credentials_pk PRIMARY KEY (id),
+    CONSTRAINT credentials_un UNIQUE ("User", "URL", "Username"),
     CONSTRAINT "Credentials_User_fkey" FOREIGN KEY ("User")
         REFERENCES public."Accounts" ("Email") MATCH SIMPLE
         ON UPDATE NO ACTION

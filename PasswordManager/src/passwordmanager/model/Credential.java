@@ -6,7 +6,8 @@ import java.io.Serializable;
  */
 
 public class Credential implements Serializable {
-	
+
+	private int id;
 	private String user;
 	private String URL;
 	private String pictureURL;
@@ -14,8 +15,8 @@ public class Credential implements Serializable {
 	private String password;
 	private static final long serialVersionUID = 5070481307938381662L;
 	
-	public Credential(String user, String URL, String username, String password) {
-		
+	public Credential(int id, String user, String URL, String username, String password) {
+		this.id = id;
 		this.user=user;
 		this.URL=URL;
 		this.username=username;
@@ -23,6 +24,20 @@ public class Credential implements Serializable {
 		
 		this.pictureURL=URL+"/favicon.ico";
 	}
+
+	public Credential(String user, String URL, String username, String password) {
+		this(0, user, URL, username, password);
+	}
+
+	/**
+	 * 
+	 * @return the id for the credential
+	 */
+
+	public int getId() {
+		return id;
+	}
+
 	/**
 	 * @return the user
 	 */

@@ -66,14 +66,15 @@ public class PasswordDatabase {
 		List<Credential> list=new ArrayList<Credential>();
 		
 		this.s=c.createStatement();
-		ResultSet rs=s.executeQuery("SELECT \"URL\", \"Username\", \"Password\" FROM public.\"Credentials\" WHERE \"User\"='"+acc.getEmail()+"'");
+		ResultSet rs=s.executeQuery("SELECT * FROM public.\"Credentials\" WHERE \"User\"='"+acc.getEmail()+"'");
 		
 		while(rs.next()) {
 			//need to return a list of credentials instead of printing it out
+			int id = rs.getInt("id");
 			String URL=rs.getString("URL");
 			String Username=rs.getString("Username");
 			String Password=rs.getString("Password");
-			Credential cred=new Credential(acc.getEmail(), URL, Username, Password);
+			Credential cred=new Credential(id, acc.getEmail(), URL, Username, Password);
 			list.add(cred);
 		}
 		
@@ -82,13 +83,14 @@ public class PasswordDatabase {
 	
 	public Credential listOneCredential(String account, String URL, String username) throws SQLException {
 		this.s=c.createStatement();
-		ResultSet rs=s.executeQuery("SELECT \"URL\", \"Username\", \"Password\" FROM public.\"Credentials\" WHERE \"User\"='"+account+"' AND \"URL\"='"+URL+"' AND \"Username\"='"+username+"'");
+		ResultSet rs=s.executeQuery("SELECT * FROM public.\"Credentials\" WHERE \"User\"='"+account+"' AND \"URL\"='"+URL+"' AND \"Username\"='"+username+"'");
 		while(rs.next()) {
 			//needs to return an instance of Credential instead of printing it out
+			int id = rs.getInt("id");
 			String Url=rs.getString("URL");
 			String Username=rs.getString("Username");
 			String Password=rs.getString("Password");
-			Credential cred= new Credential(account, Url, Username, Password);
+			Credential cred= new Credential(id, account, Url, Username, Password);
 			return cred;
 		}
 		return null;
@@ -96,7 +98,7 @@ public class PasswordDatabase {
 	
 	public void deleteCredential(Credential cred) throws SQLException {
 		this.s=c.createStatement();
-		s.executeUpdate("DELETE FROM public.\"Credentials\" WHERE \"User\"='"+cred.getUser()+"' AND \"URL\"='"+cred.getURL()+"' AND \"Username\"='"+cred.getUsername()+"'");
+		s.executeUpdate("DELETE FROM public.\"Credentials\" WHERE \"id\"='" + cred.getId() + "'");
 	}
 	
 	public void deleteAllCredentials(UserAccount a) throws SQLException {
@@ -117,7 +119,7 @@ public class PasswordDatabase {
 	
 	public void changeCredential(Credential cred, String newPass) throws SQLException {
 		this.s=c.createStatement();
-		s.executeUpdate("UPDATE public.\"Credentials\" SET \"Password\"='" + newPass + "', \"URL\"='" + cred.getURL() + "', \"Username\"='" + cred.getUsername() + "' WHERE \"User\"='" + cred.getUser() + "'");
+		s.executeUpdate("UPDATE public.\"Credentials\" SET \"Password\"='" + newPass + "', \"URL\"='" + cred.getURL() + "', \"Username\"='" + cred.getUsername() + "' WHERE \"id\"='" + cred.getId() + "'" + " AND \"User\"='" + cred.getUser() + "'");
 	}
 	
 	public void insertResetRequest(UserAccount account) throws SQLException {

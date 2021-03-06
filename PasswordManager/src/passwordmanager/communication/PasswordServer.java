@@ -204,6 +204,7 @@ public class PasswordServer implements Runnable {
 			database.addCredential(credential);
 			return true;
 		} catch (SQLException exadd) {
+			exadd.printStackTrace();
 		return false;
 		}
 	}
