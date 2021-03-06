@@ -9,18 +9,18 @@ import java.net.InetAddress;
 import com.google.gson.Gson;
 
 /**
- * @author Erik Wahlberger
  * Represents a configuration file
+ * 
+ * @author Erik Wahlberger
  */
 public class Configuration {
 	/**
 	 * Specifies the application mode, either Client or Server
 	 */
 	public enum AppMode {
-		Client,
-		Server,
+		Client, Server,
 	}
-	
+
 	public AppMode appMode;
 	public InetAddress serverIp;
 	public int serverPort;
@@ -31,25 +31,28 @@ public class Configuration {
 	public String serverEmail;
 	public String serverPassword;
 	public String publicDomainName;
-	
+
 	/**
 	 * Loads a Configuration from a File object
+	 * 
 	 * @param file The property file to be loaded as a Configuration
 	 * @return The Configuration
-	 * @throws FileNotFoundException Thrown if the file was not found on the computer
+	 * @throws FileNotFoundException Thrown if the file was not found on the
+	 *                               computer
 	 * @throws IOException
 	 */
 	public static Configuration GetConfiguration(File file) throws FileNotFoundException, IOException {
 		if (!file.exists()) {
-			throw new FileNotFoundException("No configuration file found under the path '" + file.getAbsolutePath() + "'.");
+			throw new FileNotFoundException(
+					"No configuration file found under the path '" + file.getAbsolutePath() + "'.");
 		}
 
 		FileReader fileReader = new FileReader(file);
-		
+
 		Gson gson = new Gson();
-		
+
 		Configuration configuration = gson.fromJson(fileReader, Configuration.class);
-		
+
 		return configuration;
 	}
 
