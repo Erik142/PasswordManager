@@ -10,13 +10,8 @@ import javax.swing.table.TableModel;
 import javax.swing.text.DefaultCaret;
 
 import passwordmanager.communication.PasswordClient;
-import passwordmanager.controller.AddCredentialButtonController;
-import passwordmanager.controller.ChangeAccountButtonController;
-import passwordmanager.controller.ChangeCredentialButtonController;
-import passwordmanager.controller.DeleteAccountButtonController;
-import passwordmanager.controller.DeleteCredentialButtonController;
+import passwordmanager.controller.MainViewActionListener;
 import passwordmanager.controller.MainViewTableController;
-import passwordmanager.controller.SignOutButtonController;
 import passwordmanager.model.MainModel;
 import passwordmanager.model.Observer;
 import passwordmanager.util.FrameUtil;
@@ -39,7 +34,7 @@ public class MainView implements Observer<MainModel> {
 	
 	private DefaultTableModel tableModel;
 	
-	public MainView() throws IOException {
+	public MainView() {
 		this.setFrame(new JFrame("Password Manager"));
 		this.getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -104,18 +99,19 @@ public class MainView implements Observer<MainModel> {
         FrameUtil.centerFrame(this.getFrame());
     }
 
-	public void registerListeners(MainViewTableController tableController, AddCredentialButtonController addCredentialController,
-			ChangeCredentialButtonController changeCredentialController,
-			DeleteCredentialButtonController deleteCredentialController,
-			ChangeAccountButtonController changeAccountController,
-			DeleteAccountButtonController deleteAccountController,
-			SignOutButtonController signoutController) {
-		addButton.addActionListener(addCredentialController);
-		changeButton.addActionListener(changeCredentialController);
-		removeButton.addActionListener(deleteCredentialController);
-		changePasswordButton.addActionListener(changeAccountController);
-		deleteAccountButton.addActionListener(deleteAccountController);
-		signOutButton.addActionListener(signoutController);
+	public void registerListeners(MainViewTableController tableController, MainViewActionListener actionListener) {
+		addButton.setActionCommand("" + actionListener.ADD_CREDENTIAL);
+		addButton.addActionListener(actionListener);
+		changeButton.setActionCommand("" + actionListener.CHANGE_CREDENTIAL);
+		changeButton.addActionListener(actionListener);
+		removeButton.setActionCommand("" + actionListener.DELETE_CREDENTIAL);
+		removeButton.addActionListener(actionListener);
+		changePasswordButton.setActionCommand("" + actionListener.CHANGE_ACCOUNT_PASSWORD);
+		changePasswordButton.addActionListener(actionListener);
+		deleteAccountButton.setActionCommand("" + actionListener.DELETE_ACCOUNT);
+		deleteAccountButton.addActionListener(actionListener);
+		signOutButton.setActionCommand("" + actionListener.SIGN_OUT);
+		signOutButton.addActionListener(actionListener);
 		table.getSelectionModel().addListSelectionListener(tableController);
 	}
 	
@@ -142,19 +138,6 @@ public class MainView implements Observer<MainModel> {
 	
 	@Override
 	public void update(MainModel observable) {
-		this.getFrame().setVisible(observable.getViewVisibility());
-		
-		String dialogMessage = observable.getDialogMessage();
-		
-		int dialogType = observable.getDialogErrorStatus() ? JOptionPane.ERROR_MESSAGE : JOptionPane.INFORMATION_MESSAGE;
-		
-		if (!StringExtensions.isNullOrEmpty(dialogMessage)) {
-			JOptionPane.showMessageDialog(this.getFrame(),
-		            dialogMessage,
-		            observable.getDialogTitle(),
-		            dialogType);
-		}
-		
 		this.tableModel.setRowCount(0);
 		Object[][] tableData = observable.getTableData();
 		

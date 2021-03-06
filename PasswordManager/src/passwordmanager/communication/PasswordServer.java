@@ -321,6 +321,7 @@ public class PasswordServer implements Runnable {
 			database.changeCredential(credential, credential.getPassword());
 			return true;
 		} catch (SQLException eCred) {
+			eCred.printStackTrace();
 			return false;
 		}
 	}

@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import passwordmanager.communication.PasswordClient;
+import passwordmanager.exception.ModelException;
 import passwordmanager.util.EmailUtil;
 import passwordmanager.util.StringExtensions;
 
 public class ForgotPasswordModel implements Observable<ForgotPasswordModel> {
 	private String email = "";
-	private String dialogMessage = "";
-	
-	private boolean isDialogError = false;
-	private boolean isViewVisible = false;
 	
 	private List<Observer<ForgotPasswordModel>> observers;
 	
@@ -24,74 +21,36 @@ public class ForgotPasswordModel implements Observable<ForgotPasswordModel> {
 		this.client = client;
 	}
 	
-	public String getDialogMessage() {
-		String dialogMessage = this.dialogMessage;
-		
-		// Reset dialog message so that it doesn't trigger every time
-		this.dialogMessage = "";
-		
-		return dialogMessage;
-	}
-	
 	public String getEmail() {
 		return email;
 	}
 	
-	public boolean getIsDialogError() {
-		return this.isDialogError;
-	}
-	
-	public boolean getIsViewVisible() {
-		return isViewVisible;
-	}
-	
-	public void sendEmail(String email) {
-		String dialogMessage = "";
-		isDialogError = true;
-		
+	public void sendEmail(String email) throws ModelException {
 		if (StringExtensions.isNullOrEmpty(email)) {
-			dialogMessage = "E-mail field cannot be empty!";
+			throw new ModelException("E-mail field cannot be empty!");
 		}
 		else if (!EmailUtil.isValidEmail(email)) {
-			dialogMessage = "The value is not a valid e-mail address.";
+			throw new ModelException("The value is not a valid e-mail address.");
 		}
 		else {
 			try {
 				boolean result = client.forgotPassword(email);
 				
 				if (result) {
-					dialogMessage = "You will receive an email with a link to change your password.";
 					setEmail("");
-					isDialogError = false;
-					isViewVisible = false;
 				}
 				else {
-					dialogMessage = "The account does not exist! Please sign up to create an account.";
+					throw new ModelException("The account does not exist! Please sign up to create an account.");
 				}
 			} catch (Exception ex) {
-				dialogMessage = "Error: The server could not handle the request!";
+				setEmail(email);
+				throw new ModelException("Error: The server could not handle the request!");
 			}
 		}
-		
-		if (!StringExtensions.isNullOrEmpty(dialogMessage) && isDialogError) {
-			setEmail(email);
-		}
-		
-		setDialogMessage(dialogMessage);
-	}
-	
-	public void setDialogMessage(String dialogMessage) {
-		this.dialogMessage = dialogMessage;
-		updateObservers();
 	}
 	
 	public void setEmail(String email) {
 		this.email = email;
-		updateObservers();
-	}
-	
-	public void setIsViewVisible(boolean isViewVisible) {
-		this.isViewVisible = isViewVisible;
 		updateObservers();
 	}
 	

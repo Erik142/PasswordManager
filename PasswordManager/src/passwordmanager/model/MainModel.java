@@ -5,19 +5,13 @@ import java.util.HashSet;
 
 import passwordmanager.communication.PasswordClient;
 
-public class MainModel implements Observable<MainModel>, Observer {
+public class MainModel implements Observable<MainModel> {
 
 	private final Collection<Observer<MainModel>> observers;
 	
 	private final PasswordClient client;
 	private Object[][] tableData;
 	private Credential[] credentials;
-	
-	private boolean isViewVisible = false;
-	private boolean isDialogError = false;
-	
-	private String dialogMessage = "";
-	private String dialogTitle = "";
 	
 	private UserAccount account;
 	
@@ -28,46 +22,8 @@ public class MainModel implements Observable<MainModel>, Observer {
 		this.credentials = new Credential[0];
 	}
 	
-	public void deleteAccount() {
-		this.isDialogError = true;
-		
-		if (account != null) {
-			boolean success = client.deleteUserAccount(account);
-			
-			dialogMessage = success ? "Successfully deleted account!" : "The account could not be deleted";
-			this.isDialogError = false;
-		}
-		else {
-			dialogMessage = "There is no account to delete.";
-		}
-		
-		dialogTitle = "Delete account";
-		
-		updateObservers();
-	}
-	
 	public Credential[] getCredentials() {
 		return this.credentials;
-	}
-	
-	public String getDialogTitle() {
-		String dialogTitle = this.dialogTitle;
-		
-		this.dialogTitle = "";
-		
-		return dialogTitle;
-	}
-	
-	public String getDialogMessage() {
-		String dialogMessage = this.dialogMessage;
-		
-		this.dialogMessage = "";
-		
-		return dialogMessage;
-	}
-	
-	public boolean getDialogErrorStatus() {
-		return isDialogError;
 	}
 	
 	public Object[][] getTableData() {
@@ -78,18 +34,8 @@ public class MainModel implements Observable<MainModel>, Observer {
 		return this.account;
 	}
 	
-	public boolean getViewVisibility() {
-		return this.isViewVisible;
-	}
-	
 	public void setUserAccount(UserAccount account) {
 		this.account = account;
-		
-		updateObservers();
-	}
-	
-	public void setViewVisibility(boolean isVisible) {
-		this.isViewVisible = isVisible;
 		
 		updateObservers();
 	}
@@ -141,42 +87,4 @@ public class MainModel implements Observable<MainModel>, Observer {
 		observers.remove(observer);
 	}
 
-	private void updateLoginDialogModel(LoginDialogModel observable) {
-		if (observable.getLoggedInStatus()) {
-			String email = observable.getEmail();
-			String password = observable.getPassword();
-			
-			setUserAccount(new UserAccount(email, password));
-			updateCredentials();
-			setViewVisibility(true);
-		}
-	}
-	
-	private void updateAddCredentialModel(AddCredentialModel observable) {
-		if (observable.getCredentialAddedStatus()) {
-			updateCredentials();
-		}
-	}
-	
-	private void updateManipulateCredentialModel(ManipulateCredentialModel observable) {
-		if (!observable.getChangeViewVisibilityStatus()) {
-			updateCredentials();
-		}
-	}
-	
-	@Override
-	public void update(Object observable) {
-		if (observable instanceof LoginDialogModel) {
-			updateLoginDialogModel((LoginDialogModel)observable);
-		}
-		
-		if (observable instanceof AddCredentialModel) {
-			updateAddCredentialModel((AddCredentialModel)observable);
-		}
-		
-		if (observable instanceof ManipulateCredentialModel) {
-			updateManipulateCredentialModel((ManipulateCredentialModel)observable);
-		}
-	}
-	
 }

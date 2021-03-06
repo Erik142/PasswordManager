@@ -5,14 +5,14 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-import passwordmanager.controller.ChangeCredentialComponentListener;
 import passwordmanager.controller.ChangeCredentialController;
+import passwordmanager.controller.UpdateTableWindowListener;
 import passwordmanager.model.Credential;
 import passwordmanager.model.ManipulateCredentialModel;
 import passwordmanager.model.Observer;
 import passwordmanager.util.StringExtensions;
 
-public class ChangeDialog extends JDialog implements Observer<ManipulateCredentialModel> {
+public class ChangeCredentialDialog extends JDialog implements Observer<ManipulateCredentialModel> {
 	
     /**
 	 * 
@@ -29,12 +29,12 @@ public class ChangeDialog extends JDialog implements Observer<ManipulateCredenti
     
     private Frame parent;
     
-    public ChangeDialog(Frame parent) {
+    public ChangeCredentialDialog(Frame parent, ManipulateCredentialModel model) {
     	this.parent = parent;
-    	showChangeDialog();
+    	showChangeDialog(model);
     }
         
-    public void showChangeDialog() {
+    public void showChangeDialog(ManipulateCredentialModel model) {
     	JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints cs = new GridBagConstraints();
  
@@ -54,6 +54,7 @@ public class ChangeDialog extends JDialog implements Observer<ManipulateCredenti
         panel.add(lbPassword, cs);
  
         pfPassword = new JPasswordField(20);
+        pfPassword.setText(model.getPassword());
         cs.gridx = 1;
         cs.gridy = 2;
         cs.gridwidth = 2;
@@ -67,6 +68,7 @@ public class ChangeDialog extends JDialog implements Observer<ManipulateCredenti
         panel.add(lbUserName, cs);
         
         tfService = new JTextField(20);
+        tfService.setText(model.getService());
         cs.gridx = 1;
         cs.gridy = 0;
         cs.gridwidth = 2;
@@ -74,6 +76,7 @@ public class ChangeDialog extends JDialog implements Observer<ManipulateCredenti
         panel.setBorder(new LineBorder(Color.GRAY));
  
         tfUserName = new JTextField(20);
+        tfUserName.setText(model.getUserName());
         cs.gridx = 1;
         cs.gridy = 1;
         cs.gridwidth = 2;
@@ -94,6 +97,7 @@ public class ChangeDialog extends JDialog implements Observer<ManipulateCredenti
 	    pack();
 	    setResizable(false);
 	    setLocationRelativeTo(parent);
+        setModal(true);
 	    setVisible(false);
 	}
 
@@ -108,29 +112,16 @@ public class ChangeDialog extends JDialog implements Observer<ManipulateCredenti
         return new String(pfPassword.getPassword());
     }
 
-    public void registerListener(ChangeCredentialController controller, ChangeCredentialComponentListener componentListener) {
-    	changeButton.setActionCommand(controller.CHANGE_COMMAND);
+    public void registerListener(ChangeCredentialController controller, UpdateTableWindowListener windowListener) {
+    	changeButton.setActionCommand("" + controller.CHANGE_CREDENTIAL);
     	changeButton.addActionListener(controller);
-    	cancelButton.setActionCommand(controller.CANCEL_COMMAND);
+    	cancelButton.setActionCommand("" + controller.CANCEL);
     	cancelButton.addActionListener(controller);
-    	this.addComponentListener(componentListener);
+        this.addWindowListener(windowListener);
     }
     
 	@Override
 	public void update(ManipulateCredentialModel observable) {
-		String dialogMessage = observable.getDialogMessage();
-		int dialogType = observable.getIsDialogError() ? JOptionPane.ERROR_MESSAGE : JOptionPane.INFORMATION_MESSAGE;
-		
-		if (!StringExtensions.isNullOrEmpty(dialogMessage)) {
-			JOptionPane.showMessageDialog(this,
-                    dialogMessage,
-                    "Change credential",
-                    dialogType);
-		}
-		
-		setModal(observable.getChangeViewVisibilityStatus());
-		setVisible(observable.getChangeViewVisibilityStatus());
-		
 		this.tfService.setText(observable.getService());
 		this.tfUserName.setText(observable.getUserName());
 		this.pfPassword.setText(observable.getPassword());

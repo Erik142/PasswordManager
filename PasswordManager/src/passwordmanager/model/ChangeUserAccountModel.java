@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import passwordmanager.communication.PasswordClient;
+import passwordmanager.exception.ModelException;
 import passwordmanager.util.StringExtensions;
 
 public class ChangeUserAccountModel implements Observable<ChangeUserAccountModel>, Observer<LoginDialogModel> {
@@ -15,11 +16,6 @@ public class ChangeUserAccountModel implements Observable<ChangeUserAccountModel
 	
 	private UserAccount account;
 	
-	private String dialogMessage = "";
-	private boolean isDialogError = false;
-	
-	private boolean isViewVisible = false;
-	
 	private String oldPassword = "";
 	private String confirmPassword = "";
 	private String newPassword = "";
@@ -29,9 +25,7 @@ public class ChangeUserAccountModel implements Observable<ChangeUserAccountModel
 		this.client = client;
 	}
 	
-	public void changeUserPassword(String oldPassword, String newPassword, String confirmPassword) {
-		isViewVisible = true;
-		
+	public void changeUserPassword(String oldPassword, String newPassword, String confirmPassword) throws ModelException {
 		if (isValidPassword(newPassword) && isValidPassword(confirmPassword) && newPassword.equals(confirmPassword) && !newPassword.equals(oldPassword)) {
 			if (oldPassword.equals(account.getPassword())) {
 				UserAccount updatedAccount = new UserAccount(account.getEmail(), newPassword); 
@@ -39,52 +33,42 @@ public class ChangeUserAccountModel implements Observable<ChangeUserAccountModel
 				
 				if (success) {
 					account = updatedAccount;
-					dialogMessage = "Successfully changed the user password!";
-					isDialogError = false;
-					isViewVisible = false;
 				} else {
-					dialogMessage = "The user password could not be updated. Try again later.";
-					isDialogError = true;
+					throw new ModelException("The user password could not be updated. Try again later.");
 				}
 			} else {
-				this.dialogMessage = "The old password is not correct!";
-				isDialogError = true;
+				throw new ModelException("The old password is not correct!");
 			}
 		}
 		else if (!newPassword.equals(confirmPassword)) {
-			this.dialogMessage = "The passwords do not match!";
-			this.isDialogError = true;
+			throw new ModelException("The passwords do not match!");
 		}
 		else if (oldPassword.equals(newPassword)) {
-			this.dialogMessage = "The new password cannot be the same as the old password!";
-			this.isDialogError = true;
+			throw new ModelException("The new password cannot be the same as the old password!");
 		}
 		else if (!isValidPassword(newPassword) || !isValidPassword(confirmPassword)) {
-			this.dialogMessage = "The password must be at least 8 characters long!";
-			this.isDialogError = true;
+			throw new ModelException("The password must be at least 8 characters long!");
 		}
 		else {
-			dialogMessage = "Password cannot be empty!";
-			isDialogError = true;
+			throw new ModelException("Password cannot be empty!");
 		}
 		
 		updateObservers();
 	}
 	
-	public String getDialogMessage() {
-		String dialogMessage = this.dialogMessage;
+	public void deleteAccount() throws ModelException {
+		if (account != null) {
+			boolean success = client.deleteUserAccount(account);
+			
+			if (!success) {
+				throw new ModelException("The account could not be deleted.");	
+			}
+		}
+		else {
+			throw new ModelException("There is no account to delete.");
+		}
 		
-		this.dialogMessage = "";
-		
-		return dialogMessage;
-	}
-	
-	public boolean getIsDialogError() {
-		return this.isDialogError;
-	}
-	
-	public boolean getIsViewVisible() {
-		return this.isViewVisible;
+		updateObservers();
 	}
 	
 	public String getNewPassword() {
@@ -109,18 +93,10 @@ public class ChangeUserAccountModel implements Observable<ChangeUserAccountModel
 		updateObservers();
 	}
 	
-	public void setIsViewVisible(boolean isVisible) {
-		this.isViewVisible = isVisible;
-		
-		updateObservers();
-	}
-	
 	public void reset() {
 		this.oldPassword = "";
 		this.newPassword = "";
 		this.confirmPassword = "";
-		this.dialogMessage = "";
-		this.isDialogError = false;
 		
 		updateObservers();
 	}

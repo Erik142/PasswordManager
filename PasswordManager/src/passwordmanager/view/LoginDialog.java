@@ -80,12 +80,14 @@ public class LoginDialog extends JDialog implements Observer<LoginDialogModel> {
         pack();
         setResizable(false);
         setLocationRelativeTo(parent);
+        setModal(true);
+        setVisible(false);
     }
     
     public void registerListener(LoginDialogController controller) {
-    	btnLogin.setActionCommand(controller.LOGIN_COMMAND);
+    	btnLogin.setActionCommand("" + controller.LOGIN);
     	btnLogin.addActionListener(controller);
-    	btnCancel.setActionCommand(controller.CANCEL_COMMAND);
+    	btnCancel.setActionCommand("" + controller.CANCEL);
     	btnCancel.addActionListener(controller);
     }
  
@@ -105,20 +107,6 @@ public class LoginDialog extends JDialog implements Observer<LoginDialogModel> {
 	public void update(LoginDialogModel observable) {
 		this.tfUsername.setText(observable.getEmail());
 		this.pfPassword.setText(observable.getPassword());
-		
-		String dialogMessage = observable.getDialogMessage();
-		
-		if (!StringExtensions.isNullOrEmpty(dialogMessage)) {
-			int dialogType = observable.getLoggedInStatus() ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE;
-			
-			JOptionPane.showMessageDialog(this,
-                    dialogMessage,
-                    "Login",
-                    dialogType);
-		}
-		
-		this.setModal(observable.getViewVisibility());
-		this.setVisible(observable.getViewVisibility());
-		this.succeeded = observable.getLoggedInStatus();
+	    this.succeeded = observable.getLoggedInStatus();
 	}
 }

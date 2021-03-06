@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import passwordmanager.communication.PasswordClient;
+import passwordmanager.exception.ModelException;
 import passwordmanager.util.EmailUtil;
 import passwordmanager.util.StringExtensions;
 
@@ -13,24 +14,14 @@ public class LoginDialogModel implements Observable<LoginDialogModel> {
 	
 	private String email = "";
 	private String password = "";
-	private String dialogMessage = "";
-	
+
 	private boolean isLoggedIn = false;
-	private boolean isViewVisible = false;
 	
 	private final PasswordClient client;
 	
 	public LoginDialogModel(PasswordClient client) {
 		this.observers = new HashSet<Observer<LoginDialogModel>>();
 		this.client = client;
-	}
-	
-	public String getDialogMessage() {
-		String dialogMessage = this.dialogMessage;
-		
-		this.dialogMessage = "";
-		
-		return dialogMessage;
 	}
 	
 	public String getEmail() {
@@ -45,14 +36,12 @@ public class LoginDialogModel implements Observable<LoginDialogModel> {
 		return password;
 	}
 	
-	public boolean getViewVisibility() {
-		return isViewVisible;
-	}
-	
-	public void login(String email, String password) {
+	public void login(String email, String password) throws ModelException {
 		boolean isValidEmail = EmailUtil.isValidEmail(email);
 		boolean isPasswordEmpty = StringExtensions.isNullOrEmpty(password);
 		
+		System.out.println("Is valid email: " + isValidEmail + ", is password empty: " + isPasswordEmpty);
+
 		if (isValidEmail && !isPasswordEmpty) {
 			UserAccount account = client.getUserAccount(email);
 			
@@ -61,21 +50,20 @@ public class LoginDialogModel implements Observable<LoginDialogModel> {
 			}
 			else {
 				isLoggedIn = false;
-				dialogMessage = "Invalid username or password";
+				throw new ModelException("Invalid username or password");
 			}
 		}
 		else if (isPasswordEmpty) {
 			isLoggedIn = false;
-			dialogMessage = "The password field cannot be emtpy!";
+			throw new ModelException("The password field cannot be emtpy!");
 		}
 		else {
 			isLoggedIn = false;
-			dialogMessage = "You entered an invalid e-mail address.";
+			throw new ModelException("You entered an invalid e-mail address.");
 		}
 		
 		this.email = email;
 		this.password = password;
-		this.isViewVisible = !isLoggedIn;
 		
 		updateObservers();
 	}
@@ -86,12 +74,6 @@ public class LoginDialogModel implements Observable<LoginDialogModel> {
 		this.password = "";
 		
 		this.updateObservers();
-	}
-	
-	public void setViewVisibility(boolean visible) {
-		this.isViewVisible = visible;
-		
-		updateObservers();
 	}
 	
 	private void updateObservers() {

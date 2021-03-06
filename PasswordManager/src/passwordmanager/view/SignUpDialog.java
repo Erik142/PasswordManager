@@ -6,7 +6,6 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 import passwordmanager.controller.SignUpController;
-import passwordmanager.controller.SignUpWindowController;
 import passwordmanager.model.Observer;
 import passwordmanager.model.SignUpModel;
 import passwordmanager.util.StringExtensions;
@@ -96,36 +95,18 @@ public class SignUpDialog extends JDialog implements Observer<SignUpModel> {
 		return new String(pfPassword2.getPassword());
 	}
 
-	public void registerListener(SignUpController controller, SignUpWindowController componentController) {
+	public void registerListener(SignUpController controller) {
 		btnSignUp.setActionCommand(controller.SIGNUP_COMMAND);
 		btnSignUp.addActionListener(controller);
 		btnCancel.setActionCommand(controller.CANCEL_COMMAND);
 		btnCancel.addActionListener(controller);
-		
-		this.addComponentListener(componentController);
 	}
 	
 	@Override
 	public void update(SignUpModel observable) {
-		String dialogMessage = observable.getDialogMessage();
-		boolean success = observable.getStatus();
-		
-		if (!StringExtensions.isNullOrEmpty(dialogMessage)) {
-			int messageType = success ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE;
-			
-			JOptionPane.showMessageDialog(this,
-				dialogMessage,
-                "Sign Up",
-                messageType);
-		}
-		
 		tfUsername.setText(observable.getEmail());
 		pfPassword1.setText(observable.getPassword());
 		pfPassword2.setText(observable.getConfirmPassword());
-		
-		this.setModal(observable.getIsViewVisible());
-		this.setVisible(observable.getIsViewVisible());
 	}
-    
 
 }

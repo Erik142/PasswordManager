@@ -5,12 +5,7 @@ import java.io.IOException;
 
 import javax.swing.*;
 
-import passwordmanager.config.Configuration;
-import passwordmanager.controller.ForgotPasswordController;
-import passwordmanager.controller.LoginController;
-import passwordmanager.controller.SignUpDialogController;
-import passwordmanager.model.LoginScreenModel;
-import passwordmanager.model.Observer;
+import passwordmanager.controller.InitialViewActionListener;
 import passwordmanager.util.FrameUtil;
 
 
@@ -44,11 +39,13 @@ public class InitialView {
 		return this.frame;
 	}
 	
-	public void registerListener(LoginController loginController, ForgotPasswordController forgotPasswordController, SignUpDialogController signupController) {
-        btnLogin.addActionListener(loginController);
-        btnForgot.setActionCommand(forgotPasswordController.FORGOT_PASSWORD_EVENT);
-        btnForgot.addActionListener(forgotPasswordController);
-        btnSignUp.addActionListener(signupController); 
+	public void registerListener(InitialViewActionListener authenticationActionListener) {
+        btnLogin.setActionCommand("" + authenticationActionListener.LOG_IN);
+		btnLogin.addActionListener(authenticationActionListener);
+        btnForgot.setActionCommand("" + authenticationActionListener.FORGOT_PASSWORD);
+        btnForgot.addActionListener(authenticationActionListener);
+		btnSignUp.setActionCommand("" + authenticationActionListener.SIGN_UP);
+        btnSignUp.addActionListener(authenticationActionListener); 
 	}
 
 }

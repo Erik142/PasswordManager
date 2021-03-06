@@ -4,18 +4,13 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import passwordmanager.communication.PasswordClient;
+import passwordmanager.exception.ModelException;
 import passwordmanager.util.StringExtensions;
 
 public class ManipulateCredentialModel implements Observable<ManipulateCredentialModel> {
 
 	private final Collection<Observer<ManipulateCredentialModel>> observers;
 	private final PasswordClient client;
-	
-	private boolean isChangeViewVisible = false;
-	private boolean isManipulateCredentialSuccessful = false;
-	
-	private String dialogMessage = "";
-	private boolean isDialogError = false;
 	
 	private Credential credential;
 	
@@ -24,26 +19,19 @@ public class ManipulateCredentialModel implements Observable<ManipulateCredentia
 		this.client = client;
 	}
 	
-	public void deleteCredential() {
+	public void deleteCredential() throws ModelException {
 		if (credential != null) {
 			boolean success = client.deleteCredential(credential);
 			
-			this.isManipulateCredentialSuccessful = success;
-			
 			if (success) {
-				dialogMessage = "";
-				isDialogError = false;
-				
 				credential = null;
 			}
 			else {
-				isDialogError = true;
-				dialogMessage = "Could not delete the credential from the database!";
+				throw new ModelException("Could not delete the credential from the database!");
 			}
 		}
 		else {
-			dialogMessage = "No credential has been chosen!";
-			isDialogError = true;
+			throw new ModelException("No credential has been chosen!");
 		}
 		
 		updateObservers();
@@ -51,26 +39,6 @@ public class ManipulateCredentialModel implements Observable<ManipulateCredentia
 	
 	public Credential getCredential() {
 		return this.credential;
-	}
-	
-	public boolean getChangeViewVisibilityStatus() {
-		return this.isChangeViewVisible;
-	}
-	
-	public String getDialogMessage() {
-		String dialogMessage = this.dialogMessage;
-		
-		this.dialogMessage = "";
-		
-		return dialogMessage;
-	}
-	
-	public boolean getIsDialogError() {
-		return this.isDialogError;
-	}
-	
-	public boolean getManipulateCredentialSucceeded() {
-		return this.isManipulateCredentialSuccessful;
 	}
 	
 	public String getPassword() {
@@ -85,48 +53,35 @@ public class ManipulateCredentialModel implements Observable<ManipulateCredentia
 		return this.credential != null ? this.credential.getUsername() : "";
 	}
 	
-	public void reset() {
-		this.isManipulateCredentialSuccessful = false;
-	}
-	
-	public void setChangeViewVisibilityStatus(boolean isVisible) {
-		this.isChangeViewVisible = isVisible;
-		
-		updateObservers();
-	}
-	
 	public void setCredential(Credential credential) {
 		this.credential = credential;
 		
 		updateObservers();
 	}
 	
-	public void updateCredential(String url, String username, String password) {
+	public void updateCredential(String url, String username, String password) throws ModelException {
 		if (StringExtensions.isNullOrEmpty(url) || StringExtensions.isNullOrEmpty(username) || StringExtensions.isNullOrEmpty(password)) {
-			this.isDialogError = true;
-			this.dialogMessage = "Error: One or more fields are empty!";
+			throw new ModelException("Error: One or more fields are empty!");
 		}
-		
+	
 		if (this.credential != null) {
+			System.out.println("Before changing data. User: " + credential.getUser() + ", Service: " + credential.getURL() + " , Username: " + credential.getUsername() + ", Password: " + credential.getPassword());
 			this.credential.setURL(url);
 			this.credential.setUsername(username);
 			this.credential.setPassword(password);
 			
+			System.out.println("After changing data. User: " + credential.getUser() + ", Service: " + credential.getURL() + " , Username: " + credential.getUsername() + ", Password: " + credential.getPassword());
 			boolean success = client.modifyCredential(credential);
-			
-			if (success) {
-				this.dialogMessage = "";
-				this.isDialogError = false;
-				this.isChangeViewVisible = false;
+
+			if (!success) {
+				throw new ModelException("An error occured when updating the credential. Try again.");
 			}
 			else {
-				this.dialogMessage = "An error occured when updating the credential. Try again.";
-				this.isDialogError = true;
+				this.credential = null;
 			}
 		}
 		else {
-			this.isDialogError = true;
-			this.dialogMessage = "No credential has been chosen!";
+			throw new ModelException("No credential has been chosen!");
 		}
 		
 		updateObservers();

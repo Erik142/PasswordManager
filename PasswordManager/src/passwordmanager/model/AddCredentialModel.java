@@ -4,17 +4,12 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import passwordmanager.communication.PasswordClient;
+import passwordmanager.exception.ModelException;
 import passwordmanager.util.StringExtensions;
 
 public class AddCredentialModel implements Observable<AddCredentialModel> {
 	private final Collection<Observer<AddCredentialModel>> observers;
 	private final PasswordClient client;
-	
-	private String dialogMessage = "";
-	
-	private boolean isDialogError = false;
-	private boolean isViewVisible = false;
-	private boolean isCredentialAdded = false;
 	
 	private String url = "";
 	private String username = "";
@@ -25,42 +20,24 @@ public class AddCredentialModel implements Observable<AddCredentialModel> {
 		this.client = client;
 	}
 	
-	public void addCredential(UserAccount account, String url, String username, String password) {
+	public void addCredential(UserAccount account, String url, String username, String password) throws ModelException {
 		if (StringExtensions.isNullOrEmpty(url) || StringExtensions.isNullOrEmpty(username) || StringExtensions.isNullOrEmpty(password)) {
-			isDialogError = true;
-			dialogMessage = "Please fill in all the fields";
+			throw new ModelException("Please fill in all the fields");
 		}
 		else {
 			Credential credential = new Credential(account.getEmail(), url, username, password);
 			boolean success = client.storeCredential(credential);
 			
-			isDialogError = !success;
-			dialogMessage = !isDialogError ? "" : "An error occured while adding the credential. Try again.";
-			isCredentialAdded = success;
-			isViewVisible = !success;
-			
 			this.url = url;
 			this.username = username;
 			this.password = password;
+			updateObservers();
+
+			if (!success) {
+				throw new ModelException("An error occured while adding the credential. Try again.");
+			}
+			
 		}
-		
-		updateObservers();
-	}
-	
-	public boolean getCredentialAddedStatus() {
-		return this.isCredentialAdded;
-	}
-	
-	public boolean getDialogErrorStatus() {
-		return this.isDialogError;
-	}
-	
-	public String getDialogMessage() {
-		String dialogMessage = this.dialogMessage;
-		
-		this.dialogMessage = "";
-		
-		return dialogMessage;
 	}
 	
 	public String getPassword() {
@@ -75,25 +52,10 @@ public class AddCredentialModel implements Observable<AddCredentialModel> {
 		return this.username;
 	}
 	
-	public boolean getVisibilityStatus() {
-		return this.isViewVisible;
-	}
-	
 	public void reset() {
-		this.dialogMessage = "";
-		this.isDialogError = false;
-		
 		this.username = "";
 		this.url = "";
 		this.password = "";
-		
-		this.isCredentialAdded = false;
-	}
-	
-	public void setVisibilityStatus(boolean isVisible) {
-		this.isViewVisible = isVisible;
-		
-		updateObservers();
 	}
 	
 	private void updateObservers() {

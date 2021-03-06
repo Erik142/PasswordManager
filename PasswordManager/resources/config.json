@@ -1,5 +1,5 @@
 {
-    "appMode": "Server",
+    "appMode": "Client",
     "serverIp": "127.0.0.1",
     "serverPort": 50000,
     "webPort":3000,

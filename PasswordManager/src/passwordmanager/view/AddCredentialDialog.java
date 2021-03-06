@@ -6,12 +6,13 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 import passwordmanager.controller.AddCredentialController;
+import passwordmanager.controller.UpdateTableWindowListener;
 import passwordmanager.model.AddCredentialModel;
 import passwordmanager.model.Observer;
 import passwordmanager.util.StringExtensions;
 
 
-public class AddDialog extends JDialog implements Observer<AddCredentialModel> {
+public class AddCredentialDialog extends JDialog implements Observer<AddCredentialModel> {
 	
 
     private JLabel lbWebsite;
@@ -23,7 +24,7 @@ public class AddDialog extends JDialog implements Observer<AddCredentialModel> {
     private JButton addButton;
     private JButton cancelButton;
     
-    public AddDialog(Frame parent) {
+    public AddCredentialDialog(Frame parent) {
         //
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints cs = new GridBagConstraints();
@@ -81,6 +82,9 @@ public class AddDialog extends JDialog implements Observer<AddCredentialModel> {
         pack();
         setResizable(false);
         setLocationRelativeTo(parent);
+
+        setModal(true);
+        setVisible(false);
     }
     
     public String getWebsite() {
@@ -89,36 +93,23 @@ public class AddDialog extends JDialog implements Observer<AddCredentialModel> {
     public String getEmail() {
         return tfEmail.getText().trim();
     }
-
     
     public String getPassword() {
         return new String(pfPassword.getPassword());
     }
 
-    public void registerListener(AddCredentialController controller) {
-    	addButton.setActionCommand(controller.ADD_COMMAND);
+    public void registerListener(AddCredentialController controller, UpdateTableWindowListener windowListener) {
+    	addButton.setActionCommand("" + controller.ADD_CREDENTIAL);
     	addButton.addActionListener(controller);
-    	cancelButton.setActionCommand(controller.CANCEL_COMMAND);
+    	cancelButton.setActionCommand("" + controller.CANCEL);
     	cancelButton.addActionListener(controller);
+        this.addWindowListener(windowListener);
     }
     
 	@Override
-	public void update(AddCredentialModel observable) {
-		String dialogMessage = observable.getDialogMessage();
-		int dialogType = observable.getDialogErrorStatus() ? JOptionPane.ERROR_MESSAGE : JOptionPane.INFORMATION_MESSAGE;
-		
-		if (!StringExtensions.isNullOrEmpty(dialogMessage)) {
-			JOptionPane.showMessageDialog(null,
-	                dialogMessage ,
-	                "Add credential",
-	                dialogType);
-		}
-		
+	public void update(AddCredentialModel observable) {	
 		tfWebsite.setText(observable.getUrl());
 		tfEmail.setText(observable.getUserName());
 		pfPassword.setText(observable.getPassword());
-		
-		setModal(observable.getVisibilityStatus());
-		setVisible(observable.getVisibilityStatus());
 	}
 }

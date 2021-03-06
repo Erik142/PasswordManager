@@ -4,7 +4,6 @@ import java.awt.*;
 import javax.swing.*;
 
 import passwordmanager.controller.ForgotPasswordDialogController;
-import passwordmanager.controller.ForgotPasswordWindowController;
 import passwordmanager.model.ForgotPasswordModel;
 import passwordmanager.model.Observer;
 import passwordmanager.util.StringExtensions;
@@ -58,8 +57,8 @@ public class ForgotPasswordDialog extends JDialog implements Observer<ForgotPass
         setResizable(false);
         setLocationRelativeTo(parent);
         
-        setModal(model.getIsViewVisible());
-        setVisible(model.getIsViewVisible());
+        setModal(true);
+        setVisible(false);
     }
     
     public void registerListener(ForgotPasswordDialogController controller) {
@@ -75,20 +74,6 @@ public class ForgotPasswordDialog extends JDialog implements Observer<ForgotPass
     
 	@Override
 	public void update(ForgotPasswordModel observable) {
-		// TODO Auto-generated method stub
-		String dialogMessage = observable.getDialogMessage();
-		int dialogType = observable.getIsDialogError() ? JOptionPane.ERROR_MESSAGE : JOptionPane.INFORMATION_MESSAGE;
-		
-		if (!StringExtensions.isNullOrEmpty(dialogMessage)) {
-			JOptionPane.showMessageDialog(parent,
-		            dialogMessage,
-		            "Forgot password",
-		            dialogType);
-		}
-		
 		tfEmail.setText(observable.getEmail());
-		
-		this.setModal(observable.getIsViewVisible());
-		this.setVisible(observable.getIsViewVisible());
 	}
 }
