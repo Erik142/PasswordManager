@@ -16,11 +16,7 @@ import com.google.gson.Gson;
 public class Configuration {
 	public enum AppMode {
 		Client,
-		DatabaseTest,
 		Server,
-		ServerTest,
-		RSATest,
-		Debug
 	}
 	
 	public AppMode appMode;
