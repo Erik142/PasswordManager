@@ -107,21 +107,6 @@ public class PasswordDatabase {
 		return list;
 	}
 	
-	public Credential listOneCredential(String account, String URL, String username) throws SQLException {
-		this.s=c.createStatement();
-		ResultSet rs=s.executeQuery("SELECT * FROM public.\"Credentials\" WHERE \"User\"='"+account+"' AND \"URL\"='"+URL+"' AND \"Username\"='"+username+"'");
-		while(rs.next()) {
-			//needs to return an instance of Credential instead of printing it out
-			int id = rs.getInt("id");
-			String Url=rs.getString("URL");
-			String Username=rs.getString("Username");
-			String Password=rs.getString("Password");
-			Credential cred= new Credential(id, account, Url, Username, Password);
-			return cred;
-		}
-		return null;
-	}
-	
 	/**
 	 * Delete a Credential object from the database
 	 * @param cred The Credential object to delete
