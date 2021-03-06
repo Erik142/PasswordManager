@@ -12,6 +12,10 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import passwordmanager.communication.PasswordServer;
 import passwordmanager.config.Configuration;
 
+/**
+ * The main entry for the program. This class searches for the configuration file on the PC and loads a Configuration object from it.
+ * It also starts the program in either Client or Server mode depending on what information is stored in the Configuration object.
+ */
 public class Program {
 
 	private static final String CONFIG_PATH = "config.json";
