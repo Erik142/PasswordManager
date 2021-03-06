@@ -1,8 +1,5 @@
 package passwordmanager.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import passwordmanager.communication.PasswordClient;
 import passwordmanager.exception.ModelException;
 import passwordmanager.util.EmailUtil;
@@ -11,10 +8,8 @@ import passwordmanager.util.StringExtensions;
 /**
  * Used to send "forgot password" e-mail to the specified UserAccount e-mail address
  */
-public class ForgotPasswordModel implements Observable<ForgotPasswordModel> {
+public class ForgotPasswordModel extends AbstractObservable<ForgotPasswordModel> {
 	private String email = "";
-	
-	private List<Observer<ForgotPasswordModel>> observers;
 	
 	private final PasswordClient client;
 	
@@ -23,8 +18,7 @@ public class ForgotPasswordModel implements Observable<ForgotPasswordModel> {
 	 * @param client The PasswordClient
 	 */
 	public ForgotPasswordModel(PasswordClient client) {
-		observers = new ArrayList<Observer<ForgotPasswordModel>>();
-		
+		super();		
 		this.client = client;
 	}
 
@@ -71,22 +65,7 @@ public class ForgotPasswordModel implements Observable<ForgotPasswordModel> {
 	 */
 	public void setEmail(String email) {
 		this.email = email;
-		updateObservers();
+		updateObservers(this);
 	}
 	
-	private void updateObservers() {
-		for (Observer<ForgotPasswordModel> observer: observers) {
-			observer.update(this);
-		}
-	}
-
-	@Override
-	public void addObserver(Observer<ForgotPasswordModel> observer) {
-		observers.add(observer);
-	}
-
-	@Override
-	public void removeObserver(Observer<ForgotPasswordModel> observer) {
-		observers.remove(observer);
-	}
 }

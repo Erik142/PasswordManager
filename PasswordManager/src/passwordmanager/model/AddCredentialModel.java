@@ -1,8 +1,5 @@
 package passwordmanager.model;
 
-import java.util.Collection;
-import java.util.HashSet;
-
 import passwordmanager.communication.PasswordClient;
 import passwordmanager.exception.ModelException;
 import passwordmanager.util.StringExtensions;
@@ -11,8 +8,7 @@ import passwordmanager.util.StringExtensions;
  * @author Erik Wahlberger
  * The model used to add a credential to the database
  */
-public class AddCredentialModel implements Observable<AddCredentialModel> {
-	private final Collection<Observer<AddCredentialModel>> observers;
+public class AddCredentialModel extends AbstractObservable<AddCredentialModel> {
 	private final PasswordClient client;
 	
 	private String url = "";
@@ -24,7 +20,7 @@ public class AddCredentialModel implements Observable<AddCredentialModel> {
 	 * @param client The PasswordClient
 	 */
 	public AddCredentialModel(PasswordClient client) {
-		this.observers = new HashSet<Observer<AddCredentialModel>>();
+		super();
 		this.client = client;
 	}
 	
@@ -47,7 +43,7 @@ public class AddCredentialModel implements Observable<AddCredentialModel> {
 			this.url = url;
 			this.username = username;
 			this.password = password;
-			updateObservers();
+			updateObservers(this);
 
 			if (!success) {
 				throw new ModelException("An error occured while adding the credential. Try again.");
@@ -89,20 +85,4 @@ public class AddCredentialModel implements Observable<AddCredentialModel> {
 		this.password = "";
 	}
 	
-	private void updateObservers() {
-		for (Observer<AddCredentialModel> observer : observers) {
-			observer.update(this);
-		}
-	}
-	
-	@Override
-	public void addObserver(Observer<AddCredentialModel> observer) {
-		observers.add(observer);
-	}
-
-	@Override
-	public void removeObserver(Observer<AddCredentialModel> observer) {
-		observers.remove(observer);
-	}
-
 }

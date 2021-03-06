@@ -1,8 +1,5 @@
 package passwordmanager.model;
 
-import java.util.Collection;
-import java.util.HashSet;
-
 import passwordmanager.communication.PasswordClient;
 import passwordmanager.exception.ModelException;
 import passwordmanager.util.StringExtensions;
@@ -11,11 +8,10 @@ import passwordmanager.util.StringExtensions;
  * @author Erik Wahlberger
  * Used to change the password for a UserAccount object
  */
-public class ChangeUserAccountModel implements Observable<ChangeUserAccountModel> {
+public class ChangeUserAccountModel extends AbstractObservable<ChangeUserAccountModel> {
 
 	private final int MIN_PASSWORD_LENGTH = 8;
 	
-	private final Collection<Observer<ChangeUserAccountModel>> observers;
 	private final PasswordClient client;
 	
 	private UserAccount account;
@@ -29,7 +25,7 @@ public class ChangeUserAccountModel implements Observable<ChangeUserAccountModel
 	 * @param client The PasswordClient
 	 */
 	public ChangeUserAccountModel(PasswordClient client) {
-		this.observers = new HashSet<Observer<ChangeUserAccountModel>>();
+		super();
 		this.client = client;
 	}
 	
@@ -68,7 +64,7 @@ public class ChangeUserAccountModel implements Observable<ChangeUserAccountModel
 			throw new ModelException("Password cannot be empty!");
 		}
 		
-		updateObservers();
+		updateObservers(this);
 	}
 	
 	/**
@@ -87,7 +83,7 @@ public class ChangeUserAccountModel implements Observable<ChangeUserAccountModel
 			throw new ModelException("There is no account to delete.");
 		}
 		
-		updateObservers();
+		updateObservers(this);
 	}
 	
 	/**
@@ -130,7 +126,7 @@ public class ChangeUserAccountModel implements Observable<ChangeUserAccountModel
 	public void setAccount(UserAccount account) {
 		this.account = account;
 		
-		updateObservers();
+		updateObservers(this);
 	}
 	
 	/**
@@ -141,23 +137,7 @@ public class ChangeUserAccountModel implements Observable<ChangeUserAccountModel
 		this.newPassword = "";
 		this.confirmPassword = "";
 		
-		updateObservers();
+		updateObservers(this);
 	}
 	
-	private void updateObservers() {
-		for (Observer<ChangeUserAccountModel> observer : observers) {
-			observer.update(this);
-		}
-	}
-	
-	@Override
-	public void addObserver(Observer<ChangeUserAccountModel> observer) {
-		this.observers.add(observer);
-	}
-
-	@Override
-	public void removeObserver(Observer<ChangeUserAccountModel> observer) {
-		this.observers.remove(observer);
-	}
-
 }

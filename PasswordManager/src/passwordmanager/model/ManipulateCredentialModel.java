@@ -1,8 +1,5 @@
 package passwordmanager.model;
 
-import java.util.Collection;
-import java.util.HashSet;
-
 import passwordmanager.communication.PasswordClient;
 import passwordmanager.exception.ModelException;
 import passwordmanager.util.StringExtensions;
@@ -11,9 +8,8 @@ import passwordmanager.util.StringExtensions;
  * @author Erik Wahlberger
  * Manipulates Credential objects in the database
  */
-public class ManipulateCredentialModel implements Observable<ManipulateCredentialModel> {
+public class ManipulateCredentialModel extends AbstractObservable<ManipulateCredentialModel> {
 
-	private final Collection<Observer<ManipulateCredentialModel>> observers;
 	private final PasswordClient client;
 	
 	private Credential credential;
@@ -23,7 +19,7 @@ public class ManipulateCredentialModel implements Observable<ManipulateCredentia
 	 * @param client The PasswordClient
 	 */
 	public ManipulateCredentialModel(PasswordClient client) {
-		this.observers = new HashSet<Observer<ManipulateCredentialModel>>();
+		super();
 		this.client = client;
 	}
 	
@@ -46,7 +42,7 @@ public class ManipulateCredentialModel implements Observable<ManipulateCredentia
 			throw new ModelException("No credential has been chosen!");
 		}
 		
-		updateObservers();
+		updateObservers(this);
 	}
 	
 	/**
@@ -88,7 +84,7 @@ public class ManipulateCredentialModel implements Observable<ManipulateCredentia
 	public void setCredential(Credential credential) {
 		this.credential = credential;
 		
-		updateObservers();
+		updateObservers(this);
 	}
 	
 	/**
@@ -121,23 +117,7 @@ public class ManipulateCredentialModel implements Observable<ManipulateCredentia
 			throw new ModelException("No credential has been chosen!");
 		}
 		
-		updateObservers();
+		updateObservers(this);
 	}
 	
-	private void updateObservers() {
-		for (Observer<ManipulateCredentialModel> observer : observers) {
-			observer.update(this);
-		}
-	}
-	
-	@Override
-	public void addObserver(Observer<ManipulateCredentialModel> observer) {
-		observers.add(observer);
-	}
-
-	@Override
-	public void removeObserver(Observer<ManipulateCredentialModel> observer) {
-		observers.remove(observer);
-	}
-
 }

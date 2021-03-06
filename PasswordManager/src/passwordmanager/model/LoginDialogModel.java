@@ -1,8 +1,5 @@
 package passwordmanager.model;
 
-import java.util.Collection;
-import java.util.HashSet;
-
 import passwordmanager.communication.PasswordClient;
 import passwordmanager.exception.ModelException;
 import passwordmanager.util.EmailUtil;
@@ -11,10 +8,8 @@ import passwordmanager.util.StringExtensions;
 /**
  * Used to login and logout a UserAccount into/from the application
  */
-public class LoginDialogModel implements Observable<LoginDialogModel> {
+public class LoginDialogModel extends AbstractObservable<LoginDialogModel> {
 
-	private final Collection<Observer<LoginDialogModel>> observers;
-	
 	private String email = "";
 	private String password = "";
 
@@ -27,7 +22,7 @@ public class LoginDialogModel implements Observable<LoginDialogModel> {
 	 * @param client The PasswordClient
 	 */
 	public LoginDialogModel(PasswordClient client) {
-		this.observers = new HashSet<Observer<LoginDialogModel>>();
+		super();
 		this.client = client;
 	}
 	
@@ -88,7 +83,7 @@ public class LoginDialogModel implements Observable<LoginDialogModel> {
 		this.email = email;
 		this.password = password;
 		
-		updateObservers();
+		updateObservers(this);
 	}
 	
 	/**
@@ -99,23 +94,7 @@ public class LoginDialogModel implements Observable<LoginDialogModel> {
 		this.email = "";
 		this.password = "";
 		
-		this.updateObservers();
+		this.updateObservers(this);
 	}
 	
-	private void updateObservers() {
-		for (Observer<LoginDialogModel> observer: observers) {
-			observer.update(this);
-		}
-	}
-	
-	@Override
-	public void addObserver(Observer<LoginDialogModel> observer) {
-		observers.add(observer);
-	}
-
-	@Override
-	public void removeObserver(Observer<LoginDialogModel> observer) {
-		observers.add(observer);
-	}
-
 }

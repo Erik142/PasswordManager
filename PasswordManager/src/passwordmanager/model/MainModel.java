@@ -1,18 +1,13 @@
 package passwordmanager.model;
 
-import java.util.Collection;
-import java.util.HashSet;
-
 import passwordmanager.communication.PasswordClient;
 
 /**
  * @author Erik Wahlberger
  * Stores and updates the Credential data for the table in the MainView
  */
-public class MainModel implements Observable<MainModel> {
+public class MainModel extends AbstractObservable<MainModel> {
 
-	private final Collection<Observer<MainModel>> observers;
-	
 	private final PasswordClient client;
 	private Object[][] tableData;
 	private Credential[] credentials;
@@ -24,7 +19,7 @@ public class MainModel implements Observable<MainModel> {
 	 * @param client The PasswordClient
 	 */
 	public MainModel(PasswordClient client) {
-		this.observers = new HashSet<Observer<MainModel>>();
+		super();
 		this.client = client;
 		this.tableData = new Object[0][0];
 		this.credentials = new Credential[0];
@@ -61,7 +56,7 @@ public class MainModel implements Observable<MainModel> {
 	public void setUserAccount(UserAccount account) {
 		this.account = account;
 		
-		updateObservers();
+		updateObservers(this);
 	}
 	
 	/**
@@ -94,23 +89,7 @@ public class MainModel implements Observable<MainModel> {
 			this.credentials = credentials;
 		}
 		
-		updateObservers();
+		updateObservers(this);
 	}
 	
-	private void updateObservers() {
-		for (Observer<MainModel> observer : observers) {
-			observer.update(this);
-		}
-	}
-	
-	@Override
-	public void addObserver(Observer<MainModel> observer) {
-		observers.add(observer);
-	}
-
-	@Override
-	public void removeObserver(Observer<MainModel> observer) {
-		observers.remove(observer);
-	}
-
 }

@@ -7,24 +7,21 @@ import java.util.HashSet;
  * @author Erik Wahlberger
  * An abstract implementation of the Observable interface
  */
-public class AbstractObservable<T> implements Observable<T> {
+public abstract class AbstractObservable<T> implements Observable<T> {
 
     private Collection<Observer<T>> observers;
 
-    private final T observable;
-
-    public AbstractObservable(T observable) {
+    public AbstractObservable() {
         observers = new HashSet<Observer<T>>();
-        this.observable = observable;
     }
 
     /**
      * Updates all the observers with the specified Observable
      * @param observable The Observable
      */
-    protected void updateObservers() {
+    protected void updateObservers(T observable) {
         for (Observer<T> observer: observers) {
-            observer.update(this.observable);
+            observer.update(observable);
         }
     }
 

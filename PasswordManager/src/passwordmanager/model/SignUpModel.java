@@ -1,8 +1,5 @@
 package passwordmanager.model;
 
-import java.util.Collection;
-import java.util.HashSet;
-
 import passwordmanager.communication.PasswordClient;
 import passwordmanager.exception.ModelException;
 import passwordmanager.util.EmailUtil;
@@ -11,7 +8,7 @@ import passwordmanager.util.StringExtensions;
 /**
  * Used to sign up a user to the database
  */
-public class SignUpModel implements Observable<SignUpModel> {
+public class SignUpModel extends AbstractObservable<SignUpModel> {
 
 	private final int minimumPasswordLength = 8;
 	
@@ -21,8 +18,6 @@ public class SignUpModel implements Observable<SignUpModel> {
 	
 	private boolean status = false;
 	
-	private Collection<Observer<SignUpModel>> observers;
-	
 	private final PasswordClient client;
 	
 	/**
@@ -30,8 +25,8 @@ public class SignUpModel implements Observable<SignUpModel> {
 	 * @param client
 	 */
 	public SignUpModel(PasswordClient client) {
+		super();
 		this.client = client;
-		observers = new HashSet<Observer<SignUpModel>>();
 	}
 	
 	/**
@@ -109,7 +104,7 @@ public class SignUpModel implements Observable<SignUpModel> {
 			}
 		}
 		
-		updateObservers();
+		updateObservers(this);
 	}
 	
 	/**
@@ -120,23 +115,7 @@ public class SignUpModel implements Observable<SignUpModel> {
 		this.password = "";
 		this.confirmPassword = "";
 		
-		updateObservers();
+		updateObservers(this);
 	}
 	
-	private void updateObservers() {
-		for (Observer<SignUpModel> observer : observers) {
-			observer.update(this);
-		}
-	}
-	
-	@Override
-	public void addObserver(Observer<SignUpModel> observer) {
-		observers.add(observer);
-	}
-
-	@Override
-	public void removeObserver(Observer<SignUpModel> observer) {
-		observers.remove(observer);
-	}
-
 }
