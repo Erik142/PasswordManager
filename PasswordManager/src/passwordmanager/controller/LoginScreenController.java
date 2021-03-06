@@ -9,12 +9,12 @@ import passwordmanager.model.ForgotPasswordModel;
 import passwordmanager.model.LoginScreenModel;
 import passwordmanager.view.ForgotPasswordDialog;
 import passwordmanager.view.LoginDialog;
-import passwordmanager.view.LoginScreen;
+import passwordmanager.view.InitialView;
 import passwordmanager.view.MainView;
 import passwordmanager.view.SignUpDialog;
 
 public class LoginScreenController implements ActionListener {
-	private LoginScreen parentView;
+	private InitialView parentView;
 	private PasswordClient client;
 	
 	ForgotPasswordDialogController forgotPasswordController;
@@ -22,7 +22,7 @@ public class LoginScreenController implements ActionListener {
 	ForgotPasswordDialog forgotPasswordDialog;
 	ForgotPasswordModel forgotPasswordModel;
 	
-	public LoginScreenController(LoginScreen parentView, LoginScreenModel model) throws IOException {
+	public LoginScreenController(InitialView parentView) throws IOException {
 		this.parentView = parentView;
 		
 		forgotPasswordModel = new ForgotPasswordModel(client);

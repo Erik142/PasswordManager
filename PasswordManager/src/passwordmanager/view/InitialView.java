@@ -14,7 +14,7 @@ import passwordmanager.model.Observer;
 import passwordmanager.util.FrameUtil;
 
 
-public class LoginScreen implements Observer<LoginScreenModel> {
+public class InitialView {
 	
 	private final JButton btnLogin;
 	private final JButton btnSignUp;
@@ -22,7 +22,7 @@ public class LoginScreen implements Observer<LoginScreenModel> {
 	
 	protected final JFrame frame;
 	
-	public LoginScreen() throws IOException {
+	public InitialView() throws IOException {
 		this.frame = new JFrame("Password Manager");
 		
 		btnLogin = new JButton("Login");
@@ -51,12 +51,4 @@ public class LoginScreen implements Observer<LoginScreenModel> {
         btnSignUp.addActionListener(signupController); 
 	}
 
-	@Override
-	public void update(LoginScreenModel observable) {
-		frame.setVisible(observable.getViewVisibility());
-		
-		if (!observable.getViewVisibility()) {
-			frame.dispose();
-		}
-	}
 }

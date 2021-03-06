@@ -37,7 +37,7 @@ import passwordmanager.view.ChangeDialog;
 import passwordmanager.view.ChangePasswordDialog;
 import passwordmanager.view.ForgotPasswordDialog;
 import passwordmanager.view.LoginDialog;
-import passwordmanager.view.LoginScreen;
+import passwordmanager.view.InitialView;
 import passwordmanager.view.MainView;
 import passwordmanager.view.SignUpDialog;
 
@@ -46,10 +46,10 @@ public class ClientWindow {
 		PasswordClient client = new PasswordClient(config);
 		
 		LoginScreenModel loginModel = new LoginScreenModel();
-		LoginScreen loginScreen = new LoginScreen();
 		LoginScreenController loginScreenController = new LoginScreenController(loginScreen, loginModel);
 			
 		loginModel.addObserver(loginScreen);
+		InitialView initialView = new InitialView();
 		
 		ForgotPasswordModel forgotPasswordModel = new ForgotPasswordModel(client);
 		ForgotPasswordDialog forgotPasswordDialog = new ForgotPasswordDialog(loginScreen.getFrame(), forgotPasswordModel);
