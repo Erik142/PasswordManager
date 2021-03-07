@@ -25,6 +25,10 @@ public class Program {
 
 	private static final String CONFIG_PATH = "config.json";
 
+	/**
+	 * The main method for the program
+	 * @param args The command line arguments
+	 */
 	public static void main(String[] args) {
 		URL res = Program.class.getClassLoader().getResource(CONFIG_PATH);
 		File configFile = null;

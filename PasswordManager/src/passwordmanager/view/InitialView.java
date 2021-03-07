@@ -25,9 +25,8 @@ public class InitialView {
 	
 	/**
      * The constructor creates a frame to create and display the dialog for the initial view
-     * @param parent
      */
-	public InitialView() throws IOException {
+	public InitialView() {
 		this.frame = new JFrame("Password Manager");
 		
 		btnLogin = new JButton("Login");
@@ -56,7 +55,7 @@ public class InitialView {
 	/**
      * Checks whether user pressed login, forgot or SignUp button and tells controller to do the appropriate action
      * 
-     * @param authenticationActionListener
+     * @param actionListener The action listener
      */
 	public void registerListener(InitialViewActionListener actionListener) {
         btnLogin.setActionCommand("" + actionListener.LOG_IN);

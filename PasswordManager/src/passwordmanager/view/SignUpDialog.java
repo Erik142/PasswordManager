@@ -14,18 +14,42 @@ import passwordmanager.controller.SignUpController;
  *
  */
 public class SignUpDialog extends JDialog {
+	/**
+	 * Text field for the username
+	 */
     private JTextField tfUsername;
+    /**
+     * Password field for the password
+     */
     private JPasswordField pfPassword1;
+    /**
+     * Password field for "confirm password"
+     */
     private JPasswordField pfPassword2;
+    /**
+     * Label for the username JTextfield
+     */
     private JLabel lbUsername;
+    /**
+     * Label for the password JPasswordField
+     */
     private JLabel lbPassword1;
+    /**
+     * Label for the "confirm password" JPasswordField
+     */
     private JLabel lbPassword2;
+    /**
+     * Used to sign up
+     */
     private JButton btnSignUp;
+    /**
+     * Used to cancel and close the dialog
+     */
     private JButton btnCancel;
     
     /**
      * The constructor uses a parent frame to create and display the MainView
-     * @param parent
+     * @param parent The parent frame for this dialog
      */
     public SignUpDialog(Frame parent) {
         //
@@ -116,7 +140,7 @@ public class SignUpDialog extends JDialog {
 	/**
      * Checks which button was pressed and tells controller to do the appropriate action
      * 
-     * @param controller
+     * @param controller The action listener
      */
 	public void registerListener(SignUpController controller) {
 		btnSignUp.setActionCommand("" + controller.SIGNUP);

@@ -38,44 +38,152 @@ public class CommunicationProtocol implements Serializable {
 	 * Specifies the allowed operations to perform when communicating
 	 */
 	public enum CommunicationOperation {
-		AddCredential, DeleteCredential, UpdateCredential, GetAllCredentials, AddUser, DeleteUser, UpdateUser, GetUser,
-		VerifyUser, ExchangeKeys, InitiateConnection, VerifyApplication, ForgotPassword
+		/**
+		 * Add a new Credential
+		 */
+		AddCredential, 
+		/**
+		 * Delete an existing Credential
+		 */
+		DeleteCredential,
+		/**
+		 * Update an existing Credential
+		 */
+		UpdateCredential, 
+		/**
+		 * Get all Credentials for a UserAccount object
+		 */
+		GetAllCredentials, 
+		/**
+		 * Add a new UserAccount
+		 */
+		AddUser, 
+		/**
+		 * Delete an existing UserAccount
+		 */
+		DeleteUser, 
+		/**
+		 * Update an existing UserAccount
+		 */
+		UpdateUser, 
+		/**
+		 * Get an existing UserAccount from an email address
+		 */
+		GetUser,
+		/**
+		 * Exchange AES encryption keys
+		 */
+		ExchangeKeys, 
+		/**
+		 * Initiate a new connection, exchange RSA keys
+		 */
+		InitiateConnection,
+		/**
+		 * Request an email with a password reset link for the provided email address
+		 */
+		ForgotPassword
 	}
 
 	/**
 	 * Specifies if the protocol should be run in Client or Server mode
 	 */
 	public enum ProtocolMode {
-		Client, Server
+		/**
+		 * Client mode
+		 */
+		Client, 
+		/**
+		 * Server mode
+		 */
+		Server
 	}
 
 	/**
 	 * Specifies different cryptography methods
 	 */
 	private enum CryptographyMethod {
-		RSA, AES, None
+		/**
+		 * RSA cryptography
+		 */
+		RSA, 
+		/**
+		 * AES cryptography
+		 */
+		AES, 
+		/**
+		 * Unencrypted
+		 */
+		None
 	}
 
+	/**
+	 * Used in the protocol to initiate a new connection
+	 */
 	private final int INITIATE_NEW_CONNECTION = 1;
+	/**
+	 * Used in the protocol to trigger an AES key exchange
+	 */
 	private final int EXCHANGE_KEYS = 2;
+	/**
+	 * Used in the protocol to indicate that invalid AES keys are used
+	 */
 	private final int INVALID_KEY = 3;
+	/**
+	 * Used in the protocol to indicate that no special messages are being transferred
+	 */
 	private final int USE_ESTABLISHED_CONNECTION = 0;
 
+	/**
+	 * The maximum allowed transactions for the AES keys
+	 */
 	private final int MAX_VALID_TRANSACTIONS = 10;
 
+	/**
+	 * AES encryption instance
+	 */
 	private RSA rsa = null;
+	/**
+	 * RSA encryption instance
+	 */
 	private AES aes = null;
 
+	/**
+	 * The AES password
+	 */
 	private String passwordKey = "";
+	/**
+	 * The AES salt
+	 */
 	private String salt = "";
+	/**
+	 * The AES password for the recipient
+	 */
 	private String recipientPasswordKey = "";
+	/**
+	 * The AES salt for the recipient
+	 */
 	private String recipientSalt = "";
+	/**
+	 * Remaining transactions for the AES keys before renewal is required
+	 */
 	private int validTransactionsRemaining = 0;
 
+	/**
+	 * The used protocol mode
+	 */
 	private final ProtocolMode PROTO_MODE;
 
+	/**
+	 * The socket connection
+	 */
 	private Socket socket;
+	/**
+	 * The input stream from the socket
+	 */
 	private DataInputStream inputStream;
+	/**
+	 * The output stream from the socket
+	 */
 	private DataOutputStream outputStream;
 
 	/**
@@ -477,7 +585,6 @@ public class CommunicationProtocol implements Serializable {
 					case UpdateUser:
 					case GetAllCredentials:
 					case GetUser:
-					case VerifyUser:
 					case ForgotPassword:
 						eventListener.onUserAccountEvent((UserAccount) object, operation);
 						break;

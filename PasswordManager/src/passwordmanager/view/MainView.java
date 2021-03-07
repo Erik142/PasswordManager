@@ -36,7 +36,6 @@ public class MainView implements Observer<CredentialModel> {
 	
 	/**
      * The constructor creates a frame to create and display the MainView
-     * @param parent
      */
 	public MainView() {
 		this.setFrame(new JFrame("Password Manager"));
@@ -106,7 +105,8 @@ public class MainView implements Observer<CredentialModel> {
 	/**
      * Checks which button was pressed and tells controller to do the appropriate action
      * 
-     * @param controller
+     * @param tableController The table controller
+     * @param actionListener The action listener
      */
 	public void registerListeners(MainViewTableController tableController, MainViewActionListener actionListener) {
 		addButton.setActionCommand("" + actionListener.ADD_CREDENTIAL);

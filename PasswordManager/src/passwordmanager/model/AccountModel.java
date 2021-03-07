@@ -17,6 +17,10 @@ public class AccountModel extends AbstractObservable<AccountModel> {
 	private boolean isLoggedIn = false;
 	private UserAccount account = null;
 
+	/**
+	 * Create a new instance of the AccountModel class with the specified PasswordClient object
+	 * @param client The PasswordClient
+	 */
 	public AccountModel(PasswordClient client) {
 		super();
 
@@ -29,9 +33,9 @@ public class AccountModel extends AbstractObservable<AccountModel> {
 	 * @param oldPassword     The old password String
 	 * @param newPassword     The new password String
 	 * @param confirmPassword The new password String, confirmed
-	 * @throws ModelException
+	 * @throws ModelException Throws on data validation or server errors
 	 */
-	public void changeUserPassword(UserAccount account, String oldPassword, String newPassword, String confirmPassword)
+	public void changeUserPassword(String oldPassword, String newPassword, String confirmPassword)
 			throws ModelException {
 		if (isValidPassword(newPassword) && isValidPassword(confirmPassword) && newPassword.equals(confirmPassword)
 				&& !newPassword.equals(oldPassword)) {
@@ -61,9 +65,9 @@ public class AccountModel extends AbstractObservable<AccountModel> {
 	/**
 	 * Deletes the UserAccount from the database
 	 * 
-	 * @throws ModelException
+	 * @throws ModelException Throws on data validation or server errors
 	 */
-	public void deleteAccount(UserAccount account) throws ModelException {
+	public void deleteAccount() throws ModelException {
 		if (account != null) {
 			boolean success = client.deleteUserAccount(account);
 
@@ -81,7 +85,7 @@ public class AccountModel extends AbstractObservable<AccountModel> {
 	 * Send an e-mail to the specified e-mail address
 	 * 
 	 * @param email The e-mail address
-	 * @throws ModelException
+	 * @throws ModelException Throws on data validation or server errors
 	 */
 	public void forgotPassword(String email) throws ModelException {
 		if (StringExtensions.isNullOrEmpty(email)) {
@@ -135,7 +139,7 @@ public class AccountModel extends AbstractObservable<AccountModel> {
 	 * 
 	 * @param email    The e-mail address
 	 * @param password The password
-	 * @throws ModelException
+	 * @throws ModelException Throws on data validation or server errors
 	 */
 	public void login(String email, String password) throws ModelException {
 		boolean isValidEmail = EmailUtil.isValidEmail(email);
@@ -178,7 +182,7 @@ public class AccountModel extends AbstractObservable<AccountModel> {
 	 * @param email           The e-mail address
 	 * @param password        The password String
 	 * @param confirmPassword The password String, confirmed
-	 * @throws ModelException
+	 * @throws ModelException Throws on data validation or server errors
 	 */
 	public void signup(String email, String password, String confirmPassword) throws ModelException {
 		boolean isValidEmail = EmailUtil.isValidEmail(email);

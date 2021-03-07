@@ -22,9 +22,8 @@ public class MainViewTableController implements ListSelectionListener {
 	 * Creates a new instance of the MainViewTableController, with the specified
 	 * MainView, MainModel and ManipulateCredentialModel
 	 * 
-	 * @param view      The MainView
-	 * @param mainModel The MainModel
-	 * @param model     The ManipulateCredentialModel
+	 * @param view      The view used together with this controller
+	 * @param model     The model used together with this controller
 	 */
 	public MainViewTableController(MainView view, CredentialModel model) {
 		this.view = view;

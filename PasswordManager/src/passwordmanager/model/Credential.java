@@ -10,11 +10,29 @@ import java.io.Serializable;
  */
 public class Credential implements Serializable {
 
+	/**
+	 * The id column in the database
+	 */
 	private int id;
+	/**
+	 * The e-mail address for the corresponding UserAccount
+	 */
 	private String user;
+	/**
+	 * Url for the Credential
+	 */
 	private String URL;
+	/**
+	 * Picture url for the Credential (Currently not used)
+	 */
 	private String pictureURL;
+	/**
+	 * Username for the Credential
+	 */
 	private String username;
+	/**
+	 * Password for the Credential
+	 */
 	private String password;
 	private static final long serialVersionUID = 5070481307938381662L;
 

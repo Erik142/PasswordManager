@@ -17,7 +17,13 @@ import passwordmanager.view.LoginDialog;
  */
 
 public class LoginDialogController implements ActionListener {
+	/**
+	 * Action command used to login
+	 */
 	public final int LOGIN = 0;
+	/**
+	 * Action command used to cancel and close the window
+	 */
 	public final int CANCEL = 1;
 
 	private LoginDialog parentView;
@@ -25,8 +31,8 @@ public class LoginDialogController implements ActionListener {
 	
 	/**
 	 * Creates an instance of the controller with the parentView and model
-	 * @param parentview
-	 * @param model
+	 * @param parentView The view used together with this controller
+	 * @param model The model used together with this controller
 	 */
 	public LoginDialogController(LoginDialog parentView, AccountModel model) {
 		this.parentView = parentView;
@@ -49,7 +55,7 @@ public class LoginDialogController implements ActionListener {
 	}
 	
 	/**
-	 * Cancels the act and disposes the parentview
+	 * Cancels the act and disposes the parent view
 	 */
 	private void cancel() {
 		parentView.dispose();

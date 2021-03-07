@@ -10,22 +10,21 @@ import passwordmanager.config.Configuration;
 import passwordmanager.model.Credential;
 import passwordmanager.model.UserAccount;
 
+/**
+ * Used to send queries to the server and receive responses from the server 
+ * @author Yemeri Nisa
+ * @version 2021-03-07
+ * 
+ */
 public class PasswordClient {
-
-	/**
-	 * Used to send queries to the server and receive responses from the server 
-	 * @author Yemeri Nisa
-	 * @version 2021-03-07
-	 * 
-	 */
 
 	private CommunicationProtocol protocol;
 	/**
 	 * Creates a new instance of the PasswordClient class, with the parameters
 	 * specified in the Configuration object
 	 * 
-	 * @param config
-	 * @throws IOException
+	 * @param config Configuration with server IP and port numbers specified
+	 * @throws IOException If the Socket throws IOException
 	 */
 
 	public PasswordClient(Configuration config) throws IOException {
@@ -91,24 +90,6 @@ public class PasswordClient {
 	}
 
 	/**
-	 * Method below verifies User's account.
-	 * 
-	 * @param account is to be verified with the stored information on the server
-	 *                database.
-	 * @return true if the UserAccount is successfully stored, otherwise false. Same
-	 *         principle applies to classes storeUserAccount, modifyAccount &
-	 *         deleteAccount.
-	 */
-
-	public boolean verifyUser(UserAccount account) {
-
-		Query<UserAccount> query = new Query<UserAccount>(CommunicationOperation.VerifyUser, account);
-		Response<Boolean> response = protocol.sendAndReceive(query);
-		return response.getData();
-
-	}
-
-	/**
 	 * Sends a query to add a UserAccount to the database
 	 * 
 	 * @param account that shall be added
@@ -147,6 +128,7 @@ public class PasswordClient {
 		return response.getData();
 
 	}
+
 	/**
 	 * Sends a query to retrieve a UserAccount from the database
 	 * 
@@ -160,11 +142,13 @@ public class PasswordClient {
 
 		return response.getData();
 	}
+
 	/**
 	 * Sends a query that the account has forgotten password to the server
 	 * 
 	 * @param email of the account
 	 * @return returns the success of the operation
+	 * @throws Exception if the response code from the server was not OK
 	 */
 	public boolean forgotPassword(String email) throws Exception {
 		Query<UserAccount> query = new Query<UserAccount>(CommunicationOperation.ForgotPassword,

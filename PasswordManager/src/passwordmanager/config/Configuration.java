@@ -19,18 +19,55 @@ public class Configuration {
 	 * Specifies the application mode, either Client or Server
 	 */
 	public enum AppMode {
-		Client, Server,
+		/**
+		 * Client application mode
+		 */
+		Client, 
+		/**
+		 * Server application mode
+		 */
+		Server,
 	}
 
+	/**
+	 * The application mode
+	 */
 	public AppMode appMode;
+	/**
+	 * The server IP address or hostname
+	 */
 	public InetAddress serverIp;
+	/**
+	 * The server TCP port number
+	 */
 	public int serverPort;
+	/**
+	 * The IP address or hostname for the PostgreSQL server
+	 */
 	public String dbHostName;
+	/**
+	 * The port number for the PostgreSQL server
+	 */
 	public int dbPort;
+	/**
+	 * The user name for the PostgreSQL user
+	 */
 	public String dbUserName;
+	/**
+	 * The password for the PostgreSQL user
+	 */
 	public String dbPassword;
+	/**
+	 * The email address to send emails from (Must be a gmail address)
+	 */
 	public String serverEmail;
-	public String serverPassword;
+	/**
+	 * The password for the server email address to send emails from
+	 */
+	public String serverEmailPassword;
+	/**
+	 * The public domain name for the "forgot password" web UI
+	 */
 	public String publicDomainName;
 
 	/**
@@ -40,9 +77,8 @@ public class Configuration {
 	 * @return The Configuration
 	 * @throws FileNotFoundException Thrown if the file was not found on the
 	 *                               computer
-	 * @throws IOException
 	 */
-	public static Configuration GetConfiguration(File file) throws FileNotFoundException, IOException {
+	public static Configuration GetConfiguration(File file) throws FileNotFoundException {
 		if (!file.exists()) {
 			throw new FileNotFoundException(
 					"No configuration file found under the path '" + file.getAbsolutePath() + "'.");

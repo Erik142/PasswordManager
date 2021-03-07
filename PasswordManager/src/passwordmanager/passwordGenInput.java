@@ -4,7 +4,7 @@ import java.awt.GridLayout;
 import java.awt.*;
 import java.awt.event.*;
 /**
- * Used for creating the GUI for generating a random password
+ * Used for creating the GUI for generating a random password (Currently not used in the application)
  * 
  * @author Hannes Larsson
  * @version 2021-03-07

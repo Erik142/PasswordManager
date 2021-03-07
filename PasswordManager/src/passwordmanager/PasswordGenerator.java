@@ -4,7 +4,7 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 /**
- * Used for generating a random password
+ * Used for generating a random password (Currently not used in the application)
  * 
  * @author Hannes Larsson
  * @version 2021-03-07

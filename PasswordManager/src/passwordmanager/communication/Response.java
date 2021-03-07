@@ -16,9 +16,23 @@ public class Response<T> extends Message<T> {
 	 * Represents the possible responses codes a server can send back to a client
 	 */
 	public enum ResponseCode {
-		OK, Fail, InvalidKey
+		/**
+		 * Response code if the query was processed correctly
+		 */
+		OK, 
+		/**
+		 * Response code if the query was not processed correctly
+		 */
+		Fail, 
+		/**
+		 * Response code for invalid encryption keys
+		 */
+		InvalidKey
 	}
 
+	/**
+	 * The response code for this response
+	 */
 	private final ResponseCode responseCode;
 
 	/**

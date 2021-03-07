@@ -22,7 +22,7 @@ public class ClientWindow {
 	 * specified in the Configuration object
 	 * 
 	 * @param config The Configuration object
-	 * @throws IOException
+	 * @throws IOException if the created PasswordClient throws IOException
 	 */
 	public ClientWindow(Configuration config) throws IOException {
 		PasswordClient client = new PasswordClient(config);

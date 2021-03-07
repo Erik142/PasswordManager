@@ -29,9 +29,9 @@ public class PasswordDatabase {
 	 * name and port specified in the Configuration object
 	 * 
 	 * @param config The Configuration object
-	 * @throws Exception
+	 * @throws SQLException If the connection cannot be created
 	 */
-	public PasswordDatabase(Configuration config) throws Exception {
+	public PasswordDatabase(Configuration config) throws SQLException {
 		// Try to connect to Database
 		String url = "jdbc:postgresql://" + config.dbHostName + ":" + config.dbPort + "/passwordmanager";
 
@@ -49,7 +49,7 @@ public class PasswordDatabase {
 	 * 
 	 * @param Email The e-mail address for the UserAccount object
 	 * @return The UserAccount object
-	 * @throws SQLException
+	 * @throws SQLException If a database access error occurs
 	 */
 	public UserAccount getAccount(String Email) throws SQLException {
 		this.s = c.createStatement();
@@ -71,7 +71,7 @@ public class PasswordDatabase {
 	 * Add a UserAccount object to the database
 	 * 
 	 * @param acc The UserAccount to be added
-	 * @throws SQLException
+	 * @throws SQLException If a database access error occurs
 	 */
 	public void addAccount(UserAccount acc) throws SQLException {
 		this.s = c.createStatement();
@@ -83,7 +83,7 @@ public class PasswordDatabase {
 	 * Add a Credential object to the database
 	 * 
 	 * @param cred The Credential to be added
-	 * @throws SQLException
+	 * @throws SQLException If a database access error occurs
 	 */
 	public void addCredential(Credential cred) throws SQLException {
 		this.s = c.createStatement();
@@ -97,7 +97,7 @@ public class PasswordDatabase {
 	 * 
 	 * @param acc The UserAccount
 	 * @return The Credentials for the specified UserAccount
-	 * @throws SQLException
+	 * @throws SQLException If a database access error occurs
 	 */
 	public List<Credential> listAllCredentials(UserAccount acc) throws SQLException {
 		List<Credential> list = new ArrayList<Credential>();
@@ -124,7 +124,7 @@ public class PasswordDatabase {
 	 * Delete a Credential object from the database
 	 * 
 	 * @param cred The Credential object to delete
-	 * @throws SQLException
+	 * @throws SQLException If a database access error occurs
 	 */
 	public void deleteCredential(Credential cred) throws SQLException {
 		this.s = c.createStatement();
@@ -135,7 +135,7 @@ public class PasswordDatabase {
 	 * Deletes all Credential objects for a specified UserAccount from the database
 	 * 
 	 * @param a The UserAccount object
-	 * @throws SQLException
+	 * @throws SQLException If a database access error occurs
 	 */
 	public void deleteAllCredentials(UserAccount a) throws SQLException {
 		this.s = c.createStatement();
@@ -146,7 +146,7 @@ public class PasswordDatabase {
 	 * Deletes a UserAccount object from the database
 	 * 
 	 * @param a The UserAccount to delete
-	 * @throws SQLException
+	 * @throws SQLException If a database access error occurs
 	 */
 	public void deleteAccount(UserAccount a) throws SQLException {
 		this.deleteAllCredentials(a);
@@ -159,7 +159,7 @@ public class PasswordDatabase {
 	 * 
 	 * @param a       The UserAccount object that the password will be updated for
 	 * @param newPass The new password
-	 * @throws SQLException
+	 * @throws SQLException If a database access error occurs
 	 */
 	public void changeAccountPassword(UserAccount a, String newPass) throws SQLException {
 		this.s = c.createStatement();
@@ -171,7 +171,7 @@ public class PasswordDatabase {
 	 * Update a Credential object in the Database
 	 * 
 	 * @param cred The Credential containing the new data
-	 * @throws SQLException
+	 * @throws SQLException If a database access error occurs
 	 */
 	public void changeCredential(Credential cred) throws SQLException {
 		this.s = c.createStatement();
@@ -185,7 +185,7 @@ public class PasswordDatabase {
 	 * UserAccount
 	 * 
 	 * @param account The UserAccount that the request will be made for
-	 * @throws SQLException
+	 * @throws SQLException If a database access error occurs
 	 */
 	public void insertResetRequest(UserAccount account) throws SQLException {
 		// Check if reset request already exists for user
@@ -207,7 +207,7 @@ public class PasswordDatabase {
 	 * 
 	 * @param account The UserAccount object
 	 * @return The request id number
-	 * @throws SQLException
+	 * @throws SQLException If a database access error occurs
 	 */
 	public int getResetRequestId(UserAccount account) throws SQLException {
 		this.s = c.createStatement();
@@ -223,7 +223,7 @@ public class PasswordDatabase {
 	 * database
 	 * 
 	 * @param account The UserAccount object
-	 * @throws SQLException
+	 * @throws SQLException If a database access error occurs
 	 */
 	public void deleteResetRequest(UserAccount account) throws SQLException {
 		this.s = c.createStatement();
@@ -233,7 +233,7 @@ public class PasswordDatabase {
 	/**
 	 * Closes the connection to the PostgreSQL database
 	 * 
-	 * @throws SQLException
+	 * @throws SQLException If a database access error occurs
 	 */
 	public void closeConnection() throws SQLException {
 		c.close();

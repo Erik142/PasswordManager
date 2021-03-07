@@ -38,10 +38,10 @@ public class PasswordServer implements Runnable {
 	/**
 	 * Creates a new instance of the PasswordServer class, with the parameters
 	 * specified in the Configuration object
-	 * @param config
-	 * @throws Exception
+	 * @param config The configuration file with server specific parameters
+	 * @throws SQLException if the connection to the database cannot be created
 	 */
-	public PasswordServer(Configuration config) throws Exception {
+	public PasswordServer(Configuration config) throws SQLException {
 		this.config = config;
 		this.database = new PasswordDatabase(config);
 	}
@@ -294,7 +294,7 @@ public class PasswordServer implements Runnable {
 	/**
 	 * Sends a query that the account has forgotten password to the server
 	 * 
-	 * @param email of the account
+	 * @param account The UserAccount to send an email to
 	 * @return returns the success of the operation
 	 */
 	private boolean forgotPassword(UserAccount account) {
@@ -324,12 +324,9 @@ public class PasswordServer implements Runnable {
 			props.put("mail.smtp.auth", "true");
 			props.put("mail.smtp.port", "465");
 
-			System.out.println("Server e-mail: " + config.serverEmail);
-			System.out.println("Server e-mail password: " + config.serverPassword);
-
 			Authenticator auth = new Authenticator() {
 				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication(config.serverEmail, config.serverPassword);
+					return new PasswordAuthentication(config.serverEmail, config.serverEmailPassword);
 				}
 			};
 

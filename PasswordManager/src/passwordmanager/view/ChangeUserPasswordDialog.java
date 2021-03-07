@@ -17,27 +17,48 @@ import passwordmanager.model.Observer;
 public class ChangeUserPasswordDialog  extends JDialog {
 	
 	private static final long serialVersionUID = 1L;
+	/**
+	 * Label for the "old password" JTextField
+	 */
 	private JLabel lbOld;
+	/**
+	 * Label for the "new password" JTextField
+	 */
 	private JLabel lbNew;
+	/**
+	 * Label for the "confirm password" JTextField
+	 */
 	private JLabel lbConfirm;
+	/**
+	 * Password field for the "old password"
+	 */
 	private JPasswordField pfPasswordOld;
+	/**
+	 * Password field for the "new password"
+	 */
 	private JPasswordField pfPasswordNew;
+	/**
+	 * Password field for "confirm password"
+	 */
 	private JPasswordField pfPasswordConfirm;
+	/**
+	 * Used to change the user account password
+	 */
     private JButton btnChange;
+    /**
+     * Used to cancel and close the dialog
+     */
     private JButton btnCancel;
-    
-    private final Frame parent;
     
     /**
      * The constructor uses a parent frame to create and display the dialog for changing a user's password
-     * @param parent
+     * @param parent The parent frame which will be used as a parent for this dialog
      */
     public ChangeUserPasswordDialog(Frame parent) {
-    	this.parent = parent;
-    	showChangePasswordDialog();
+    	showChangePasswordDialog(parent);
     }
     
-    private void showChangePasswordDialog() {
+    private void showChangePasswordDialog(Frame parent) {
     	JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints cs = new GridBagConstraints();
  
@@ -126,7 +147,7 @@ public class ChangeUserPasswordDialog  extends JDialog {
     /**
      * Checks whether user pressed change or cancel button and tells controller to do the appropriate action
      * 
-     * @param controller
+     * @param controller The action listener
      */
     public void registerListener(ChangePasswordController controller) {
     	this.btnChange.setActionCommand("" + controller.CHANGE_PASSWORD);

@@ -18,28 +18,50 @@ import passwordmanager.model.CredentialModel;
 public class ChangeCredentialDialog extends JDialog {
     
 	private static final long serialVersionUID = 1L;
+	/**
+	 * Label for the website/URL JTextField
+	 */
 	private JLabel lbService;
+	/**
+	 * Label for the username JTextField
+	 */
     private JLabel lbUserName;
+    /**
+     * Label for the password JPasswordField
+     */
     private JLabel lbPassword;
+    /**
+     * Text field for the website/URL
+     */
 	private JTextField tfService;
+	/**
+	 * Text field for the username
+	 */
     private JTextField tfUserName;
+    /**
+     * Password field for the password
+     */
     private JPasswordField pfPassword;
+    /**
+     * Used to update the credential with the new values
+     */
     private JButton changeButton;
+    /**
+     * Used to cancel and close the window
+     */
     private JButton cancelButton;
     
-    private Frame parent;
     
     /**
      * The constructor uses a parent frame to create and display the dialog for adding a credential
-     * @param parent
-     * @param model
+     * @param parent The parent frame on which this dialog will be create on top off
+     * @param model The model that will used to retrieve data for the GUI
      */
     public ChangeCredentialDialog(Frame parent, CredentialModel model) {
-    	this.parent = parent;
-    	showChangeDialog(model);
+    	showChangeDialog(model, parent);
     }
         
-    private void showChangeDialog(CredentialModel model) {
+    private void showChangeDialog(CredentialModel model, Frame parent) {
     	JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints cs = new GridBagConstraints();
  
@@ -133,8 +155,8 @@ public class ChangeCredentialDialog extends JDialog {
     /**
      * Checks whether user pressed change or cancel button and tells controller to do the appropriate action
      * 
-     * @param controller
-     * @param windowListener
+     * @param controller The action listener
+     * @param windowListener The window listener
      */
     public void registerListener(ChangeCredentialController controller, UpdateTableWindowListener windowListener) {
     	changeButton.setActionCommand("" + controller.CHANGE_CREDENTIAL);

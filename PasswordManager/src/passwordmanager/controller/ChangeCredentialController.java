@@ -16,8 +16,14 @@ import passwordmanager.view.ChangeCredentialDialog;
  * @version 2021-03-07
  */
 public class ChangeCredentialController implements ActionListener {
-	
+
+	/**
+	 * Action command to change the credential
+	 */
 	public final int CHANGE_CREDENTIAL = 0;
+	/**
+	 * Action command for the cancel button
+	 */
 	public final int CANCEL = 1;
 	
 	private ChangeCredentialDialog view;
@@ -25,8 +31,8 @@ public class ChangeCredentialController implements ActionListener {
 	
 	/**
 	 * Creates an instance of the controller with the parentView and model
-	 * @param view
-	 * @param Model
+	 * @param view The view that this controller will be used with
+	 * @param model The model that this controller will be used with
 	 */
 	public ChangeCredentialController(ChangeCredentialDialog view, CredentialModel model) {
 		this.view = view;

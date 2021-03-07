@@ -11,7 +11,13 @@ import java.io.Serializable;
 
 public class UserAccount implements Serializable {
 
+	/**
+	 * The e-mail address for this UserAccount
+	 */
 	private String email;
+	/**
+	 * The password for this UserAccount
+	 */
 	private String password;
 	private static final long serialVersionUID = -12622240058470036L;
 

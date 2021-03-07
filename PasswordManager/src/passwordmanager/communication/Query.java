@@ -18,7 +18,6 @@ public class Query<T> extends Message<T> {
 	 * Creates a new instance of a Query object with the specified authorization
 	 * token and the specified CommunicationOperation
 	 * 
-	 * @param authToken The authorization token
 	 * @param operation The CommunicationOperation
 	 */
 	public Query(CommunicationOperation operation) {
@@ -29,7 +28,6 @@ public class Query<T> extends Message<T> {
 	 * Creates a new instance of a Query object with the specified authorization
 	 * token, CommunicationOperation and data
 	 * 
-	 * @param authToken The authorization token
 	 * @param operation The CommunicationOperation
 	 * @param data      The data
 	 */

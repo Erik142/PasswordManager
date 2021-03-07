@@ -18,7 +18,13 @@ import passwordmanager.view.ChangeUserPasswordDialog;
  */
 public class ChangePasswordController implements ActionListener {
 
+	/**
+	 * Action command used to change the user password
+	 */
 	public final int CHANGE_PASSWORD = 0;
+	/**
+	 * Action command used to cancel the password change
+	 */
 	public final int CANCEL = 1;
 
 	private ChangeUserPasswordDialog view;
@@ -27,8 +33,8 @@ public class ChangePasswordController implements ActionListener {
 	
 	/**
 	 * Creates an instance of the controller with the parentView and model
-	 * @param view
-	 * @param model
+	 * @param view The view that this controller will be used with
+	 * @param model The model that this controller will be used with
 	 */
 	public ChangePasswordController(ChangeUserPasswordDialog view, AccountModel model) {
 		this.view = view;
@@ -45,8 +51,7 @@ public class ChangePasswordController implements ActionListener {
 		String confirmPassword = view.getPasswordConfirm();
 
 		try {
-			UserAccount loggedInUser = model.getUserAccount();
-			model.changeUserPassword(loggedInUser, oldPassword, newPassword, confirmPassword);
+			model.changeUserPassword(oldPassword, newPassword, confirmPassword);
 			JOptionPane.showMessageDialog(view, "Successfully changed the user password!",
 					"Change user account password", JOptionPane.INFORMATION_MESSAGE);
 			view.dispose();

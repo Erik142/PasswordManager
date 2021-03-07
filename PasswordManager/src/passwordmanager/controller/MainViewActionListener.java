@@ -23,11 +23,29 @@ import passwordmanager.view.MainView;
  */
 public class MainViewActionListener implements ActionListener {
 
+	/**
+	 * Action command used to add a credential
+	 */
     public final int ADD_CREDENTIAL = 0;
+    /**
+     * Action command used to change a credential
+     */
     public final int CHANGE_CREDENTIAL = 1;
+    /**
+     * Action command used to delete a credential
+     */
     public final int DELETE_CREDENTIAL = 2;
+    /**
+     * Action command used to change the account password
+     */
     public final int CHANGE_ACCOUNT_PASSWORD = 3;
+    /**
+     * Action command used to delete the account
+     */
     public final int DELETE_ACCOUNT = 4;
+    /**
+     * Action command used to sign out from the application
+     */
     public final int SIGN_OUT = 5;
 
     private final AccountModel accountModel;
@@ -40,9 +58,9 @@ public class MainViewActionListener implements ActionListener {
     /**
      * Creates an instance of this class with the the mainView and the different models
      * 
-     * @param mainView
-     * @param accountModel
-     * @param credentialModel
+     * @param mainView The view used together with this controller
+     * @param accountModel The account model
+     * @param credentialModel The credential model
      */
     public MainViewActionListener(MainView mainView, AccountModel accountModel, CredentialModel credentialModel) {
         this.accountModel = accountModel;
@@ -103,7 +121,7 @@ public class MainViewActionListener implements ActionListener {
 
         if (deleteAccount) {
             try {
-                accountModel.deleteAccount(accountModel.getUserAccount()); 
+                accountModel.deleteAccount(); 
                 JOptionPane.showMessageDialog(mainView.getFrame(), "Successfully deleted account!", "Delete account", JOptionPane.INFORMATION_MESSAGE);
                 mainView.getFrame().dispose();
                 credentialModel.removeObserver(mainView);

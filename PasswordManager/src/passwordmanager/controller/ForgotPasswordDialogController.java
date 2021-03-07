@@ -17,7 +17,13 @@ import passwordmanager.view.ForgotPasswordDialog;
  */
 public class ForgotPasswordDialogController implements ActionListener {
 
+	/**
+	 * Action command used to send an email
+	 */
 	public final int SEND_MAIL = 0;
+	/**
+	 * Action command used to cancel and close the window
+	 */
 	public final int CANCEL = 1;
 
 	private ForgotPasswordDialog view;
@@ -28,7 +34,7 @@ public class ForgotPasswordDialogController implements ActionListener {
 	 * specified ForgotPasswordDialog and ForgotPasswordModel
 	 * 
 	 * @param view  The ForgotPasswordDialog
-	 * @param model The ForgotPasswordModel
+	 * @param model The AccountModel
 	 */
 	public ForgotPasswordDialogController(ForgotPasswordDialog view, AccountModel model) {
 		this.view = view;

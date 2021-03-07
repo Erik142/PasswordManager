@@ -18,7 +18,13 @@ import passwordmanager.view.AddCredentialDialog;
  */
 public class AddCredentialController implements ActionListener {
 
+	/**
+	 * Action command for adding a credential
+	 */
 	public final int ADD_CREDENTIAL = 0;
+	/**
+	 * Action command for the cancel button
+	 */
 	public final int CANCEL = 1;
 
 	private AddCredentialDialog view;
@@ -26,9 +32,8 @@ public class AddCredentialController implements ActionListener {
 	
 	/**
 	 * Creates an instance of the controller with the parentView and Model along with the mainModel
-	 * @param view
-	 * @param addCredentialModel
-	 * @param mainModel
+	 * @param view The view that this controller will be used with
+	 * @param credentialModel The model that will be used
 	 */
 	public AddCredentialController(AddCredentialDialog view, CredentialModel credentialModel) {
 		this.view = view;

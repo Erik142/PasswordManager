@@ -13,6 +13,9 @@ public abstract class AbstractObservable<T> implements Observable<T> {
 
     private Collection<Observer<T>> observers;
 
+    /**
+     * Initiate the observers variable
+     */
     public AbstractObservable() {
         observers = new HashSet<Observer<T>>();
     }

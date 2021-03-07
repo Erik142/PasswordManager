@@ -15,16 +15,27 @@ import passwordmanager.controller.ForgotPasswordDialogController;
 public class ForgotPasswordDialog extends JDialog {
 	
 	private static final long serialVersionUID = -1191660850628433498L;
+	/**
+	 * Label for the email JTextField
+	 */
 	private JLabel lbEmail;
+	/**
+	 * Used to trigger a "forgot password" email from the server
+	 */
     private JButton btnSend;
+    /**
+     * Used to cancel and close the dialog
+     */
     private JButton btnCancel;
+    /**
+     * Text field for the email
+     */
     private JTextField tfEmail;
     
     
     /**
      * The constructor uses a parent frame to create and display the dialog for forgotten passwords
-     * @param parent
-     * @param model
+     * @param parent The parent frame for this dialog
      */
     public ForgotPasswordDialog(Frame parent) {
     	super(parent, true);
@@ -67,22 +78,22 @@ public class ForgotPasswordDialog extends JDialog {
     }
     
     /**
+     * Returns the email
+     * @return String with the email
+     */
+    public String getEmail() {
+    	return tfEmail.getText();
+    }
+    
+    /**
      * Checks whether user pressed send or cancel button and tells controller to do the appropriate action
      * 
-     * @param controller
+     * @param controller The action listener
      */
     public void registerListener(ForgotPasswordDialogController controller) {
     	btnSend.setActionCommand("" + controller.SEND_MAIL);
     	btnSend.addActionListener(controller);
     	btnCancel.setActionCommand("" + controller.CANCEL);
     	btnCancel.addActionListener(controller);
-    }
-
-    /**
-     * Returns the email
-     * @return String with the email
-     */
-    public String getEmail() {
-    	return tfEmail.getText();
     }
 }

@@ -17,7 +17,13 @@ import passwordmanager.view.SignUpDialog;
  *
  */
 public class SignUpController implements ActionListener {
+	/**
+	 * Action command used to sign up
+	 */
 	public final int SIGNUP = 0;
+	/**
+	 * Action command used to cancel and close the window
+	 */
 	public final int CANCEL = 1;
 
 	private SignUpDialog parentView;
@@ -26,8 +32,8 @@ public class SignUpController implements ActionListener {
 	
 	/**
 	 * Creates an instance of the controller with the parentView and model
-	 * @param parentView
-	 * @param model
+	 * @param parentView The view used together with this controller
+	 * @param model The model used together with this controller
 	 */
 	public SignUpController(SignUpDialog parentView, AccountModel model) {
 		this.model = model;

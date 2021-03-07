@@ -16,7 +16,13 @@ public abstract class Message<T> implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -3037518128810042924L;
+	/**
+	 * The data in the message
+	 */
 	protected final T data;
+	/**
+	 * The operation for the message
+	 */
 	protected final CommunicationOperation operation;
 
 	/**

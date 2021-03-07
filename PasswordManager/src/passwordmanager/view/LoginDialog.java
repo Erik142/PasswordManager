@@ -17,17 +17,35 @@ public class LoginDialog extends JDialog {
 	 
    
 	private static final long serialVersionUID = 1L;
+	/**
+	 * Text field for the username
+	 */
 	private JTextField tfUsername;
+	/**
+	 * Password field for the password
+	 */
     private JPasswordField pfPassword;
+    /**
+     * Label for the username JTextField
+     */
     private JLabel lbUsername;
+    /**
+     * Label for the password JPasswordField
+     */
     private JLabel lbPassword;
+    /**
+     * Used to login
+     */
     private JButton btnLogin;
+    /**
+     * Used to cancel and close the dialog
+     */
     private JButton btnCancel;
     
     
     /**
      * The constructor uses a parent frame to create and display the LoginDialog
-     * @param parent
+     * @param parent The parent frame for this dialog
      */
     public LoginDialog(Frame parent) {
     	super(parent, "Login", true);
@@ -89,7 +107,7 @@ public class LoginDialog extends JDialog {
     /**
      * Checks whether user pressed login or cancel button and tells controller to do the appropriate action
      * 
-     * @param controller
+     * @param controller The action listener
      */
     public void registerListener(LoginDialogController controller) {
     	btnLogin.setActionCommand("" + controller.LOGIN);

@@ -17,19 +17,42 @@ import passwordmanager.controller.UpdateTableWindowListener;
 
 public class AddCredentialDialog extends JDialog {
 	
-
+	/**
+	 * Label for the website JTextField
+	 */
     private JLabel lbWebsite;
+    /**
+     * Label for the email JTextField
+     */
     private JLabel lbEmail;
+    /**
+     * Label for the password JTextField
+     */
     private JLabel lbPassword;
+    /**
+     * Text field for the website
+     */
     private JTextField tfWebsite;
+    /**
+     * Text field for the E-mail
+     */
     private JTextField tfEmail;
+    /**
+     * Password field for the password
+     */
     private JPasswordField pfPassword;
+    /**
+     * Used to add a credential
+     */
     private JButton addButton;
+    /**
+     * Used to cancel and close the window
+     */
     private JButton cancelButton;
     
     /**
      * The constructor uses a parent frame to create and display the dialog for adding a credential
-     * @param parent
+     * @param parent The parent on which to create this dialog upon
      */
     public AddCredentialDialog(Frame parent) {
         //
@@ -120,8 +143,8 @@ public class AddCredentialDialog extends JDialog {
     /**
      * Checks whether user pressed add or cancel button and tells controller to do the appropriate action
      * 
-     * @param controller
-     * @param windowListener
+     * @param controller The action listener
+     * @param windowListener The window listener
      */
     public void registerListener(AddCredentialController controller, UpdateTableWindowListener windowListener) {
     	addButton.setActionCommand("" + controller.ADD_CREDENTIAL);

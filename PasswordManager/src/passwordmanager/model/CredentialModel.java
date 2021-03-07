@@ -17,6 +17,10 @@ public class CredentialModel extends AbstractObservable<CredentialModel> {
 	private UserAccount account = null;
 	private Credential selectedCredential = null;
 
+	/**
+	 * Create a new instance of the CredentialModel class with the specified PasswordClient object
+	 * @param client The PasswordClient
+	 */
 	public CredentialModel(PasswordClient client) {
 		this.client = client;
 	}
@@ -25,11 +29,10 @@ public class CredentialModel extends AbstractObservable<CredentialModel> {
 	 * Add a Credential object to the database with the specified UserAccount e-mail
 	 * address, url, username and password
 	 * 
-	 * @param account  The e-mail address for the corresponding UserAccount object
 	 * @param url      The URL for the service
 	 * @param username The username for the service
 	 * @param password The password for the service
-	 * @throws ModelException
+	 * @throws ModelException On data validation or server errors
 	 */
 	public void addCredential(String url, String username, String password) throws ModelException {
 		if (StringExtensions.isNullOrEmpty(url) || StringExtensions.isNullOrEmpty(username)
@@ -51,7 +54,7 @@ public class CredentialModel extends AbstractObservable<CredentialModel> {
 	/**
 	 * Deletes the Credential in this instance from the database
 	 * 
-	 * @throws ModelException
+	 * @throws ModelException On data validation or server errors
 	 */
 	public void deleteCredential() throws ModelException {
 		if (selectedCredential != null) {
@@ -183,7 +186,7 @@ public class CredentialModel extends AbstractObservable<CredentialModel> {
 	 * @param url      The new service url String
 	 * @param username The new username
 	 * @param password The new password
-	 * @throws ModelException
+	 * @throws ModelException On data validation or server errors
 	 */
 	public void updateCredential(String url, String username, String password) throws ModelException {
 		if (StringExtensions.isNullOrEmpty(url) || StringExtensions.isNullOrEmpty(username)

@@ -87,11 +87,11 @@ public class RSA {
 	 * 
 	 * @param bytes The unencrypted byte array
 	 * @return The encrypted byte array
-	 * @throws NoSuchPaddingException
-	 * @throws NoSuchAlgorithmException
-	 * @throws InvalidKeyException
-	 * @throws IllegalBlockSizeException
-	 * @throws BadPaddingException
+	 * @throws NoSuchPaddingException Thrown by the underlying Cipher class
+	 * @throws NoSuchAlgorithmException Thrown by the underlying Cipher class
+	 * @throws InvalidKeyException Thrown by the underlying Cipher class
+	 * @throws IllegalBlockSizeException Thrown by the underlying Cipher class
+	 * @throws BadPaddingException Thrown by the underlying Cipher class
 	 */
 	public byte[] encrypt(byte[] bytes) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException,
 			IllegalBlockSizeException, BadPaddingException {
@@ -104,11 +104,11 @@ public class RSA {
 	 * 
 	 * @param bytes The RSA-encrypted byte array
 	 * @return The decrypted byte array
-	 * @throws NoSuchPaddingException
-	 * @throws NoSuchAlgorithmException
-	 * @throws InvalidKeyException
-	 * @throws IllegalBlockSizeException
-	 * @throws BadPaddingException
+	 * @throws NoSuchPaddingException Thrown by the underlying Cipher class
+	 * @throws NoSuchAlgorithmException Thrown by the underlying Cipher class
+	 * @throws InvalidKeyException Thrown by the underlying Cipher class
+	 * @throws IllegalBlockSizeException Thrown by the underlying Cipher class
+	 * @throws BadPaddingException Thrown by the underlying Cipher class
 	 */
 	public byte[] decrypt(byte[] bytes) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException,
 			IllegalBlockSizeException, BadPaddingException {
@@ -124,11 +124,11 @@ public class RSA {
 	 * @param bytes        The byte array on which the cipher operation should be
 	 *                     applied to
 	 * @return The ciphered byte array
-	 * @throws NoSuchPaddingException
-	 * @throws NoSuchAlgorithmException
-	 * @throws InvalidKeyException
-	 * @throws IllegalBlockSizeException
-	 * @throws BadPaddingException
+	 * @throws NoSuchPaddingException Thrown by the underlying Cipher class
+	 * @throws NoSuchAlgorithmException Thrown by the underlying Cipher class
+	 * @throws InvalidKeyException Thrown by the underlying Cipher class
+	 * @throws IllegalBlockSizeException Thrown by the underlying Cipher class
+	 * @throws BadPaddingException Thrown by the underlying Cipher class
 	 */
 	private byte[] performCipherOperation(int cipherOpMode, Key key, byte[] bytes) throws NoSuchPaddingException,
 			NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
