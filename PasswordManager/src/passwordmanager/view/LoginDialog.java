@@ -5,7 +5,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 import passwordmanager.controller.LoginDialogController;
-import passwordmanager.model.LoginDialogModel;
+import passwordmanager.model.AccountModel;
 import passwordmanager.model.Observer;
 
 /**
@@ -15,7 +15,7 @@ import passwordmanager.model.Observer;
  * @version 2021-03-07
  *
  */
-public class LoginDialog extends JDialog implements Observer<LoginDialogModel> {
+public class LoginDialog extends JDialog implements Observer<AccountModel> {
 	 
    
 	private static final long serialVersionUID = 1L;
@@ -25,7 +25,6 @@ public class LoginDialog extends JDialog implements Observer<LoginDialogModel> {
     private JLabel lbPassword;
     private JButton btnLogin;
     private JButton btnCancel;
-    public boolean succeeded;
     
     private final Frame parent;
     
@@ -117,18 +116,9 @@ public class LoginDialog extends JDialog implements Observer<LoginDialogModel> {
     public String getPassword() {
         return new String(pfPassword.getPassword());
     }
-    /**
-     * Returns the boolean succeeded
-     * @return succeeded
-     */
-    public boolean isSucceeded() {
-        return succeeded;
-    }
 
 	@Override
-	public void update(LoginDialogModel observable) {
-		this.tfUsername.setText(observable.getEmail());
-		this.pfPassword.setText(observable.getPassword());
-	    this.succeeded = observable.getLoggedInStatus();
+	public void update(AccountModel observable) {
+		this.pfPassword.setText("");
 	}
 }

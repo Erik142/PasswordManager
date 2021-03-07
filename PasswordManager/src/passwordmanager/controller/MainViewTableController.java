@@ -4,8 +4,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import passwordmanager.model.Credential;
-import passwordmanager.model.MainModel;
-import passwordmanager.model.ManipulateCredentialModel;
+import passwordmanager.model.CredentialModel;
 import passwordmanager.view.MainView;
 
 /**
@@ -17,8 +16,7 @@ import passwordmanager.view.MainView;
  */
 public class MainViewTableController implements ListSelectionListener {
 	private MainView view;
-	private MainModel mainModel;
-	private ManipulateCredentialModel model;
+	private CredentialModel model;
 
 	/**
 	 * Creates a new instance of the MainViewTableController, with the specified
@@ -28,9 +26,8 @@ public class MainViewTableController implements ListSelectionListener {
 	 * @param mainModel The MainModel
 	 * @param model     The ManipulateCredentialModel
 	 */
-	public MainViewTableController(MainView view, MainModel mainModel, ManipulateCredentialModel model) {
+	public MainViewTableController(MainView view, CredentialModel model) {
 		this.view = view;
-		this.mainModel = mainModel;
 		this.model = model;
 	}
 
@@ -44,13 +41,13 @@ public class MainViewTableController implements ListSelectionListener {
 
 		if (selectedRow >= 0) {
 			try {
-				Credential credential = mainModel.getCredentials()[selectedRow];
-				model.setCredential(credential);
+				Credential credential = model.getCredentials()[selectedRow];
+				model.setSelectedCredential(credential);
 			} catch (Exception ex) {
-				model.setCredential(null);
+				model.setSelectedCredential(null);
 			}
 		} else {
-			model.setCredential(null);
+			model.setSelectedCredential(null);
 		}
 	}
 }

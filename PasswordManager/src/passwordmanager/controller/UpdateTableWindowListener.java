@@ -3,7 +3,8 @@ package passwordmanager.controller;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import passwordmanager.model.MainModel;
+import passwordmanager.model.CredentialModel;
+
 
 /**
  * A generic WindowListener used to update the MainView table when the specified
@@ -14,7 +15,7 @@ import passwordmanager.model.MainModel;
  */
 public class UpdateTableWindowListener implements WindowListener {
 
-    private final MainModel model;
+    private final CredentialModel model;
 
     /**
      * Creates a new instance of the UpdateTableWindowListener class with the
@@ -22,7 +23,7 @@ public class UpdateTableWindowListener implements WindowListener {
      * 
      * @param model The MainModel
      */
-    public UpdateTableWindowListener(MainModel model) {
+    public UpdateTableWindowListener(CredentialModel model) {
         this.model = model;
     }
 
@@ -36,7 +37,7 @@ public class UpdateTableWindowListener implements WindowListener {
 
     @Override
     public void windowClosed(WindowEvent e) {
-        this.model.updateCredentials();
+        this.model.refreshCredentials();
     }
 
     @Override

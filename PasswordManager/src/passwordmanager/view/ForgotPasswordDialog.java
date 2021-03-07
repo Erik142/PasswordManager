@@ -4,7 +4,6 @@ import java.awt.*;
 import javax.swing.*;
 
 import passwordmanager.controller.ForgotPasswordDialogController;
-import passwordmanager.model.ForgotPasswordModel;
 import passwordmanager.model.Observer;
 
 /**
@@ -14,7 +13,7 @@ import passwordmanager.model.Observer;
  * @version 2021-03-07
  *
  */
-public class ForgotPasswordDialog extends JDialog implements Observer<ForgotPasswordModel> {
+public class ForgotPasswordDialog extends JDialog {
 	
 	private static final long serialVersionUID = -1191660850628433498L;
 	private JLabel lbEmail;
@@ -28,7 +27,7 @@ public class ForgotPasswordDialog extends JDialog implements Observer<ForgotPass
      * @param parent
      * @param model
      */
-    public ForgotPasswordDialog(Frame parent, ForgotPasswordModel model) {
+    public ForgotPasswordDialog(Frame parent) {
     	super(parent, true);
     	
     	JPanel panel = new JPanel(new GridBagLayout());
@@ -43,7 +42,7 @@ public class ForgotPasswordDialog extends JDialog implements Observer<ForgotPass
         panel.add(lbEmail, cs);
  
         tfEmail = new JTextField(20);
-        tfEmail.setText(model.getEmail());
+        tfEmail.setText("");
         cs.gridx = 1;
         cs.gridy = 0;
         cs.gridwidth = 2;
@@ -87,9 +86,4 @@ public class ForgotPasswordDialog extends JDialog implements Observer<ForgotPass
     public String getEmail() {
     	return tfEmail.getText();
     }
-    
-	@Override
-	public void update(ForgotPasswordModel observable) {
-		tfEmail.setText(observable.getEmail());
-	}
 }

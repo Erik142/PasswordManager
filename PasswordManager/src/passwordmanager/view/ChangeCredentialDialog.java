@@ -6,7 +6,7 @@ import javax.swing.border.*;
 
 import passwordmanager.controller.ChangeCredentialController;
 import passwordmanager.controller.UpdateTableWindowListener;
-import passwordmanager.model.ManipulateCredentialModel;
+import passwordmanager.model.CredentialModel;
 import passwordmanager.model.Observer;
 
 /**
@@ -16,7 +16,7 @@ import passwordmanager.model.Observer;
  * @version 2021-03-07
  *
  */
-public class ChangeCredentialDialog extends JDialog implements Observer<ManipulateCredentialModel> {
+public class ChangeCredentialDialog extends JDialog {
 	
     
 	private static final long serialVersionUID = 1L;
@@ -36,12 +36,12 @@ public class ChangeCredentialDialog extends JDialog implements Observer<Manipula
      * @param parent
      * @param model
      */
-    public ChangeCredentialDialog(Frame parent, ManipulateCredentialModel model) {
+    public ChangeCredentialDialog(Frame parent, CredentialModel model) {
     	this.parent = parent;
     	showChangeDialog(model);
     }
         
-    public void showChangeDialog(ManipulateCredentialModel model) {
+    public void showChangeDialog(CredentialModel model) {
     	JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints cs = new GridBagConstraints();
  
@@ -146,13 +146,6 @@ public class ChangeCredentialDialog extends JDialog implements Observer<Manipula
         this.addWindowListener(windowListener);
     }
     
-	@Override
-	public void update(ManipulateCredentialModel observable) {
-		this.tfService.setText(observable.getService());
-		this.tfUserName.setText(observable.getUserName());
-		this.pfPassword.setText(observable.getPassword());
-	}
-	
 }
     
 

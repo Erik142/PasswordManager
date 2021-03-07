@@ -6,8 +6,6 @@ import javax.swing.border.*;
 
 import passwordmanager.controller.AddCredentialController;
 import passwordmanager.controller.UpdateTableWindowListener;
-import passwordmanager.model.AddCredentialModel;
-import passwordmanager.model.Observer;
 
 /**
  * This class creates the GUI for adding a credential
@@ -17,7 +15,7 @@ import passwordmanager.model.Observer;
  *
  */
 
-public class AddCredentialDialog extends JDialog implements Observer<AddCredentialModel> {
+public class AddCredentialDialog extends JDialog {
 	
 
     private JLabel lbWebsite;
@@ -132,11 +130,4 @@ public class AddCredentialDialog extends JDialog implements Observer<AddCredenti
     	cancelButton.addActionListener(controller);
         this.addWindowListener(windowListener);
     }
-    
-	@Override
-	public void update(AddCredentialModel observable) {	
-		tfWebsite.setText(observable.getUrl());
-		tfEmail.setText(observable.getUserName());
-		pfPassword.setText(observable.getPassword());
-	}
 }

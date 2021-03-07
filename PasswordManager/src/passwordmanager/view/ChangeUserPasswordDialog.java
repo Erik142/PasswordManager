@@ -5,7 +5,6 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 import passwordmanager.controller.ChangePasswordController;
-import passwordmanager.model.ChangeUserAccountModel;
 import passwordmanager.model.Observer;
 
 /**
@@ -15,7 +14,7 @@ import passwordmanager.model.Observer;
  * @version 2021-03-07
  *
  */
-public class ChangeUserPasswordDialog  extends JDialog implements Observer<ChangeUserAccountModel> {
+public class ChangeUserPasswordDialog  extends JDialog {
 	
 	private static final long serialVersionUID = 1L;
 	private JLabel lbOld;
@@ -135,11 +134,4 @@ public class ChangeUserPasswordDialog  extends JDialog implements Observer<Chang
     	this.btnCancel.setActionCommand("" + controller.CANCEL);
     	this.btnCancel.addActionListener(controller);
     }
-    
-	@Override
-	public void update(ChangeUserAccountModel observable) {
-		this.pfPasswordOld.setText(observable.getOldPassword());
-		this.pfPasswordNew.setText(observable.getNewPassword());
-		this.pfPasswordConfirm.setText(observable.getConfirmPassword());
-	}
 }

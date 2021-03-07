@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 
 import passwordmanager.exception.ModelException;
-import passwordmanager.model.SignUpModel;
+import passwordmanager.model.AccountModel;
 import passwordmanager.view.SignUpDialog;
 
 /**
@@ -22,14 +22,14 @@ public class SignUpController implements ActionListener {
 
 	private SignUpDialog parentView;
 
-	private SignUpModel model;
+	private AccountModel model;
 	
 	/**
 	 * Creates an instance of the controller with the parentView and model
 	 * @param parentView
 	 * @param model
 	 */
-	public SignUpController(SignUpDialog parentView, SignUpModel model) {
+	public SignUpController(SignUpDialog parentView, AccountModel model) {
 		this.model = model;
 		this.parentView = parentView;
 	}

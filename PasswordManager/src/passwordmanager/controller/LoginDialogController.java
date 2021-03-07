@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 
 import passwordmanager.exception.ModelException;
-import passwordmanager.model.LoginDialogModel;
+import passwordmanager.model.AccountModel;
 import passwordmanager.view.LoginDialog;
 /**
  * The controller for the LoginDialog
@@ -21,14 +21,14 @@ public class LoginDialogController implements ActionListener {
 	public final int CANCEL = 1;
 
 	private LoginDialog parentView;
-	private LoginDialogModel model;
+	private AccountModel model;
 	
 	/**
 	 * Creates an instance of the controller with the parentView and model
 	 * @param parentview
 	 * @param model
 	 */
-	public LoginDialogController(LoginDialog parentView, LoginDialogModel model) {
+	public LoginDialogController(LoginDialog parentView, AccountModel model) {
 		this.parentView = parentView;
 		this.model = model;
 	}

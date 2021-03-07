@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 
 import passwordmanager.exception.ModelException;
-import passwordmanager.model.ManipulateCredentialModel;
+import passwordmanager.model.CredentialModel;
 import passwordmanager.view.ChangeCredentialDialog;
 
 /**
@@ -21,14 +21,14 @@ public class ChangeCredentialController implements ActionListener {
 	public final int CANCEL = 1;
 	
 	private ChangeCredentialDialog view;
-	private ManipulateCredentialModel model;
+	private CredentialModel model;
 	
 	/**
 	 * Creates an instance of the controller with the parentView and model
 	 * @param view
 	 * @param Model
 	 */
-	public ChangeCredentialController(ChangeCredentialDialog view, ManipulateCredentialModel model) {
+	public ChangeCredentialController(ChangeCredentialDialog view, CredentialModel model) {
 		this.view = view;
 		this.model = model;
 	}
@@ -45,7 +45,6 @@ public class ChangeCredentialController implements ActionListener {
 		try {
 			model.updateCredential(service, username, password);
 			view.dispose();
-			model.removeObserver(view);
 		} catch (ModelException e) {
 			JOptionPane.showMessageDialog(view, e.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 		}
@@ -56,7 +55,6 @@ public class ChangeCredentialController implements ActionListener {
 	 */
 	private void cancel() {
 		view.dispose();
-		model.removeObserver(view);
 	}
 
 	@Override

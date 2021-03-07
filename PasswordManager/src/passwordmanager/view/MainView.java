@@ -6,7 +6,7 @@ import javax.swing.table.DefaultTableModel;
 
 import passwordmanager.controller.MainViewActionListener;
 import passwordmanager.controller.MainViewTableController;
-import passwordmanager.model.MainModel;
+import passwordmanager.model.CredentialModel;
 import passwordmanager.model.Observer;
 import passwordmanager.util.FrameUtil;
 
@@ -18,7 +18,7 @@ import passwordmanager.util.FrameUtil;
  * @version 2021-03-07
  *
  */
-public class MainView implements Observer<MainModel> {
+public class MainView implements Observer<CredentialModel> {
 	
 	private JTable table = null;
 	private final String[] columns = {"Service", "Username", "Password" };
@@ -146,7 +146,7 @@ public class MainView implements Observer<MainModel> {
 	}
 	
 	@Override
-	public void update(MainModel observable) {
+	public void update(CredentialModel observable) {
 		this.tableModel.setRowCount(0);
 		Object[][] tableData = observable.getTableData();
 		

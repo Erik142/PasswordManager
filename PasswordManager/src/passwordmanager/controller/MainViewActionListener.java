@@ -6,11 +6,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 
 import passwordmanager.exception.ModelException;
-import passwordmanager.model.AddCredentialModel;
-import passwordmanager.model.ChangeUserAccountModel;
-import passwordmanager.model.LoginDialogModel;
-import passwordmanager.model.MainModel;
-import passwordmanager.model.ManipulateCredentialModel;
+import passwordmanager.model.AccountModel;
+import passwordmanager.model.CredentialModel;
 import passwordmanager.view.AddCredentialDialog;
 import passwordmanager.view.ChangeCredentialDialog;
 import passwordmanager.view.ChangeUserPasswordDialog;
@@ -33,11 +30,8 @@ public class MainViewActionListener implements ActionListener {
     public final int DELETE_ACCOUNT = 4;
     public final int SIGN_OUT = 5;
 
-    private final MainModel mainModel;
-    private final AddCredentialModel addCredentialModel;
-    private final ManipulateCredentialModel manipulateCredentialModel;
-    private final LoginDialogModel loginDialogModel;
-    private final ChangeUserAccountModel changeUserAccountModel;
+    private final AccountModel accountModel;
+    private final CredentialModel credentialModel;
 
     private final MainView mainView;
 
@@ -47,22 +41,16 @@ public class MainViewActionListener implements ActionListener {
      * Creates an instance of this class with the the mainView and the different models
      * 
      * @param mainView
-     * @param mainModel
-     * @param addCredentialModel
-     * @param manipulateCredentialModel
-     * @param loginModel
-     * @param changeUserAccountModel
+     * @param accountModel
+     * @param credentialModel
      */
-    public MainViewActionListener(MainView mainView, MainModel mainModel, AddCredentialModel addCredentialModel, ManipulateCredentialModel manipulateCredentialModel, LoginDialogModel loginModel, ChangeUserAccountModel changeUserAccountModel) {
-        this.mainModel = mainModel;
-        this.addCredentialModel = addCredentialModel;
-        this.manipulateCredentialModel = manipulateCredentialModel;
-        this.loginDialogModel = loginModel;
-        this.changeUserAccountModel = changeUserAccountModel;
+    public MainViewActionListener(MainView mainView, AccountModel accountModel, CredentialModel credentialModel) {
+        this.accountModel = accountModel;
+        this.credentialModel = credentialModel;
 
         this.mainView = mainView;
 
-        this.updateTableWindowListener = new UpdateTableWindowListener(mainModel);
+        this.updateTableWindowListener = new UpdateTableWindowListener(credentialModel);
     }
 
     /**
@@ -70,9 +58,8 @@ public class MainViewActionListener implements ActionListener {
      */
     private void addCredential() {
         AddCredentialDialog addCredentialDialog = new AddCredentialDialog(mainView.getFrame());
-        AddCredentialController addCredentialController = new AddCredentialController(addCredentialDialog, addCredentialModel, mainModel);
+        AddCredentialController addCredentialController = new AddCredentialController(addCredentialDialog, credentialModel);
 
-        addCredentialModel.addObserver(addCredentialDialog);
         addCredentialDialog.registerListener(addCredentialController, updateTableWindowListener);
 
         addCredentialDialog.setVisible(true);
@@ -83,9 +70,8 @@ public class MainViewActionListener implements ActionListener {
      */
     private void changeAccountPassword() {
        ChangeUserPasswordDialog changeAccountPasswordDialog = new ChangeUserPasswordDialog(mainView.getFrame());
-       ChangePasswordController changeAccountPasswordController = new ChangePasswordController(changeAccountPasswordDialog, changeUserAccountModel);
+       ChangePasswordController changeAccountPasswordController = new ChangePasswordController(changeAccountPasswordDialog, accountModel);
        
-       changeUserAccountModel.addObserver(changeAccountPasswordDialog);
        changeAccountPasswordDialog.registerListener(changeAccountPasswordController);
 
        changeAccountPasswordDialog.setVisible(true);
@@ -96,10 +82,9 @@ public class MainViewActionListener implements ActionListener {
      */
     private void changeCredential() {
         if (mainView.getTable().getSelectedRow() >= 0) {
-            ChangeCredentialDialog changeCredentialDialog = new ChangeCredentialDialog(mainView.getFrame(), manipulateCredentialModel);
-            ChangeCredentialController changeCredentialController = new ChangeCredentialController(changeCredentialDialog, manipulateCredentialModel);
+            ChangeCredentialDialog changeCredentialDialog = new ChangeCredentialDialog(mainView.getFrame(), credentialModel);
+            ChangeCredentialController changeCredentialController = new ChangeCredentialController(changeCredentialDialog, credentialModel);
 
-            manipulateCredentialModel.addObserver(changeCredentialDialog);
             changeCredentialDialog.registerListener(changeCredentialController, updateTableWindowListener);
 
             changeCredentialDialog.setVisible(true);
@@ -118,11 +103,11 @@ public class MainViewActionListener implements ActionListener {
 
         if (deleteAccount) {
             try {
-                changeUserAccountModel.deleteAccount(); 
+                accountModel.deleteAccount(accountModel.getUserAccount()); 
                 JOptionPane.showMessageDialog(mainView.getFrame(), "Successfully deleted account!", "Delete account", JOptionPane.INFORMATION_MESSAGE);
                 mainView.getFrame().dispose();
-                mainModel.removeObserver(mainView);
-                loginDialogModel.logout();
+                credentialModel.removeObserver(mainView);
+                accountModel.logout();
             }
             catch (ModelException e) {
                 JOptionPane.showMessageDialog(mainView.getFrame(), e.getMessage(), "Delete account", JOptionPane.ERROR_MESSAGE);
@@ -145,8 +130,8 @@ public class MainViewActionListener implements ActionListener {
 			
 			if (delete) {
                 try {
-				    manipulateCredentialModel.deleteCredential();
-				    mainModel.updateCredentials();
+				    credentialModel.deleteCredential();
+				    credentialModel.refreshCredentials();
                 } catch (ModelException e) {
                     JOptionPane.showMessageDialog(mainView.getFrame(), e.getMessage(), "Delete credential", JOptionPane.ERROR_MESSAGE);
                 }
@@ -168,7 +153,7 @@ public class MainViewActionListener implements ActionListener {
 
         if (signout) {
             mainView.getFrame().dispose();
-            loginDialogModel.logout();
+            accountModel.logout();
         }
     }
 

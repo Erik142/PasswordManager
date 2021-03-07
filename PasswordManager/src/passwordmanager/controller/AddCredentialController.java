@@ -6,8 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 
 import passwordmanager.exception.ModelException;
-import passwordmanager.model.AddCredentialModel;
-import passwordmanager.model.MainModel;
+import passwordmanager.model.CredentialModel;
 import passwordmanager.model.UserAccount;
 import passwordmanager.view.AddCredentialDialog;
 
@@ -23,8 +22,7 @@ public class AddCredentialController implements ActionListener {
 	public final int CANCEL = 1;
 
 	private AddCredentialDialog view;
-	private AddCredentialModel addCredentialModel;
-	private MainModel mainModel;
+	private CredentialModel credentialModel;
 	
 	/**
 	 * Creates an instance of the controller with the parentView and Model along with the mainModel
@@ -32,10 +30,9 @@ public class AddCredentialController implements ActionListener {
 	 * @param addCredentialModel
 	 * @param mainModel
 	 */
-	public AddCredentialController(AddCredentialDialog view, AddCredentialModel addCredentialModel, MainModel mainModel) {
+	public AddCredentialController(AddCredentialDialog view, CredentialModel credentialModel) {
 		this.view = view;
-		this.addCredentialModel = addCredentialModel;
-		this.mainModel = mainModel;
+		this.credentialModel = credentialModel;
 	}
 	
 	/**
@@ -45,13 +42,11 @@ public class AddCredentialController implements ActionListener {
 		String username = view.getEmail();
 		String url = view.getWebsite();
 		String password = view.getPassword();
-		UserAccount account = mainModel.getUserAccount();
+		UserAccount account = credentialModel.getUserAccount();
 
 		try {
-			addCredentialModel.addCredential(account, url, username, password);
-			addCredentialModel.reset();
+			credentialModel.addCredential(account, url, username, password);
 			view.dispose();
-			addCredentialModel.removeObserver(view);
 		} catch (ModelException e1) {
 			JOptionPane.showMessageDialog(view, e1.getMessage(), "Add credential", JOptionPane.ERROR_MESSAGE);
 		}
@@ -61,9 +56,7 @@ public class AddCredentialController implements ActionListener {
 	 * Cancels the act and disposes the AddCredentialDialog view
 	 */
 	private void cancel() {
-		addCredentialModel.reset();
 		view.dispose();
-		addCredentialModel.removeObserver(view);
 	}
 
 	@Override

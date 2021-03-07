@@ -6,7 +6,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 
 import passwordmanager.exception.ModelException;
-import passwordmanager.model.ChangeUserAccountModel;
+import passwordmanager.model.AccountModel;
+import passwordmanager.model.UserAccount;
 import passwordmanager.view.ChangeUserPasswordDialog;
 
 /**
@@ -21,7 +22,7 @@ public class ChangePasswordController implements ActionListener {
 	public final int CANCEL = 1;
 
 	private ChangeUserPasswordDialog view;
-	private ChangeUserAccountModel model;
+	private AccountModel model;
 
 	
 	/**
@@ -29,7 +30,7 @@ public class ChangePasswordController implements ActionListener {
 	 * @param view
 	 * @param model
 	 */
-	public ChangePasswordController(ChangeUserPasswordDialog view, ChangeUserAccountModel model) {
+	public ChangePasswordController(ChangeUserPasswordDialog view, AccountModel model) {
 		this.view = view;
 		this.model = model;
 	}
@@ -44,11 +45,11 @@ public class ChangePasswordController implements ActionListener {
 		String confirmPassword = view.getPasswordConfirm();
 
 		try {
-			model.changeUserPassword(oldPassword, newPassword, confirmPassword);
+			UserAccount loggedInUser = model.getUserAccount();
+			model.changeUserPassword(loggedInUser, oldPassword, newPassword, confirmPassword);
 			JOptionPane.showMessageDialog(view, "Successfully changed the user password!",
 					"Change user account password", JOptionPane.INFORMATION_MESSAGE);
 			view.dispose();
-			model.removeObserver(view);
 		} catch (ModelException e1) {
 			JOptionPane.showMessageDialog(view, e1.getMessage(), "Change user account password",
 					JOptionPane.ERROR_MESSAGE);
@@ -60,8 +61,6 @@ public class ChangePasswordController implements ActionListener {
 	 */
 	private void cancel() {
 		view.dispose();
-		model.removeObserver(view);
-		model.reset();
 	}
 
 	@Override
