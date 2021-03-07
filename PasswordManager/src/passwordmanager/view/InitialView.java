@@ -58,13 +58,13 @@ public class InitialView {
      * 
      * @param authenticationActionListener
      */
-	public void registerListener(InitialViewActionListener authenticationActionListener) {
-        btnLogin.setActionCommand("" + authenticationActionListener.LOG_IN);
-		btnLogin.addActionListener(authenticationActionListener);
-        btnForgot.setActionCommand("" + authenticationActionListener.FORGOT_PASSWORD);
-        btnForgot.addActionListener(authenticationActionListener);
-		btnSignUp.setActionCommand("" + authenticationActionListener.SIGN_UP);
-        btnSignUp.addActionListener(authenticationActionListener); 
+	public void registerListener(InitialViewActionListener actionListener) {
+        btnLogin.setActionCommand("" + actionListener.LOG_IN);
+		btnLogin.addActionListener(actionListener);
+        btnForgot.setActionCommand("" + actionListener.FORGOT_PASSWORD);
+        btnForgot.addActionListener(actionListener);
+		btnSignUp.setActionCommand("" + actionListener.SIGN_UP);
+        btnSignUp.addActionListener(actionListener); 
 	}
 
 }

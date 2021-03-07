@@ -5,20 +5,25 @@ import passwordmanager.exception.ModelException;
 import passwordmanager.util.EmailUtil;
 import passwordmanager.util.StringExtensions;
 
+/**
+ * Model used to validate data and manipulate UserAccount objects
+ * @author Erik Wahlberger
+ * @version 2021-03-07
+ */
 public class AccountModel extends AbstractObservable<AccountModel> {
-    private final int MIN_PASSWORD_LENGTH = 8;
-    private final PasswordClient client;
-    
-    private boolean isLoggedIn = false;
-    private UserAccount account = null;
+	private final int MIN_PASSWORD_LENGTH = 8;
+	private final PasswordClient client;
 
-    public AccountModel(PasswordClient client) {
-        super();
+	private boolean isLoggedIn = false;
+	private UserAccount account = null;
 
-        this.client = client;
-    }
-    
-    /**
+	public AccountModel(PasswordClient client) {
+		super();
+
+		this.client = client;
+	}
+
+	/**
 	 * Changes the password for the UserAccount
 	 * 
 	 * @param oldPassword     The old password String
@@ -71,8 +76,32 @@ public class AccountModel extends AbstractObservable<AccountModel> {
 
 		updateObservers(this);
 	}
-   
-    /**
+
+	/**
+	 * Send an e-mail to the specified e-mail address
+	 * 
+	 * @param email The e-mail address
+	 * @throws ModelException
+	 */
+	public void forgotPassword(String email) throws ModelException {
+		if (StringExtensions.isNullOrEmpty(email)) {
+			throw new ModelException("E-mail field cannot be empty!");
+		} else if (!EmailUtil.isValidEmail(email)) {
+			throw new ModelException("The value is not a valid e-mail address.");
+		} else {
+			try {
+				boolean result = client.forgotPassword(email);
+
+				if (!result) {
+					throw new ModelException("The account does not exist! Please sign up to create an account.");
+				}
+			} catch (Exception ex) {
+				throw new ModelException("Error: The server could not handle the request!");
+			}
+		}
+	}
+
+	/**
 	 * Get the current login status
 	 * 
 	 * @return true if the UserAccount is logged in, false otherwise
@@ -81,15 +110,16 @@ public class AccountModel extends AbstractObservable<AccountModel> {
 		return isLoggedIn;
 	}
 
-    /**
-     * Get the logged in user
-     * @return the UserAccount
-     */
-    public UserAccount getUserAccount() {
-        return account;
-    }
+	/**
+	 * Get the logged in user
+	 * 
+	 * @return the UserAccount
+	 */
+	public UserAccount getUserAccount() {
+		return account;
+	}
 
-    /**
+	/**
 	 * Checks if the specified String is a valid password
 	 * 
 	 * @param password The String to be verified
@@ -99,7 +129,7 @@ public class AccountModel extends AbstractObservable<AccountModel> {
 		return !StringExtensions.isNullOrEmpty(password) && password.trim().length() >= MIN_PASSWORD_LENGTH;
 	}
 
-    /**
+	/**
 	 * Log in a UserAccount with the specified e-mail address and password into the
 	 * application
 	 * 
@@ -116,7 +146,7 @@ public class AccountModel extends AbstractObservable<AccountModel> {
 
 			if (account != null && account.getPassword().equals(password)) {
 				isLoggedIn = true;
-                this.account = account;
+				this.account = account;
 			} else {
 				isLoggedIn = false;
 				throw new ModelException("Invalid username or password");
@@ -140,31 +170,8 @@ public class AccountModel extends AbstractObservable<AccountModel> {
 
 		this.updateObservers(this);
 	}
-    /**
-	 * Send an e-mail to the specified e-mail address
-	 * 
-	 * @param email The e-mail address
-	 * @throws ModelException
-	 */
-	public void forgotPassword(String email) throws ModelException {
-		if (StringExtensions.isNullOrEmpty(email)) {
-			throw new ModelException("E-mail field cannot be empty!");
-		} else if (!EmailUtil.isValidEmail(email)) {
-			throw new ModelException("The value is not a valid e-mail address.");
-		} else {
-			try {
-				boolean result = client.forgotPassword(email);
 
-				if (!result) {
-					throw new ModelException("The account does not exist! Please sign up to create an account.");
-				}
-			} catch (Exception ex) {
-				throw new ModelException("Error: The server could not handle the request!");
-			}
-		}
-	}
-    
-    /**
+	/**
 	 * Add a new user to the database with the specified e-mail address, password
 	 * and confirmed password Strings
 	 * 
@@ -182,7 +189,7 @@ public class AccountModel extends AbstractObservable<AccountModel> {
 			boolean success = client.addUserAccount(new UserAccount(email, password));
 
 			if (!success) {
-				throw new ModelException("The server could not handle the request at this moment. Please try again.");
+				throw new ModelException("The user is already registered.");
 			}
 		} else if (!isValidEmail) {
 			throw new ModelException("The entered email is not valid.");

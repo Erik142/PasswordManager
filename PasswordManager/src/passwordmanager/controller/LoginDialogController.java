@@ -37,7 +37,7 @@ public class LoginDialogController implements ActionListener {
 	 * Retrieves the fields from the GUI and calls on model to login the UserAccount
 	 *
 	 */
-	public void login() {
+	private void login() {
 		String email = parentView.getUsername();
 		String password = parentView.getPassword();
 
@@ -51,8 +51,7 @@ public class LoginDialogController implements ActionListener {
 	/**
 	 * Cancels the act and disposes the parentview
 	 */
-	public void cancel() {
-		model.removeObserver(parentView);
+	private void cancel() {
 		parentView.dispose();
 		model.logout();
 	}

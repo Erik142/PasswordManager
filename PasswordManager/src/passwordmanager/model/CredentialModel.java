@@ -4,19 +4,24 @@ import passwordmanager.communication.PasswordClient;
 import passwordmanager.exception.ModelException;
 import passwordmanager.util.StringExtensions;
 
+/**
+ * Model used to validate data and manipulate Credential objects
+ * @author Erik Wahlberger
+ * @version 2021-03-07
+ */
 public class CredentialModel extends AbstractObservable<CredentialModel> {
-    private final PasswordClient client;
+	private final PasswordClient client;
 
-    private Object[][] tableData;
-	private Credential[] credentials;   
-    private UserAccount account = null;
-    private Credential selectedCredential = null;
+	private Object[][] tableData;
+	private Credential[] credentials;
+	private UserAccount account = null;
+	private Credential selectedCredential = null;
 
-    public CredentialModel(PasswordClient client) {
-        this.client = client;
-    }
+	public CredentialModel(PasswordClient client) {
+		this.client = client;
+	}
 
-    /**
+	/**
 	 * Add a Credential object to the database with the specified UserAccount e-mail
 	 * address, url, username and password
 	 * 
@@ -26,12 +31,12 @@ public class CredentialModel extends AbstractObservable<CredentialModel> {
 	 * @param password The password for the service
 	 * @throws ModelException
 	 */
-	public void addCredential(UserAccount account, String url, String username, String password) throws ModelException {
+	public void addCredential(String url, String username, String password) throws ModelException {
 		if (StringExtensions.isNullOrEmpty(url) || StringExtensions.isNullOrEmpty(username)
 				|| StringExtensions.isNullOrEmpty(password)) {
 			throw new ModelException("Please fill in all the fields");
 		} else {
-			Credential credential = new Credential(account.getEmail(), url, username, password);
+			Credential credential = new Credential(this.account.getEmail(), url, username, password);
 			boolean success = client.storeCredential(credential);
 
 			updateObservers(this);
@@ -42,8 +47,8 @@ public class CredentialModel extends AbstractObservable<CredentialModel> {
 
 		}
 	}
-    
-    /**
+
+	/**
 	 * Deletes the Credential in this instance from the database
 	 * 
 	 * @throws ModelException
@@ -64,7 +69,7 @@ public class CredentialModel extends AbstractObservable<CredentialModel> {
 		updateObservers(this);
 	}
 
-    /**
+	/**
 	 * Get the Credentials for the UserAccount object in this instance
 	 * 
 	 * @return The Credentials
@@ -73,37 +78,41 @@ public class CredentialModel extends AbstractObservable<CredentialModel> {
 		return this.credentials;
 	}
 
-    /**
-     * Get the password for the selected Credential object
-     * @return The password
-     */
-    public String getPassword() {
-        return selectedCredential != null ? selectedCredential.getPassword() : "";
-    }
+	/**
+	 * Get the password for the selected Credential object
+	 * 
+	 * @return The password
+	 */
+	public String getPassword() {
+		return selectedCredential != null ? selectedCredential.getPassword() : "";
+	}
 
-    /**
-     * Get the service url for the selected Credential object
-     * @return The service url
-     */
-    public String getService() {
-        return selectedCredential != null ? selectedCredential.getURL() : "";
-    }
+	/**
+	 * Get the service url for the selected Credential object
+	 * 
+	 * @return The service url
+	 */
+	public String getService() {
+		return selectedCredential != null ? selectedCredential.getURL() : "";
+	}
 
-    /**
-     * Get the logged in user
-     * @return the UserAccount
-     */
-    public UserAccount getUserAccount() {
-        return this.account;
-    }
+	/**
+	 * Get the logged in user
+	 * 
+	 * @return the UserAccount
+	 */
+	public UserAccount getUserAccount() {
+		return this.account;
+	}
 
-    /**
-     * Get the user name for the selected Credential object
-     * @return The user name
-     */
-    public String getUserName() {
-        return selectedCredential != null ? selectedCredential.getUsername() : "";
-    }
+	/**
+	 * Get the user name for the selected Credential object
+	 * 
+	 * @return The user name
+	 */
+	public String getUserName() {
+		return selectedCredential != null ? selectedCredential.getUsername() : "";
+	}
 
 	/**
 	 * Get the Credentials for the UserAccount object in this instance, as a
@@ -116,55 +125,6 @@ public class CredentialModel extends AbstractObservable<CredentialModel> {
 	}
 
 	/**
-	 * Sets the selected Credential
-	 * @param credential The selected Credential
-	 */
-	public void setSelectedCredential(Credential credential) {
-		this.selectedCredential = credential;
-	}
-
-    /**
-	 * Sets the UserAccount object for this instance
-	 * 
-	 * @param account The UserAccount
-	 */
-	public void setUserAccount(UserAccount account) {
-		this.account = account;
-
-		updateObservers(this);
-	}
-    
-    /**
-	 * Updates the Credential in this instance with the specified url, username and
-	 * password strings
-	 * 
-	 * @param url      The new service url String
-	 * @param username The new username
-	 * @param password The new password
-	 * @throws ModelException
-	 */
-	public void updateCredential(String url, String username, String password) throws ModelException {
-		if (StringExtensions.isNullOrEmpty(url) || StringExtensions.isNullOrEmpty(username)
-				|| StringExtensions.isNullOrEmpty(password)) {
-			throw new ModelException("Error: One or more fields are empty!");
-		}
-
-		if (this.selectedCredential != null) {
-			Credential updatedCredential = new Credential(selectedCredential.getId(), selectedCredential.getUser(), url, username, password);
-
-			boolean success = client.modifyCredential(updatedCredential);
-
-			if (!success) {
-				throw new ModelException("An error occured when updating the credential. Try again.");
-            }
-		} else {
-			throw new ModelException("No credential has been chosen!");
-		}
-
-		updateObservers(this);
-	}
-
-    /**
 	 * Refreshes the Credentials from the database
 	 */
 	public void refreshCredentials() {
@@ -195,4 +155,56 @@ public class CredentialModel extends AbstractObservable<CredentialModel> {
 
 		updateObservers(this);
 	}
+
+	/**
+	 * Sets the selected Credential
+	 * 
+	 * @param credential The selected Credential
+	 */
+	public void setSelectedCredential(Credential credential) {
+		this.selectedCredential = credential;
+	}
+
+	/**
+	 * Sets the UserAccount object for this instance
+	 * 
+	 * @param account The UserAccount
+	 */
+	public void setUserAccount(UserAccount account) {
+		this.account = account;
+
+		updateObservers(this);
+	}
+
+	/**
+	 * Updates the Credential in this instance with the specified url, username and
+	 * password strings
+	 * 
+	 * @param url      The new service url String
+	 * @param username The new username
+	 * @param password The new password
+	 * @throws ModelException
+	 */
+	public void updateCredential(String url, String username, String password) throws ModelException {
+		if (StringExtensions.isNullOrEmpty(url) || StringExtensions.isNullOrEmpty(username)
+				|| StringExtensions.isNullOrEmpty(password)) {
+			throw new ModelException("Error: One or more fields are empty!");
+		}
+
+		if (this.selectedCredential != null) {
+			Credential updatedCredential = new Credential(selectedCredential.getId(), selectedCredential.getUser(), url,
+					username, password);
+
+			boolean success = client.modifyCredential(updatedCredential);
+
+			if (!success) {
+				throw new ModelException("An error occured when updating the credential. Try again.");
+			}
+		} else {
+			throw new ModelException("No credential has been chosen!");
+		}
+
+		updateObservers(this);
+	}
+
 }

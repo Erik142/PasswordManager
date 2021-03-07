@@ -45,7 +45,7 @@ public class MainView implements Observer<CredentialModel> {
 		createFrame();
 	}
 	
-	public void createFrame()
+	private void createFrame()
     {
         try 
         {

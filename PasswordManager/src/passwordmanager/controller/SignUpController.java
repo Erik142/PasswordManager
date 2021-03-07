@@ -17,8 +17,8 @@ import passwordmanager.view.SignUpDialog;
  *
  */
 public class SignUpController implements ActionListener {
-	public final String SIGNUP_COMMAND = "SignupClick";
-	public final String CANCEL_COMMAND = "SignupCancelClick";
+	public final int SIGNUP = 0;
+	public final int CANCEL = 1;
 
 	private SignUpDialog parentView;
 
@@ -38,12 +38,11 @@ public class SignUpController implements ActionListener {
 	 * Retrieves the fields from the GUI and calls on model to sign up the UserAccount to the database
 	 *
 	 */
-	public void signup() {
+	private void signup() {
 		try {
 			model.signup(parentView.getEmail(), parentView.getPassword(), parentView.getConfirmPassword());
 			JOptionPane.showMessageDialog(parentView, "Success!", "Sign up", JOptionPane.INFORMATION_MESSAGE);
 			parentView.dispose();
-			model.removeObserver(parentView);
 		} catch (ModelException e) {
 			JOptionPane.showMessageDialog(parentView, e.getMessage(), "Sign up", JOptionPane.ERROR_MESSAGE);
 		}
@@ -52,17 +51,20 @@ public class SignUpController implements ActionListener {
 	/**
 	 * Cancels the act and disposes the parentview
 	 */
-	public void cancel() {
+	private void cancel() {
 		parentView.dispose();
-		model.removeObserver(parentView);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getActionCommand() == SIGNUP_COMMAND) {
+		switch (Integer.parseInt(e.getActionCommand())) {
+			case SIGNUP:
 			signup();
-		} else if (e.getActionCommand() == CANCEL_COMMAND) {
+			break;
+			case CANCEL:
 			cancel();
+			break;
+			default:
 		}
 	}
 

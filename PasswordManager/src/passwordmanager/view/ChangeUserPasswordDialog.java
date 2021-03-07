@@ -37,7 +37,7 @@ public class ChangeUserPasswordDialog  extends JDialog {
     	showChangePasswordDialog();
     }
     
-    public void showChangePasswordDialog() {
+    private void showChangePasswordDialog() {
     	JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints cs = new GridBagConstraints();
  

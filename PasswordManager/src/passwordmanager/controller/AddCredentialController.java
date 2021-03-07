@@ -42,10 +42,9 @@ public class AddCredentialController implements ActionListener {
 		String username = view.getEmail();
 		String url = view.getWebsite();
 		String password = view.getPassword();
-		UserAccount account = credentialModel.getUserAccount();
 
 		try {
-			credentialModel.addCredential(account, url, username, password);
+			credentialModel.addCredential(url, username, password);
 			view.dispose();
 		} catch (ModelException e1) {
 			JOptionPane.showMessageDialog(view, e1.getMessage(), "Add credential", JOptionPane.ERROR_MESSAGE);

@@ -76,7 +76,6 @@ public class InitialViewActionListener implements ActionListener, Observer<Accou
 		loginDialog = new LoginDialog(initialView.getFrame());
 		LoginDialogController loginDialogController = new LoginDialogController(loginDialog, accountModel);
 
-		accountModel.addObserver(loginDialog);
 		loginDialog.registerListener(loginDialogController);
 
 		loginDialog.setVisible(true);
@@ -89,7 +88,6 @@ public class InitialViewActionListener implements ActionListener, Observer<Accou
 		SignUpDialog signUpDialog = new SignUpDialog(initialView.getFrame());
 		SignUpController signUpDialogController = new SignUpController(signUpDialog, accountModel);
 
-		accountModel.addObserver(signUpDialog);
 		signUpDialog.registerListener(signUpDialogController);
 
 		signUpDialog.setVisible(true);
@@ -142,7 +140,6 @@ public class InitialViewActionListener implements ActionListener, Observer<Accou
 
 			loginDialog.setVisible(false);
 			loginDialog.dispose();
-			accountModel.removeObserver(loginDialog);
 			initialView.getFrame().setVisible(false);
 			showMainView();
 			credentialModel.refreshCredentials();

@@ -5,8 +5,6 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 import passwordmanager.controller.SignUpController;
-import passwordmanager.model.AccountModel;
-import passwordmanager.model.Observer;
 
 /**
  * This class creates the GUI for the MainView
@@ -15,7 +13,7 @@ import passwordmanager.model.Observer;
  * @version 2021-03-07
  *
  */
-public class SignUpDialog extends JDialog implements Observer<AccountModel> {
+public class SignUpDialog extends JDialog {
     private JTextField tfUsername;
     private JPasswordField pfPassword1;
     private JPasswordField pfPassword2;
@@ -121,16 +119,10 @@ public class SignUpDialog extends JDialog implements Observer<AccountModel> {
      * @param controller
      */
 	public void registerListener(SignUpController controller) {
-		btnSignUp.setActionCommand(controller.SIGNUP_COMMAND);
+		btnSignUp.setActionCommand("" + controller.SIGNUP);
 		btnSignUp.addActionListener(controller);
-		btnCancel.setActionCommand(controller.CANCEL_COMMAND);
+		btnCancel.setActionCommand("" + controller.CANCEL);
 		btnCancel.addActionListener(controller);
-	}
-	
-	@Override
-	public void update(AccountModel observable) {
-		pfPassword1.setText("");
-		pfPassword2.setText("");
 	}
 
 }

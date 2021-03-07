@@ -4,7 +4,6 @@ import java.awt.*;
 import javax.swing.*;
 
 import passwordmanager.controller.ForgotPasswordDialogController;
-import passwordmanager.model.Observer;
 
 /**
  * This class creates the GUI for forgotten passwords
@@ -73,9 +72,9 @@ public class ForgotPasswordDialog extends JDialog {
      * @param controller
      */
     public void registerListener(ForgotPasswordDialogController controller) {
-    	btnSend.setActionCommand(controller.SEND_MAIL_COMMAND);
+    	btnSend.setActionCommand("" + controller.SEND_MAIL);
     	btnSend.addActionListener(controller);
-    	btnCancel.setActionCommand(controller.CANCEL_COMMAND);
+    	btnCancel.setActionCommand("" + controller.CANCEL);
     	btnCancel.addActionListener(controller);
     }
 

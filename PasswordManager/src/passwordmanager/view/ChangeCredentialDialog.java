@@ -7,7 +7,6 @@ import javax.swing.border.*;
 import passwordmanager.controller.ChangeCredentialController;
 import passwordmanager.controller.UpdateTableWindowListener;
 import passwordmanager.model.CredentialModel;
-import passwordmanager.model.Observer;
 
 /**
  * This class creates the GUI for changing a credential
@@ -17,7 +16,6 @@ import passwordmanager.model.Observer;
  *
  */
 public class ChangeCredentialDialog extends JDialog {
-	
     
 	private static final long serialVersionUID = 1L;
 	private JLabel lbService;
@@ -41,7 +39,7 @@ public class ChangeCredentialDialog extends JDialog {
     	showChangeDialog(model);
     }
         
-    public void showChangeDialog(CredentialModel model) {
+    private void showChangeDialog(CredentialModel model) {
     	JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints cs = new GridBagConstraints();
  

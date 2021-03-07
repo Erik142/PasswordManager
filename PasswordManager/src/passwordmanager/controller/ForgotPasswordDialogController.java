@@ -17,8 +17,8 @@ import passwordmanager.view.ForgotPasswordDialog;
  */
 public class ForgotPasswordDialogController implements ActionListener {
 
-	public final String SEND_MAIL_COMMAND = "PerformPasswordReset";
-	public final String CANCEL_COMMAND = "CancelPasswordReset";
+	public final int SEND_MAIL = 0;
+	public final int CANCEL = 1;
 
 	private ForgotPasswordDialog view;
 	private AccountModel model;
@@ -50,6 +50,7 @@ public class ForgotPasswordDialogController implements ActionListener {
 			model.forgotPassword(view.getEmail());
 			JOptionPane.showMessageDialog(view, "You will receive an email with a link to change your password.",
 					"Forgot password", JOptionPane.INFORMATION_MESSAGE);
+			view.dispose();
 		} catch (ModelException e) {
 			JOptionPane.showMessageDialog(view, e.getMessage(), "Forgot password", JOptionPane.ERROR_MESSAGE);
 		}
@@ -60,10 +61,13 @@ public class ForgotPasswordDialogController implements ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getActionCommand() == SEND_MAIL_COMMAND) {
+		switch (Integer.parseInt(e.getActionCommand())) {
+			case SEND_MAIL:
 			sendEmail();
-		} else if (e.getActionCommand() == CANCEL_COMMAND) {
+			break;
+			case CANCEL:
 			cancel();
+			default:
 		}
 	}
 }

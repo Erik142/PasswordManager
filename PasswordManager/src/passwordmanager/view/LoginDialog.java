@@ -5,8 +5,6 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 import passwordmanager.controller.LoginDialogController;
-import passwordmanager.model.AccountModel;
-import passwordmanager.model.Observer;
 
 /**
  * This class creates the GUI for the LoginDialog
@@ -15,18 +13,17 @@ import passwordmanager.model.Observer;
  * @version 2021-03-07
  *
  */
-public class LoginDialog extends JDialog implements Observer<AccountModel> {
+public class LoginDialog extends JDialog {
 	 
    
 	private static final long serialVersionUID = 1L;
-	public JTextField tfUsername;
-    public JPasswordField pfPassword;
+	private JTextField tfUsername;
+    private JPasswordField pfPassword;
     private JLabel lbUsername;
     private JLabel lbPassword;
     private JButton btnLogin;
     private JButton btnCancel;
     
-    private final Frame parent;
     
     /**
      * The constructor uses a parent frame to create and display the LoginDialog
@@ -35,12 +32,11 @@ public class LoginDialog extends JDialog implements Observer<AccountModel> {
     public LoginDialog(Frame parent) {
     	super(parent, "Login", true);
     	
-    	this.parent = parent;
     	
-    	showLoginDialog();
+    	showLoginDialog(parent);
     }
     
-    private void showLoginDialog() {
+    private void showLoginDialog(Frame parent) {
         
         //
         JPanel panel = new JPanel(new GridBagLayout());
@@ -116,9 +112,4 @@ public class LoginDialog extends JDialog implements Observer<AccountModel> {
     public String getPassword() {
         return new String(pfPassword.getPassword());
     }
-
-	@Override
-	public void update(AccountModel observable) {
-		this.pfPassword.setText("");
-	}
 }
