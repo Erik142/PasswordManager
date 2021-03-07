@@ -19,6 +19,7 @@ import passwordmanager.config.Configuration;
  * stored in the Configuration object.
  * 
  * @author Erik Wahlberger
+ * @version 2021-03-07
  */
 public class Program {
 

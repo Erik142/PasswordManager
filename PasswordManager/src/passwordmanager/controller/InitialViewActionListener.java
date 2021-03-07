@@ -22,6 +22,7 @@ import passwordmanager.view.SignUpDialog;
  * JButton ActionListener for the InitialView class
  * 
  * @author Erik Wahlberger
+ * @version 2021-03-07
  */
 public class InitialViewActionListener implements ActionListener, Observer<LoginDialogModel> {
 

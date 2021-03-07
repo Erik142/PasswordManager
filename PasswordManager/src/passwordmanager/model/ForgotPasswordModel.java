@@ -10,6 +10,7 @@ import passwordmanager.util.StringExtensions;
  * address
  * 
  * @author Erik Wahlberger
+ * @version 2021-03-07
  */
 public class ForgotPasswordModel extends AbstractObservable<ForgotPasswordModel> {
 	private String email = "";

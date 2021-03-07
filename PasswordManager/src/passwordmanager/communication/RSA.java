@@ -19,6 +19,7 @@ import java.security.Key;
  * well as generating private/public RSA keypairs
  * 
  * @author Erik Wahlberger
+ * @version 2021-03-07
  */
 public class RSA {
 	private final String KEYPAIRALGO = "RSA";

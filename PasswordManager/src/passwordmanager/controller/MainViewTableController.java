@@ -13,6 +13,7 @@ import passwordmanager.view.MainView;
  * table within the MainView has changed
  * 
  * @author Erik Wahlberger
+ * @version 2021-03-07
  */
 public class MainViewTableController implements ListSelectionListener {
 	private MainView view;

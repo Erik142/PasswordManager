@@ -6,6 +6,7 @@ import passwordmanager.communication.CommunicationProtocol.CommunicationOperatio
  * The Query class represents a query sent from the client to the server
  * 
  * @author Erik Wahlberger
+ * @version 2021-03-07
  */
 public class Query<T> extends Message<T> {
 	/**

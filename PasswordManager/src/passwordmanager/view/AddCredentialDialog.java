@@ -9,6 +9,13 @@ import passwordmanager.controller.UpdateTableWindowListener;
 import passwordmanager.model.AddCredentialModel;
 import passwordmanager.model.Observer;
 
+/**
+ * This class creates the GUI for adding a credential
+ * 
+ * @author Arian Alikashani
+ * @version 2021-03-07
+ *
+ */
 
 public class AddCredentialDialog extends JDialog implements Observer<AddCredentialModel> {
 	
@@ -22,6 +29,10 @@ public class AddCredentialDialog extends JDialog implements Observer<AddCredenti
     private JButton addButton;
     private JButton cancelButton;
     
+    /**
+     * The constructor uses a parent frame to create and display the dialog for adding a credential
+     * @param parent
+     */
     public AddCredentialDialog(Frame parent) {
         //
         JPanel panel = new JPanel(new GridBagLayout());
@@ -85,17 +96,35 @@ public class AddCredentialDialog extends JDialog implements Observer<AddCredenti
         setVisible(false);
     }
     
+    /**
+     * Returns the website
+     * @return String with the website trimmed.
+     */
     public String getWebsite() {
         return tfWebsite.getText().trim();
     }
+    /**
+     * Returns the email
+     * @return Strimg with the email trimmed.
+     */
     public String getEmail() {
         return tfEmail.getText().trim();
     }
     
+    /**
+     * Returns the password
+     * @return String with the password.
+     */
     public String getPassword() {
         return new String(pfPassword.getPassword());
     }
 
+    /**
+     * Checks whether user pressed add or cancel button and tells controller to do the appropriate action
+     * 
+     * @param controller
+     * @param windowListener
+     */
     public void registerListener(AddCredentialController controller, UpdateTableWindowListener windowListener) {
     	addButton.setActionCommand("" + controller.ADD_CREDENTIAL);
     	addButton.addActionListener(controller);

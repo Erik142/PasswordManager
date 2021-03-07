@@ -5,6 +5,7 @@ package passwordmanager.util;
  * Strings are null or empty
  * 
  * @author Erik Wahlberger
+ * @version 2021-03-07
  */
 public class StringExtensions {
 	/**

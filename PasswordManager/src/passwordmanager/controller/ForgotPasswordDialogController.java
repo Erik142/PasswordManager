@@ -13,6 +13,7 @@ import passwordmanager.view.ForgotPasswordDialog;
  * ActionListener for the buttons in ForgotPasswordDialog
  * 
  * @author Erik Wahlberger
+ * @version 2021-03-07
  */
 public class ForgotPasswordDialogController implements ActionListener {
 

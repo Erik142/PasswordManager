@@ -16,6 +16,14 @@ import passwordmanager.view.ChangeCredentialDialog;
 import passwordmanager.view.ChangeUserPasswordDialog;
 import passwordmanager.view.MainView;
 
+/**
+ * This class implements the actionlisteners for the MainView
+ * 
+ * @author Ermin Fazlic
+ * @author Erik Wahlberger
+ * @version 2021-03-07
+ *
+ */
 public class MainViewActionListener implements ActionListener {
 
     public final int ADD_CREDENTIAL = 0;
@@ -34,7 +42,17 @@ public class MainViewActionListener implements ActionListener {
     private final MainView mainView;
 
     private final UpdateTableWindowListener updateTableWindowListener;
-
+    
+    /**
+     * Creates an instance of this class with the the mainView and the different models
+     * 
+     * @param mainView
+     * @param mainModel
+     * @param addCredentialModel
+     * @param manipulateCredentialModel
+     * @param loginModel
+     * @param changeUserAccountModel
+     */
     public MainViewActionListener(MainView mainView, MainModel mainModel, AddCredentialModel addCredentialModel, ManipulateCredentialModel manipulateCredentialModel, LoginDialogModel loginModel, ChangeUserAccountModel changeUserAccountModel) {
         this.mainModel = mainModel;
         this.addCredentialModel = addCredentialModel;
@@ -47,6 +65,9 @@ public class MainViewActionListener implements ActionListener {
         this.updateTableWindowListener = new UpdateTableWindowListener(mainModel);
     }
 
+    /**
+     * Creates the dialog to add a new credential
+     */
     private void addCredential() {
         AddCredentialDialog addCredentialDialog = new AddCredentialDialog(mainView.getFrame());
         AddCredentialController addCredentialController = new AddCredentialController(addCredentialDialog, addCredentialModel, mainModel);
@@ -57,6 +78,9 @@ public class MainViewActionListener implements ActionListener {
         addCredentialDialog.setVisible(true);
     }
 
+    /**
+     * Creates the dialog to change user password
+     */
     private void changeAccountPassword() {
        ChangeUserPasswordDialog changeAccountPasswordDialog = new ChangeUserPasswordDialog(mainView.getFrame());
        ChangePasswordController changeAccountPasswordController = new ChangePasswordController(changeAccountPasswordDialog, changeUserAccountModel);
@@ -67,6 +91,9 @@ public class MainViewActionListener implements ActionListener {
        changeAccountPasswordDialog.setVisible(true);
     }
 
+    /**
+     * Creates the dialog to change a credential
+     */
     private void changeCredential() {
         if (mainView.getTable().getSelectedRow() >= 0) {
             ChangeCredentialDialog changeCredentialDialog = new ChangeCredentialDialog(mainView.getFrame(), manipulateCredentialModel);
@@ -83,7 +110,9 @@ public class MainViewActionListener implements ActionListener {
                     JOptionPane.ERROR_MESSAGE);
         }
     }
-
+    /**
+     * Creates pop-up to confirm deletion of account
+     */
     private void deleteAccount() {
         boolean deleteAccount = JOptionPane.showConfirmDialog(mainView.getFrame(), "Are you sure that you want to delete your account?", "Delete account", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
 
@@ -100,7 +129,9 @@ public class MainViewActionListener implements ActionListener {
             }
         }
     }
-
+    /**
+     * Creates pop-up to confirm deletion of credential
+     */
     private void deleteCredential() {
         int selectedRow = mainView.getTable().getSelectedRow();
 		
@@ -128,7 +159,10 @@ public class MainViewActionListener implements ActionListener {
 					JOptionPane.ERROR_MESSAGE);
 		}
     }
-
+    
+    /**
+     * Disposes the GUI and logs the user out
+     */
     private void signOut() {
         mainView.getFrame().dispose();
         loginDialogModel.logout();

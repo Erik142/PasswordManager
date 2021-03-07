@@ -12,6 +12,7 @@ import com.google.gson.Gson;
  * Represents a configuration file
  * 
  * @author Erik Wahlberger
+ * @version 2021-03-07
  */
 public class Configuration {
 	/**

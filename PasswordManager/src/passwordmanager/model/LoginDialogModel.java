@@ -9,6 +9,7 @@ import passwordmanager.util.StringExtensions;
  * Used to login and logout a UserAccount into/from the application
  * 
  * @author Erik Wahlberger
+ * @version 2021-03-07
  */
 public class LoginDialogModel extends AbstractObservable<LoginDialogModel> {
 

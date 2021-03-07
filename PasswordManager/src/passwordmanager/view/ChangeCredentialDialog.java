@@ -9,11 +9,16 @@ import passwordmanager.controller.UpdateTableWindowListener;
 import passwordmanager.model.ManipulateCredentialModel;
 import passwordmanager.model.Observer;
 
+/**
+ * This class creates the GUI for changing a credential
+ * 
+ * @author Arian Alikashani
+ * @version 2021-03-07
+ *
+ */
 public class ChangeCredentialDialog extends JDialog implements Observer<ManipulateCredentialModel> {
 	
-    /**
-	 * 
-	 */
+    
 	private static final long serialVersionUID = 1L;
 	private JLabel lbService;
     private JLabel lbUserName;
@@ -26,6 +31,11 @@ public class ChangeCredentialDialog extends JDialog implements Observer<Manipula
     
     private Frame parent;
     
+    /**
+     * The constructor uses a parent frame to create and display the dialog for adding a credential
+     * @param parent
+     * @param model
+     */
     public ChangeCredentialDialog(Frame parent, ManipulateCredentialModel model) {
     	this.parent = parent;
     	showChangeDialog(model);
@@ -97,18 +107,37 @@ public class ChangeCredentialDialog extends JDialog implements Observer<Manipula
         setModal(true);
 	    setVisible(false);
 	}
-
+    
+    /**
+     * Returns the service
+     * @return String with the service trimmed.
+     */
     public String getService() {
         return tfService.getText().trim();
     }
+    
+    /**
+     * Returns the username
+     * @return String with the username trimmed.
+     */
     public String getUserName() {
         return tfUserName.getText().trim();
     }
 
+    /**
+     * Returns the password
+     * @return String with the password trimmed.
+     */
     public String getPassword() {
         return new String(pfPassword.getPassword());
     }
 
+    /**
+     * Checks whether user pressed change or cancel button and tells controller to do the appropriate action
+     * 
+     * @param controller
+     * @param windowListener
+     */
     public void registerListener(ChangeCredentialController controller, UpdateTableWindowListener windowListener) {
     	changeButton.setActionCommand("" + controller.CHANGE_CREDENTIAL);
     	changeButton.addActionListener(controller);

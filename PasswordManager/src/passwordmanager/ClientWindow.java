@@ -19,6 +19,7 @@ import passwordmanager.view.InitialView;
  * controllers to create a GUI for the client
  * 
  * @author Erik Wahlberger
+ * @version 2021-03-07
  */
 public class ClientWindow {
 	/**

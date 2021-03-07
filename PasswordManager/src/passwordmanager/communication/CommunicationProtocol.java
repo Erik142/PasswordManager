@@ -28,11 +28,10 @@ import passwordmanager.model.UserAccount;
  * Implements the protocol used to communicate between the client and server
  * 
  * @author Erik Wahlberger
+ * @version 2021-03-07
  */
 public class CommunicationProtocol implements Serializable {
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = -222451491800802999L;
 
 	/**
@@ -222,7 +221,7 @@ public class CommunicationProtocol implements Serializable {
 	 * Checks if the current AES keys are valid by using the value for remaining
 	 * transactions as specified by the server
 	 * 
-	 * @return
+	 * @return True if AES keys are valid
 	 */
 	private boolean isKeyValid() {
 		return validTransactionsRemaining > 0;

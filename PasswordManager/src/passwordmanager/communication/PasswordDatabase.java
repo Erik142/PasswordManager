@@ -18,6 +18,7 @@ import passwordmanager.model.UserAccount;
  * Used to interact with a PostgreSQL database
  * 
  * @author Ermin Fazlic
+ * @version 2021-03-07
  */
 public class PasswordDatabase {
 	Connection c = null;

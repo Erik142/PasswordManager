@@ -7,16 +7,27 @@ import passwordmanager.controller.ForgotPasswordDialogController;
 import passwordmanager.model.ForgotPasswordModel;
 import passwordmanager.model.Observer;
 
+/**
+ * This class creates the GUI for forgotten passwords
+ * 
+ * @author Arian Alikashani
+ * @version 2021-03-07
+ *
+ */
 public class ForgotPasswordDialog extends JDialog implements Observer<ForgotPasswordModel> {
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = -1191660850628433498L;
 	private JLabel lbEmail;
     private JButton btnSend;
     private JButton btnCancel;
     private JTextField tfEmail;
     
+    
+    /**
+     * The constructor uses a parent frame to create and display the dialog for forgotten passwords
+     * @param parent
+     * @param model
+     */
     public ForgotPasswordDialog(Frame parent, ForgotPasswordModel model) {
     	super(parent, true);
     	
@@ -57,6 +68,11 @@ public class ForgotPasswordDialog extends JDialog implements Observer<ForgotPass
         setVisible(false);
     }
     
+    /**
+     * Checks whether user pressed send or cancel button and tells controller to do the appropriate action
+     * 
+     * @param controller
+     */
     public void registerListener(ForgotPasswordDialogController controller) {
     	btnSend.setActionCommand(controller.SEND_MAIL_COMMAND);
     	btnSend.addActionListener(controller);
@@ -64,6 +80,10 @@ public class ForgotPasswordDialog extends JDialog implements Observer<ForgotPass
     	btnCancel.addActionListener(controller);
     }
 
+    /**
+     * Returns the email
+     * @return String with the email
+     */
     public String getEmail() {
     	return tfEmail.getText();
     }
