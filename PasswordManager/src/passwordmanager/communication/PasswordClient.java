@@ -13,7 +13,7 @@ import passwordmanager.model.UserAccount;
 public class PasswordClient {
 
 	/**
-	 * 
+	 * Used to send queries to the server and receive responses from the server 
 	 * @author Yemeri Nisa
 	 * @version 2021-03-07
 	 * 

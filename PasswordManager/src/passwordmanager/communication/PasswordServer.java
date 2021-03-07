@@ -22,7 +22,7 @@ import passwordmanager.util.EmailUtil;
 import passwordmanager.util.StringExtensions;
 
 /**
- * 
+ * Used to receive queries from clients, interact with the PostgreSQL database and send responses back to clients 
  * @author Erik Wahlberger
  * @author Yemeri Nisa
  * @version 2021-03-07
