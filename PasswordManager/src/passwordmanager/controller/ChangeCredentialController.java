@@ -12,7 +12,7 @@ import passwordmanager.view.ChangeCredentialDialog;
 /**
  * The controller for the ChangeCredentialDialog
  * 
- * @author ???
+ * @author Hannes Larsson
  * @version 2021-03-07
  */
 public class ChangeCredentialController implements ActionListener {

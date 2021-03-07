@@ -14,7 +14,7 @@ import passwordmanager.view.AddCredentialDialog;
 /**
  * The controller for the AddCredentialDialog
  * 
- * @author ???
+ * @author Erik Wahlberger
  * @version 2021-03-07
  */
 public class AddCredentialController implements ActionListener {

@@ -12,7 +12,7 @@ import passwordmanager.view.LoginDialog;
 /**
  * The controller for the LoginDialog
  * 
- * @author ???
+ * @author Hannes Larsson
  * @version 2021-03-07
  */
 

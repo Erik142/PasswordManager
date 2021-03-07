@@ -12,7 +12,7 @@ import passwordmanager.view.ChangeUserPasswordDialog;
 /**
  * The controller for the ChangeUserPasswordDialog
  * 
- * @author ???
+ * @author Hannes Larsson
  * @version 2021-03-07
  */
 public class ChangePasswordController implements ActionListener {
@@ -47,6 +47,8 @@ public class ChangePasswordController implements ActionListener {
 			model.changeUserPassword(oldPassword, newPassword, confirmPassword);
 			JOptionPane.showMessageDialog(view, "Successfully changed the user password!",
 					"Change user account password", JOptionPane.INFORMATION_MESSAGE);
+			view.dispose();
+			model.removeObserver(view);
 		} catch (ModelException e1) {
 			JOptionPane.showMessageDialog(view, e1.getMessage(), "Change user account password",
 					JOptionPane.ERROR_MESSAGE);
@@ -60,7 +62,6 @@ public class ChangePasswordController implements ActionListener {
 		view.dispose();
 		model.removeObserver(view);
 		model.reset();
-		model.removeObserver(view);
 	}
 
 	@Override

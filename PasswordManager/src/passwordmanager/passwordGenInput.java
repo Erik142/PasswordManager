@@ -6,7 +6,7 @@ import java.awt.event.*;
 /**
  * Used for creating the GUI for generating a random password
  * 
- * @author ???
+ * @author Hannes Larsson
  * @version 2021-03-07
  */
 
