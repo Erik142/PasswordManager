@@ -23,14 +23,14 @@ public class AES {
 	/**
 	 * The length of the password and salt
 	 */
-	private static final int KEY_LENGTH = 128;
+	private final int KEY_LENGTH = 128;
 
 	/**
 	 * Generate a password with a fixed length for AES
 	 * 
 	 * @return The password as a String
 	 */
-	public static String generateKeyPassword() {
+	public String generateKeyPassword() {
 		return RandomStringUtils.randomAlphanumeric(KEY_LENGTH);
 	}
 
@@ -39,7 +39,7 @@ public class AES {
 	 * 
 	 * @return The salt as a String
 	 */
-	public static String generateSalt() {
+	public String generateSalt() {
 		return RandomStringUtils.randomAlphanumeric(KEY_LENGTH);
 	}
 
@@ -51,7 +51,7 @@ public class AES {
 	 * @param salt        The salt String
 	 * @return The encrypted data as a byte array
 	 */
-	public static byte[] encrypt(byte[] data, String keyPassword, String salt) {
+	public byte[] encrypt(byte[] data, String keyPassword, String salt) {
 		try {
 			byte[] iv = new byte[KEY_LENGTH / 8];
 			IvParameterSpec ivspec = new IvParameterSpec(iv);
@@ -79,7 +79,7 @@ public class AES {
 	 * @param salt          The salt String
 	 * @return The decrypted data as a byte array
 	 */
-	public static byte[] decrypt(byte[] encryptedData, String keyPassword, String salt) {
+	public byte[] decrypt(byte[] encryptedData, String keyPassword, String salt) {
 		try {
 			byte[] iv = new byte[KEY_LENGTH / 8];
 			IvParameterSpec ivspec = new IvParameterSpec(iv);

@@ -64,6 +64,7 @@ public class CommunicationProtocol implements Serializable {
 	private final int MAX_VALID_TRANSACTIONS = 10;
 
 	private RSA rsa = null;
+	private AES aes = null;
 
 	private String passwordKey = "";
 	private String salt = "";
@@ -89,6 +90,7 @@ public class CommunicationProtocol implements Serializable {
 	public CommunicationProtocol(Socket socket, ProtocolMode mode) {
 		this.socket = socket;
 		this.rsa = new RSA();
+		this.aes = new AES();
 
 		this.PROTO_MODE = mode;
 
@@ -149,8 +151,8 @@ public class CommunicationProtocol implements Serializable {
 		System.out.println("RSA keys are valid!");
 
 		// Generate AES keys and send them to recipient
-		passwordKey = AES.generateKeyPassword();
-		salt = AES.generateSalt();
+		passwordKey = aes.generateKeyPassword();
+		salt = aes.generateSalt();
 
 		if (PROTO_MODE == ProtocolMode.Server) {
 			StringBuilder builder = new StringBuilder();
@@ -336,7 +338,6 @@ public class CommunicationProtocol implements Serializable {
 				validTransactionsRemaining -= 1;
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -555,7 +556,7 @@ public class CommunicationProtocol implements Serializable {
 		byte[] decryptedData = null;
 
 		if (cryptographyMethod == CryptographyMethod.AES) {
-			decryptedData = AES.decrypt(bytes, recipientPasswordKey, recipientSalt);
+			decryptedData = aes.decrypt(bytes, recipientPasswordKey, recipientSalt);
 		} else if (cryptographyMethod == CryptographyMethod.RSA) {
 			decryptedData = rsa.decrypt(bytes);
 		} else {
@@ -606,7 +607,7 @@ public class CommunicationProtocol implements Serializable {
 		byte[] encryptedBytes = null;
 
 		if (cryptographyMethod == CryptographyMethod.AES) {
-			encryptedBytes = AES.encrypt(baos.toByteArray(), passwordKey, salt);
+			encryptedBytes = aes.encrypt(baos.toByteArray(), passwordKey, salt);
 		} else if (cryptographyMethod == CryptographyMethod.RSA) {
 			encryptedBytes = rsa.encrypt(baos.toByteArray());
 		} else {
