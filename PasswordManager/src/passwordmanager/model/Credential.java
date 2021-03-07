@@ -6,6 +6,7 @@ import java.io.Serializable;
  * Stores the credential data for a specified user
  * 
  * @author Ermin Fazlic.
+ * @version 2021-03-07
  */
 public class Credential implements Serializable {
 

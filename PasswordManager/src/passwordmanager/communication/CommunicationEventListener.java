@@ -8,6 +8,7 @@ import passwordmanager.model.UserAccount;
  * the CommunicationProtocol
  * 
  * @author Erik Wahlberger
+ * @version 2021-03-07
  */
 public abstract class CommunicationEventListener {
 	public abstract void onCredentialEvent(Credential credential,

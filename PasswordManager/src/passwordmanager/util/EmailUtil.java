@@ -12,6 +12,7 @@ import javax.mail.internet.MimeMessage;
  * send e-mails
  * 
  * @author Erik Wahlberger
+ * @version 2021-03-07
  */
 public class EmailUtil {
 	/**

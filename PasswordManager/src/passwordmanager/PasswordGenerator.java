@@ -3,7 +3,24 @@ package passwordmanager;
 import java.security.SecureRandom;
 import java.util.Random;
 
-public class PasswordGenerator {        
+/**
+ * Used for generating a random password
+ * 
+ * @author Hannes Larsson
+ * @version 2021-03-07
+ */
+
+public class PasswordGenerator {
+	/**
+	 * Method returns a String generated from the specified parameters.
+	 * 
+	 * @param length The length of the password
+	 * @param lower Set to true to include lower characters
+	 * @param upper Set to true to include capital characters
+	 * @param num Set to true to include numbers
+	 * @param symb Set to true to include symbols
+	 * @return String containing the generated password
+	 */
     public static String generatePassword (int length, boolean lower,boolean upper, boolean num, boolean symb) {
         boolean pinCode=false;
      

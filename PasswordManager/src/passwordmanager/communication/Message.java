@@ -9,6 +9,7 @@ import passwordmanager.communication.CommunicationProtocol.CommunicationOperatio
  * the client and server
  * 
  * @author Erik Wahlberger
+ * @version 2021-03-07
  */
 public abstract class Message<T> implements Serializable {
 	/**

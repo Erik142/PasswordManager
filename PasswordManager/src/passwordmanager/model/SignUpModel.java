@@ -9,6 +9,7 @@ import passwordmanager.util.StringExtensions;
  * Used to sign up a user to the database
  * 
  * @author Erik Wahlberger
+ * @version 2021-03-07
  */
 public class SignUpModel extends AbstractObservable<SignUpModel> {
 

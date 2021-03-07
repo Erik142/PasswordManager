@@ -3,7 +3,12 @@ import javax.swing.*;
 import java.awt.GridLayout;
 import java.awt.*;
 import java.awt.event.*;
-
+/**
+ * Used for creating the GUI for generating a random password
+ * 
+ * @author ???
+ * @version 2021-03-07
+ */
 
 class passwordGenInput{    
     // Create different checkboxes
@@ -20,6 +25,12 @@ class passwordGenInput{
         passwordGenInput pGI = new passwordGenInput();
     }
  
+    /**
+     * 
+	 * Creates a new instance of the passwordGenInput class that shows the GUI
+	 * 
+	 */
+    
     public passwordGenInput () {
         JButton b1 = new JButton("Ok");
         JButton b2 = new JButton("Use Password");

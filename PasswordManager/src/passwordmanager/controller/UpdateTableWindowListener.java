@@ -10,6 +10,7 @@ import passwordmanager.model.MainModel;
  * window is closed
  * 
  * @author Erik Wahlberger
+ * @version 2021-03-07
  */
 public class UpdateTableWindowListener implements WindowListener {
 

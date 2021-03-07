@@ -9,6 +9,12 @@ import passwordmanager.exception.ModelException;
 import passwordmanager.model.ChangeUserAccountModel;
 import passwordmanager.view.ChangeUserPasswordDialog;
 
+/**
+ * The controller for the ChangeUserPasswordDialog
+ * 
+ * @author ???
+ * @version 2021-03-07
+ */
 public class ChangePasswordController implements ActionListener {
 
 	public final int CHANGE_PASSWORD = 0;
@@ -17,11 +23,21 @@ public class ChangePasswordController implements ActionListener {
 	private ChangeUserPasswordDialog view;
 	private ChangeUserAccountModel model;
 
+	
+	/**
+	 * Creates an instance of the controller with the parentView and model
+	 * @param view
+	 * @param model
+	 */
 	public ChangePasswordController(ChangeUserPasswordDialog view, ChangeUserAccountModel model) {
 		this.view = view;
 		this.model = model;
 	}
-
+	
+	/**
+	 * Retrieves the fields from the GUI and calls on model to update the UserAccount to the database
+	 *
+	 */
 	private void changeUserAccountPassword() {
 		String oldPassword = view.getPasswordOld();
 		String newPassword = view.getPasswordNew();
@@ -36,7 +52,10 @@ public class ChangePasswordController implements ActionListener {
 					JOptionPane.ERROR_MESSAGE);
 		}
 	}
-
+	
+	/**
+	 * Cancels the act and disposes the parentview
+	 */
 	private void cancel() {
 		view.dispose();
 		model.removeObserver(view);

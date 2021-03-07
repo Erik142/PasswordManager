@@ -24,7 +24,8 @@ import passwordmanager.util.StringExtensions;
 /**
  * 
  * @author Erik Wahlberger
- * @author yemeri
+ * @author Yemeri Nisa
+ * @version 2021-03-07
  *
  */
 public class PasswordServer implements Runnable {
@@ -33,16 +34,28 @@ public class PasswordServer implements Runnable {
 	private Configuration config;
 	private PasswordDatabase database;
 	private ServerSocket serverSocket;
-
+	
+	/**
+	 * Creates a new instance of the PasswordServer class, with the parameters
+	 * specified in the Configuration object
+	 * @param config
+	 * @throws Exception
+	 */
 	public PasswordServer(Configuration config) throws Exception {
 		this.config = config;
 		this.database = new PasswordDatabase(config);
 	}
-
+	
+	/**
+	 * Closes the server
+	 */
 	protected void finalize() {
 		close();
 	}
-
+	
+	/**
+	 * Initializes the server to be able to connect to clients
+	 */
 	public void listen() {
 		try {
 			serverSocket = new ServerSocket();
@@ -72,7 +85,10 @@ public class PasswordServer implements Runnable {
 			}
 		}
 	}
-
+	
+	/**
+	 * Closes the server's socket
+	 */
 	public void close() {
 		try {
 			serverSocket.close();
@@ -81,7 +97,11 @@ public class PasswordServer implements Runnable {
 			e.printStackTrace();
 		}
 	}
-
+	
+	/**
+	 * Successfully connects the client for communication once connection has been established
+	 * @param client
+	 */
 	private void processClient(Socket client) {
 		CommunicationProtocol communicationProtocol = new CommunicationProtocol(client,
 				CommunicationProtocol.ProtocolMode.Server);
@@ -126,7 +146,13 @@ public class PasswordServer implements Runnable {
 					Response<Object> failedResponse = new Response<Object>(ResponseCode.Fail, operation, null);
 				}
 			}
-
+			
+			/**
+			 * This method is used to see what operation was called by the user client-side
+			 * 
+			 * @param userAccount
+			 * @param operation
+			 */
 			@Override
 			public void onUserAccountEvent(UserAccount userAccount, CommunicationOperation operation) {
 				try {
@@ -188,7 +214,13 @@ public class PasswordServer implements Runnable {
 			}
 		});
 	}
-
+	
+	/**
+	 * Sends a query to add a UserAccount to the database
+	 * 
+	 * @param account that shall be added
+	 * @return returns the success of the operation
+	 */
 	private boolean addAccount(UserAccount account) {
 		try {
 			database.addAccount(account);
@@ -197,7 +229,13 @@ public class PasswordServer implements Runnable {
 			return false;
 		}
 	}
-
+	
+	/**
+	 * Sends a query to store a credential in the database
+	 * 
+	 * @param credential is the credential that shall be stored
+	 * @return returns the success of the operation
+	 */
 	private boolean addCredential(Credential credential) {
 		try {
 			database.addCredential(credential);
@@ -207,7 +245,13 @@ public class PasswordServer implements Runnable {
 			return false;
 		}
 	}
-
+	
+	/**
+	 * Sends a query to delete a UserAccount from the database
+	 * 
+	 * @param account that shall be deleted
+	 * @return returns the success of the operation
+	 */
 	private boolean deleteAccount(UserAccount account) {
 		try {
 			database.deleteAccount(account);
@@ -216,7 +260,13 @@ public class PasswordServer implements Runnable {
 			return false;
 		}
 	}
-
+	
+	/**
+	 * Sends a query to delete all credentials for account
+	 * 
+	 * @param account whose credentials shall be deleted
+	 * @return returns the success of the operation
+	 */
 	private boolean deleteAllPasswords(UserAccount account) {
 		try {
 			database.deleteAllCredentials(account);
@@ -225,7 +275,13 @@ public class PasswordServer implements Runnable {
 			return false;
 		}
 	}
-
+	
+	/**
+	 * Sends a query to delete a credential from the database
+	 * 
+	 * @param credential that shall be deleted
+	 * @return returns the success of the operation
+	 */
 	private boolean deleteCredential(Credential credential) {
 		try {
 			database.deleteCredential(credential);
@@ -234,7 +290,13 @@ public class PasswordServer implements Runnable {
 			return false;
 		}
 	}
-
+	
+	/**
+	 * Sends a query that the account has forgotten password to the server
+	 * 
+	 * @param email of the account
+	 * @return returns the success of the operation
+	 */
 	private boolean forgotPassword(UserAccount account) {
 		try {
 			UserAccount dbAccount = database.getAccount(account.getEmail());
@@ -297,18 +359,37 @@ public class PasswordServer implements Runnable {
 
 		return false;
 	}
-
+	
+	/**
+	 * This method returns the UserAccount with the email specified
+	 * 
+	 * @param email
+	 * @return the UserAccount with the email
+	 * @throws SQLException
+	 */
 	private UserAccount getAccount(String email) throws SQLException {
 		return database.getAccount(email);
 	}
-
+	
+	/**
+	 * Sends a query to search the database for all credentials for user account
+	 * 
+	 * @param account is the account whose credentials is retrieved
+	 * @return list of credentials stored on server database.
+	 */
 	private Credential[] getCredentials(UserAccount account) throws SQLException {
 		List<Credential> credentials = database.listAllCredentials(account);
 		Credential[] returnValue = credentials.toArray(new Credential[credentials.size()]);
 
 		return returnValue;
 	}
-
+	
+	/**
+	 * Sends a query to update a UserAccount from the database
+	 * 
+	 * @param account that shall be updated
+	 * @return returns the success of the operation
+	 */
 	private boolean updateAccount(UserAccount account) {
 		try {
 			database.changeAccountPassword(account, account.getPassword());
@@ -317,7 +398,13 @@ public class PasswordServer implements Runnable {
 			return false;
 		}
 	}
-
+	
+	/**
+	 * Sends a query to update the database on the specified credential
+	 * 
+	 * @param credential is the credential that shall be updated
+	 * @return returns the success of the operation
+	 */
 	private boolean updateCredential(Credential credential) {
 		try {
 			database.changeCredential(credential);

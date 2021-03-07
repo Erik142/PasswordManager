@@ -6,11 +6,10 @@ import passwordmanager.communication.CommunicationProtocol.CommunicationOperatio
  * Represents a response from a server to a client
  * 
  * @author Erik Wahlberger
+ * @version 2021-03-07
  */
 public class Response<T> extends Message<T> {
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 4474155900326959886L;
 
 	/**

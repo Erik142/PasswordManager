@@ -8,10 +8,15 @@ import passwordmanager.controller.ChangePasswordController;
 import passwordmanager.model.ChangeUserAccountModel;
 import passwordmanager.model.Observer;
 
+/**
+ * This class creates the GUI for changing a user's password
+ * 
+ * @author Arian Alikashani
+ * @version 2021-03-07
+ *
+ */
 public class ChangeUserPasswordDialog  extends JDialog implements Observer<ChangeUserAccountModel> {
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	private JLabel lbOld;
 	private JLabel lbNew;
@@ -24,6 +29,10 @@ public class ChangeUserPasswordDialog  extends JDialog implements Observer<Chang
     
     private final Frame parent;
     
+    /**
+     * The constructor uses a parent frame to create and display the dialog for changing a user's password
+     * @param parent
+     */
     public ChangeUserPasswordDialog(Frame parent) {
     	this.parent = parent;
     	showChangePasswordDialog();
@@ -91,20 +100,35 @@ public class ChangeUserPasswordDialog  extends JDialog implements Observer<Chang
         setVisible(false);
     }
     
-    
+    /**
+     * Returns the old password
+     * @return String with the old password trimmed.
+     */
     public String getPasswordOld() {
         return new String(pfPasswordOld.getPassword()).trim();
     }
     
+    /**
+     * Returns the new password
+     * @return String with the new password trimmed.
+     */
     public String getPasswordNew() {
         return new String(pfPasswordNew.getPassword()).trim();
     }
     
-    
+    /**
+     * Returns the confirmation password
+     * @return String with the confirmation password trimmed.
+     */
     public String getPasswordConfirm() {
         return new String(pfPasswordConfirm.getPassword()).trim();
     }
 
+    /**
+     * Checks whether user pressed change or cancel button and tells controller to do the appropriate action
+     * 
+     * @param controller
+     */
     public void registerListener(ChangePasswordController controller) {
     	this.btnChange.setActionCommand("" + controller.CHANGE_PASSWORD);
     	this.btnChange.addActionListener(controller);

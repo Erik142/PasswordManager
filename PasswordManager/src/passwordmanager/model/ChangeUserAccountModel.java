@@ -8,6 +8,7 @@ import passwordmanager.util.StringExtensions;
  * Used to change the password for a UserAccount object
  * 
  * @author Erik Wahlberger
+ * @version 2021-03-07
  */
 public class ChangeUserAccountModel extends AbstractObservable<ChangeUserAccountModel> {
 

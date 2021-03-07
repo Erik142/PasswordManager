@@ -10,7 +10,14 @@ import passwordmanager.model.MainModel;
 import passwordmanager.model.Observer;
 import passwordmanager.util.FrameUtil;
 
-
+/**
+ * This class creates the GUI for the MainView
+ * 
+ * @author Arian Alikashani
+ * @author Ermin Fazlic
+ * @version 2021-03-07
+ *
+ */
 public class MainView implements Observer<MainModel> {
 	
 	private JTable table = null;
@@ -27,6 +34,10 @@ public class MainView implements Observer<MainModel> {
 	
 	private DefaultTableModel tableModel;
 	
+	/**
+     * The constructor creates a frame to create and display the MainView
+     * @param parent
+     */
 	public MainView() {
 		this.setFrame(new JFrame("Password Manager"));
 		this.getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -92,6 +103,11 @@ public class MainView implements Observer<MainModel> {
         FrameUtil.centerFrame(this.getFrame());
     }
 
+	/**
+     * Checks which button was pressed and tells controller to do the appropriate action
+     * 
+     * @param controller
+     */
 	public void registerListeners(MainViewTableController tableController, MainViewActionListener actionListener) {
 		addButton.setActionCommand("" + actionListener.ADD_CREDENTIAL);
 		addButton.addActionListener(actionListener);

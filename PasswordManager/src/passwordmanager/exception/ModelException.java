@@ -2,6 +2,8 @@ package passwordmanager.exception;
 
 /**
  * Custom Exception class used to throw error messages in MVC Models
+ * @author Erik Wahlberger
+ * @version 2021-03-07
  */
 public class ModelException extends Exception {
     /**

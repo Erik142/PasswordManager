@@ -8,6 +8,7 @@ import passwordmanager.util.StringExtensions;
  * Manipulates Credential objects in the database
  * 
  * @author Erik Wahlberger
+ * @version 2021-03-07
  */
 public class ManipulateCredentialModel extends AbstractObservable<ManipulateCredentialModel> {
 

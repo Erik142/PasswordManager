@@ -7,6 +7,7 @@ import java.util.HashSet;
  * An abstract implementation of the Observable interface
  * 
  * @author Erik Wahlberger
+ * @version 2021-03-07
  */
 public abstract class AbstractObservable<T> implements Observable<T> {
 

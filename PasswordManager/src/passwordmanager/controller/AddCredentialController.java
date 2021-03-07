@@ -11,6 +11,12 @@ import passwordmanager.model.MainModel;
 import passwordmanager.model.UserAccount;
 import passwordmanager.view.AddCredentialDialog;
 
+/**
+ * The controller for the AddCredentialDialog
+ * 
+ * @author ???
+ * @version 2021-03-07
+ */
 public class AddCredentialController implements ActionListener {
 
 	public final int ADD_CREDENTIAL = 0;
@@ -19,13 +25,22 @@ public class AddCredentialController implements ActionListener {
 	private AddCredentialDialog view;
 	private AddCredentialModel addCredentialModel;
 	private MainModel mainModel;
-
+	
+	/**
+	 * Creates an instance of the controller with the parentView and Model along with the mainModel
+	 * @param view
+	 * @param addCredentialModel
+	 * @param mainModel
+	 */
 	public AddCredentialController(AddCredentialDialog view, AddCredentialModel addCredentialModel, MainModel mainModel) {
 		this.view = view;
 		this.addCredentialModel = addCredentialModel;
 		this.mainModel = mainModel;
 	}
-
+	
+	/**
+	 * Retrieves the fields from the GUI and calls on model to add the credential to the database
+	 */
 	private void addCredential() {
 		String username = view.getEmail();
 		String url = view.getWebsite();
@@ -41,7 +56,10 @@ public class AddCredentialController implements ActionListener {
 			JOptionPane.showMessageDialog(view, e1.getMessage(), "Add credential", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-
+	
+	/**
+	 * Cancels the act and disposes the AddCredentialDialog view
+	 */
 	private void cancel() {
 		addCredentialModel.reset();
 		view.dispose();

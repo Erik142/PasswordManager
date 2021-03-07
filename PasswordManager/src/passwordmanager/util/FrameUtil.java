@@ -10,6 +10,7 @@ import javax.swing.JFrame;
  * vertically
  * 
  * @author Erik Wahlberger
+ * @version 2021-03-07
  */
 public class FrameUtil {
 	/***

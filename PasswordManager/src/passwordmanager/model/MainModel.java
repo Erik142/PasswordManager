@@ -6,6 +6,7 @@ import passwordmanager.communication.PasswordClient;
  * Stores and updates the Credential data for the table in the MainView
  * 
  * @author Erik Wahlberger
+ * @version 2021-03-07
  */
 public class MainModel extends AbstractObservable<MainModel> {
 

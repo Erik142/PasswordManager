@@ -8,6 +8,13 @@ import passwordmanager.controller.SignUpController;
 import passwordmanager.model.Observer;
 import passwordmanager.model.SignUpModel;
 
+/**
+ * This class creates the GUI for the MainView
+ * 
+ * @author Arian Alikashani
+ * @version 2021-03-07
+ *
+ */
 public class SignUpDialog extends JDialog implements Observer<SignUpModel> {
     private JTextField tfUsername;
     private JPasswordField pfPassword1;
@@ -18,6 +25,10 @@ public class SignUpDialog extends JDialog implements Observer<SignUpModel> {
     private JButton btnSignUp;
     private JButton btnCancel;
     
+    /**
+     * The constructor uses a parent frame to create and display the MainView
+     * @param parent
+     */
     public SignUpDialog(Frame parent) {
         //
         JPanel panel = new JPanel(new GridBagLayout());
@@ -80,19 +91,35 @@ public class SignUpDialog extends JDialog implements Observer<SignUpModel> {
         setVisible(false);
     }
     
-
+    /**
+     * Returns the email
+     * @return String with the email
+     */
     public String getEmail() {
     	return tfUsername.getText();
     }
     
+    /**
+     * Returns the password
+     * @return String with the password
+     */
 	public String getPassword() {
 		return new String(pfPassword1.getPassword());
 	}
 
+	/**
+	 * Returns the confirmationPassword
+	 * @return String with the confirmationPassword
+	 */
 	public String getConfirmPassword() {
 		return new String(pfPassword2.getPassword());
 	}
 
+	/**
+     * Checks which button was pressed and tells controller to do the appropriate action
+     * 
+     * @param controller
+     */
 	public void registerListener(SignUpController controller) {
 		btnSignUp.setActionCommand(controller.SIGNUP_COMMAND);
 		btnSignUp.addActionListener(controller);

@@ -6,6 +6,7 @@ import java.io.Serializable;
  * Represents a user account used to log in to the application
  * 
  * @author Ermin Fazlic
+ * @version 2021-03-07
  */
 
 public class UserAccount implements Serializable {

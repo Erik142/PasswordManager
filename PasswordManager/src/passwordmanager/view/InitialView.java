@@ -8,7 +8,13 @@ import javax.swing.*;
 import passwordmanager.controller.InitialViewActionListener;
 import passwordmanager.util.FrameUtil;
 
-
+/**
+ * This class creates the GUI for the initial view that starts with the client
+ * 
+ * @author Arian Alikashani
+ * @version 2021-03-07
+ *
+ */
 public class InitialView {
 	
 	private final JButton btnLogin;
@@ -17,6 +23,10 @@ public class InitialView {
 	
 	protected final JFrame frame;
 	
+	/**
+     * The constructor creates a frame to create and display the dialog for the initial view
+     * @param parent
+     */
 	public InitialView() throws IOException {
 		this.frame = new JFrame("Password Manager");
 		
@@ -35,10 +45,19 @@ public class InitialView {
         FrameUtil.centerFrame(frame);
 	}
 	
+	/**
+	 * Returns the frame
+	 * @return frame
+	 */
 	public Frame getFrame() {
 		return this.frame;
 	}
 	
+	/**
+     * Checks whether user pressed login, forgot or SignUp button and tells controller to do the appropriate action
+     * 
+     * @param authenticationActionListener
+     */
 	public void registerListener(InitialViewActionListener authenticationActionListener) {
         btnLogin.setActionCommand("" + authenticationActionListener.LOG_IN);
 		btnLogin.addActionListener(authenticationActionListener);

@@ -9,6 +9,12 @@ import passwordmanager.exception.ModelException;
 import passwordmanager.model.ManipulateCredentialModel;
 import passwordmanager.view.ChangeCredentialDialog;
 
+/**
+ * The controller for the ChangeCredentialDialog
+ * 
+ * @author ???
+ * @version 2021-03-07
+ */
 public class ChangeCredentialController implements ActionListener {
 	
 	public final int CHANGE_CREDENTIAL = 0;
@@ -17,11 +23,20 @@ public class ChangeCredentialController implements ActionListener {
 	private ChangeCredentialDialog view;
 	private ManipulateCredentialModel model;
 	
+	/**
+	 * Creates an instance of the controller with the parentView and model
+	 * @param view
+	 * @param Model
+	 */
 	public ChangeCredentialController(ChangeCredentialDialog view, ManipulateCredentialModel model) {
 		this.view = view;
 		this.model = model;
 	}
-
+	
+	/**
+	 * Retrieves the fields from the GUI and calls on model to update the credential to the database
+	 *
+	 */
 	private void changeCredential() {
 		String service = view.getService();
 		String username = view.getUserName();
@@ -35,7 +50,10 @@ public class ChangeCredentialController implements ActionListener {
 			JOptionPane.showMessageDialog(view, e.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-
+	
+	/**
+	 * Cancels the act and disposes the ChangeCredentialDialog view
+	 */
 	private void cancel() {
 		view.dispose();
 		model.removeObserver(view);

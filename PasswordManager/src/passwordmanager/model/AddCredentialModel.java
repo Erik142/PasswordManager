@@ -8,6 +8,7 @@ import passwordmanager.util.StringExtensions;
  * The model used to add a credential to the database
  * 
  * @author Erik Wahlberger
+ * @version 2021-03-07
  */
 public class AddCredentialModel extends AbstractObservable<AddCredentialModel> {
 	private final PasswordClient client;

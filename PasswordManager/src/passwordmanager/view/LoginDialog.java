@@ -8,11 +8,16 @@ import passwordmanager.controller.LoginDialogController;
 import passwordmanager.model.LoginDialogModel;
 import passwordmanager.model.Observer;
 
+/**
+ * This class creates the GUI for the LoginDialog
+ * 
+ * @author Arian Alikashani
+ * @version 2021-03-07
+ *
+ */
 public class LoginDialog extends JDialog implements Observer<LoginDialogModel> {
 	 
-    /**
-	 * 
-	 */
+   
 	private static final long serialVersionUID = 1L;
 	public JTextField tfUsername;
     public JPasswordField pfPassword;
@@ -24,6 +29,10 @@ public class LoginDialog extends JDialog implements Observer<LoginDialogModel> {
     
     private final Frame parent;
     
+    /**
+     * The constructor uses a parent frame to create and display the LoginDialog
+     * @param parent
+     */
     public LoginDialog(Frame parent) {
     	super(parent, "Login", true);
     	
@@ -82,21 +91,36 @@ public class LoginDialog extends JDialog implements Observer<LoginDialogModel> {
         setVisible(false);
     }
     
+    /**
+     * Checks whether user pressed login or cancel button and tells controller to do the appropriate action
+     * 
+     * @param controller
+     */
     public void registerListener(LoginDialogController controller) {
     	btnLogin.setActionCommand("" + controller.LOGIN);
     	btnLogin.addActionListener(controller);
     	btnCancel.setActionCommand("" + controller.CANCEL);
     	btnCancel.addActionListener(controller);
     }
- 
+    /**
+     * Returns username
+     * @return String with username trimmed
+     */
     public String getUsername() {
         return tfUsername.getText().trim();
     }
- 
+    
+    /**
+     * Returns password
+     * @return String with password
+     */
     public String getPassword() {
         return new String(pfPassword.getPassword());
     }
- 
+    /**
+     * Returns the boolean succeeded
+     * @return succeeded
+     */
     public boolean isSucceeded() {
         return succeeded;
     }
