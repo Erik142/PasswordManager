@@ -171,9 +171,9 @@ Used only in server mode. This specifies the email-address used to send "forgot 
 "serverEmail":"my-sweet-google-mail@gmail.com"
 ```
 
-### serverPassword
+### serverEmailPassword
 Used only in server mode. This specifies the password for the email-address specified in "serverEmail". See example below:
 
 ```json
-"serverPassword":"my.secret_p@ssw0rd"
+"serverEmailPassword":"my.secret_p@ssw0rd"
 ```
