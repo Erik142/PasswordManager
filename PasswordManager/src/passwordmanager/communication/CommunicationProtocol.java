@@ -116,7 +116,7 @@ public class CommunicationProtocol implements Serializable {
 			System.out.println("RSA Public key is null!");
 		}
 
-		Query<PublicKey> rsaQuery = new Query<PublicKey>("", CommunicationOperation.InitiateConnection, publicKey);
+		Query<PublicKey> rsaQuery = new Query<PublicKey>(CommunicationOperation.InitiateConnection, publicKey);
 
 		Response<PublicKey> serverResponse = sendAndReceive(rsaQuery);
 
@@ -180,7 +180,7 @@ public class CommunicationProtocol implements Serializable {
 			// Receive AES keys and decipher them
 			System.out.println("Client receiving AES keys...");
 
-			Query<Object> keysQuery = new Query<Object>("", CommunicationOperation.ExchangeKeys, null);
+			Query<Object> keysQuery = new Query<Object>(CommunicationOperation.ExchangeKeys, null);
 
 			Response<String> keysResponse = sendAndReceive(keysQuery);
 

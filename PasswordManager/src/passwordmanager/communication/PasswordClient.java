@@ -42,7 +42,7 @@ public class PasswordClient {
 	 */
 
 	public Credential[] getCredentials(UserAccount account) {
-		Query<UserAccount> query = new Query<UserAccount>("", CommunicationOperation.GetAllCredentials, account);
+		Query<UserAccount> query = new Query<UserAccount>(CommunicationOperation.GetAllCredentials, account);
 		Response<Credential[]> response = protocol.sendAndReceive(query);
 		return response.getData();
 
@@ -56,7 +56,7 @@ public class PasswordClient {
 
 
 	public boolean storeCredential(Credential credential) {
-		Query<Credential> query = new Query<Credential>("", CommunicationOperation.AddCredential, credential);
+		Query<Credential> query = new Query<Credential>(CommunicationOperation.AddCredential, credential);
 		Response<Boolean> response = protocol.sendAndReceive(query);
 
 		return response.getData();
@@ -70,7 +70,7 @@ public class PasswordClient {
 	 * @return returns the success of the operation
 	 */
 	public boolean modifyCredential(Credential credential) {
-		Query<Credential> query = new Query<Credential>("", CommunicationOperation.UpdateCredential, credential);
+		Query<Credential> query = new Query<Credential>(CommunicationOperation.UpdateCredential, credential);
 		Response<Boolean> response = protocol.sendAndReceive(query);
 
 		return response.getData();
@@ -84,7 +84,7 @@ public class PasswordClient {
 	 * @return returns the success of the operation
 	 */
 	public boolean deleteCredential(Credential credential) {
-		Query<Credential> query = new Query<Credential>("", CommunicationOperation.DeleteCredential, credential);
+		Query<Credential> query = new Query<Credential>(CommunicationOperation.DeleteCredential, credential);
 		Response<Boolean> response = protocol.sendAndReceive(query);
 		return response.getData();
 
@@ -102,7 +102,7 @@ public class PasswordClient {
 
 	public boolean verifyUser(UserAccount account) {
 
-		Query<UserAccount> query = new Query<UserAccount>("", CommunicationOperation.VerifyUser, account);
+		Query<UserAccount> query = new Query<UserAccount>(CommunicationOperation.VerifyUser, account);
 		Response<Boolean> response = protocol.sendAndReceive(query);
 		return response.getData();
 
@@ -115,7 +115,7 @@ public class PasswordClient {
 	 * @return returns the success of the operation
 	 */
 	public boolean addUserAccount(UserAccount account) {
-		Query<UserAccount> query = new Query<UserAccount>("", CommunicationOperation.AddUser, account);
+		Query<UserAccount> query = new Query<UserAccount>(CommunicationOperation.AddUser, account);
 		Response<Boolean> response = protocol.sendAndReceive(query);
 		return response.getData();
 
@@ -129,7 +129,7 @@ public class PasswordClient {
 	 */
 	public boolean modifyUserAccount(UserAccount account) {
 
-		Query<UserAccount> query = new Query<UserAccount>("", CommunicationOperation.UpdateUser, account);
+		Query<UserAccount> query = new Query<UserAccount>(CommunicationOperation.UpdateUser, account);
 		Response<Boolean> response = protocol.sendAndReceive(query);
 		return response.getData();
 	}
@@ -142,7 +142,7 @@ public class PasswordClient {
 	 */
 	public boolean deleteUserAccount(UserAccount account) {
 
-		Query<UserAccount> query = new Query<UserAccount>("", CommunicationOperation.DeleteUser, account);
+		Query<UserAccount> query = new Query<UserAccount>(CommunicationOperation.DeleteUser, account);
 		Response<Boolean> response = protocol.sendAndReceive(query);
 		return response.getData();
 
@@ -155,7 +155,7 @@ public class PasswordClient {
 	 */
 	public UserAccount getUserAccount(String email) {
 		UserAccount account = new UserAccount(email, "");
-		Query<UserAccount> query = new Query<UserAccount>("", CommunicationOperation.GetUser, account);
+		Query<UserAccount> query = new Query<UserAccount>(CommunicationOperation.GetUser, account);
 		Response<UserAccount> response = protocol.sendAndReceive(query);
 
 		return response.getData();
@@ -167,7 +167,7 @@ public class PasswordClient {
 	 * @return returns the success of the operation
 	 */
 	public boolean forgotPassword(String email) throws Exception {
-		Query<UserAccount> query = new Query<UserAccount>("", CommunicationOperation.ForgotPassword,
+		Query<UserAccount> query = new Query<UserAccount>(CommunicationOperation.ForgotPassword,
 				new UserAccount(email, ""));
 		Response<Boolean> response = protocol.sendAndReceive(query);
 

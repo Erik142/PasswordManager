@@ -13,7 +13,6 @@ public class Query<T> extends Message<T> {
 	 * 
 	 */
 	private static final long serialVersionUID = 8618620107514649552L;
-	private final String authToken;
 
 	/**
 	 * Creates a new instance of a Query object with the specified authorization
@@ -22,8 +21,8 @@ public class Query<T> extends Message<T> {
 	 * @param authToken The authorization token
 	 * @param operation The CommunicationOperation
 	 */
-	public Query(String authToken, CommunicationOperation operation) {
-		this(authToken, operation, null);
+	public Query(CommunicationOperation operation) {
+		this(operation, null);
 	}
 
 	/**
@@ -34,18 +33,8 @@ public class Query<T> extends Message<T> {
 	 * @param operation The CommunicationOperation
 	 * @param data      The data
 	 */
-	public Query(String authToken, CommunicationOperation operation, T data) {
+	public Query(CommunicationOperation operation, T data) {
 		super(operation, data);
-		this.authToken = authToken;
-	}
-
-	/**
-	 * Retrieves the authorization token
-	 * 
-	 * @return The authorization token
-	 */
-	public String getAuthToken() {
-		return authToken;
 	}
 
 }
