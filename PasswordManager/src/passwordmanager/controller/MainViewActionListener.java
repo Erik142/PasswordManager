@@ -164,8 +164,12 @@ public class MainViewActionListener implements ActionListener {
      * Disposes the GUI and logs the user out
      */
     private void signOut() {
-        mainView.getFrame().dispose();
-        loginDialogModel.logout();
+        boolean signout = JOptionPane.showConfirmDialog(mainView.getFrame(), "Are you sure that you want to sign out?", "Sign out", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+
+        if (signout) {
+            mainView.getFrame().dispose();
+            loginDialogModel.logout();
+        }
     }
 
     @Override
