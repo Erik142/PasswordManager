@@ -112,11 +112,6 @@ public class Program {
 		case Client:
 			System.out.println("Starting new client...");
 			try {
-				PasswordServer passServer = new PasswordServer(config);
-				Thread thread = new Thread(passServer);
-				thread.start();
-
-				Thread.sleep(500);
 				new ClientWindow(config);
 			} catch (Exception e) {
 				e.printStackTrace();
