@@ -23,8 +23,8 @@ import java.security.Key;
  */
 public class RSA {
 	private final String KEYPAIRALGO = "RSA";
-	private final String CIPHERTRANSFORMATION = "RSA/ECB/OAEPWITHSHA-512ANDMGF1PADDING";
-	private final int KEYSIZE = 4096;
+	private final String CIPHERTRANSFORMATION = "RSA/ECB/PKCS1Padding";
+	private final int KEYSIZE = 1024;
 
 	private PublicKey publicKey = null;
 	private PublicKey recipientPublicKey = null;

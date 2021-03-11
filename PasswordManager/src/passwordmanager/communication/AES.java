@@ -23,7 +23,8 @@ public class AES {
 	/**
 	 * The length of the password and salt
 	 */
-	private final int KEY_LENGTH = 128;
+	private final int KEY_LENGTH = 256;
+	private final int PASS_LENGTH = 64;
 
 	/**
 	 * Generate a password with a fixed length for AES
@@ -31,7 +32,7 @@ public class AES {
 	 * @return The password as a String
 	 */
 	public String generateKeyPassword() {
-		return RandomStringUtils.randomAlphanumeric(KEY_LENGTH);
+		return RandomStringUtils.randomAlphanumeric(PASS_LENGTH);
 	}
 
 	/**
@@ -40,7 +41,7 @@ public class AES {
 	 * @return The salt as a String
 	 */
 	public String generateSalt() {
-		return RandomStringUtils.randomAlphanumeric(KEY_LENGTH);
+		return RandomStringUtils.randomAlphanumeric(PASS_LENGTH);
 	}
 
 	/**
@@ -53,11 +54,11 @@ public class AES {
 	 */
 	public byte[] encrypt(byte[] data, String keyPassword, String salt) {
 		try {
-			byte[] iv = new byte[KEY_LENGTH / 8];
+			byte[] iv = new byte[16];
 			IvParameterSpec ivspec = new IvParameterSpec(iv);
 
 			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-			KeySpec spec = new PBEKeySpec(keyPassword.toCharArray(), salt.getBytes(), 65536, 256);
+			KeySpec spec = new PBEKeySpec(keyPassword.toCharArray(), salt.getBytes(), 65536, KEY_LENGTH);
 			SecretKey tmp = factory.generateSecret(spec);
 			SecretKeySpec secretKey = new SecretKeySpec(tmp.getEncoded(), "AES");
 
@@ -81,11 +82,11 @@ public class AES {
 	 */
 	public byte[] decrypt(byte[] encryptedData, String keyPassword, String salt) {
 		try {
-			byte[] iv = new byte[KEY_LENGTH / 8];
+			byte[] iv = new byte[16];
 			IvParameterSpec ivspec = new IvParameterSpec(iv);
 
 			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-			KeySpec spec = new PBEKeySpec(keyPassword.toCharArray(), salt.getBytes(), 65536, 256);
+			KeySpec spec = new PBEKeySpec(keyPassword.toCharArray(), salt.getBytes(), 65536, KEY_LENGTH);
 			SecretKey tmp = factory.generateSecret(spec);
 			SecretKeySpec secretKey = new SecretKeySpec(tmp.getEncoded(), "AES");
 
