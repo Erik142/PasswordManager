@@ -76,12 +76,9 @@ public class PasswordServer implements Runnable {
 			try {
 				Socket clientSocket = serverSocket.accept();
 
-				Thread clientThread = new Thread(() -> {
-					processClient(clientSocket);
-				});
-
-				clientThread.start();
+				processClient(clientSocket);
 			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 	}
