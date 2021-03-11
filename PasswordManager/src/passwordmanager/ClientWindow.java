@@ -1,6 +1,11 @@
 package passwordmanager;
 
 import java.io.IOException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import passwordmanager.communication.PasswordClient;
 import passwordmanager.config.Configuration;
@@ -23,14 +28,33 @@ public class ClientWindow {
 	 * 
 	 * @param config The Configuration object
 	 * @throws IOException if the created PasswordClient throws IOException
+	 * @throws ExecutionException 
+	 * @throws InterruptedException 
 	 */
-	public ClientWindow(Configuration config) throws IOException {
-		PasswordClient client = new PasswordClient(config);
+	public ClientWindow(Configuration config) throws IOException, InterruptedException, ExecutionException {		
+		PasswordClient client;
+		
+		
+		ExecutorService executorService = Executors.newSingleThreadExecutor();
+		Future<PasswordClient> result = executorService.submit(new Callable<PasswordClient>() {
 
+			@Override
+			public PasswordClient call() throws Exception {
+				PasswordClient client = new PasswordClient(config);
+				return client;
+			}
+			
+		});
+		
+		
+		InitialView initialView = new InitialView();
+		
+		client = result.get();
+		
+		initialView.enableButtons();
+		
 		AccountModel accountModel = new AccountModel(client);
 		CredentialModel credentialModel = new CredentialModel(client);
-
-		InitialView initialView = new InitialView();
 
 		InitialViewActionListener authActionListener = new InitialViewActionListener(initialView, accountModel, credentialModel);
 

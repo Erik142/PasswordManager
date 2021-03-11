@@ -42,6 +42,10 @@ public class InitialView {
         frame.setVisible(true);
         
         FrameUtil.centerFrame(frame);
+        
+        btnLogin.setEnabled(false);
+        btnSignUp.setEnabled(false);
+        btnForgot.setEnabled(false);
 	}
 	
 	/**
@@ -64,6 +68,12 @@ public class InitialView {
         btnForgot.addActionListener(actionListener);
 		btnSignUp.setActionCommand("" + actionListener.SIGN_UP);
         btnSignUp.addActionListener(actionListener); 
+	}
+	
+	public void enableButtons() {
+        btnLogin.setEnabled(true);
+        btnSignUp.setEnabled(true);
+        btnForgot.setEnabled(true);
 	}
 
 }
