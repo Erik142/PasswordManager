@@ -17,7 +17,7 @@ import org.apache.commons.lang3.RandomStringUtils;
  * for generating passwords and salts
  * 
  * @author Erik Wahlberger
- * @version 2021-03-07
+ * @version 2021-03-11
  */
 public class AES {
 	/**

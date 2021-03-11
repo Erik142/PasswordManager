@@ -3,7 +3,6 @@ package passwordmanager.config;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.net.InetAddress;
 
 import com.google.gson.Gson;
@@ -12,7 +11,7 @@ import com.google.gson.Gson;
  * Represents a configuration file
  * 
  * @author Erik Wahlberger
- * @version 2021-03-07
+ * @version 2021-03-11
  */
 public class Configuration {
 	/**

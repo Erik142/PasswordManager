@@ -90,7 +90,6 @@ public class PasswordServer implements Runnable {
 		try {
 			serverSocket.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -184,7 +183,6 @@ public class PasswordServer implements Runnable {
 						try {
 							returnValue = getAccount(userAccount.getEmail());
 						} catch (SQLException e) {
-							// TODO Auto-generated catch block
 							responseCode = ResponseCode.Fail;
 						}
 						break;

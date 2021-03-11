@@ -1,7 +1,6 @@
 package passwordmanager.view;
 
 import java.awt.*;
-import java.io.IOException;
 
 import javax.swing.*;
 
@@ -12,7 +11,7 @@ import passwordmanager.util.FrameUtil;
  * This class creates the GUI for the initial view that starts with the client
  * 
  * @author Arian Alikashani
- * @version 2021-03-07
+ * @version 2021-03-11
  *
  */
 public class InitialView {

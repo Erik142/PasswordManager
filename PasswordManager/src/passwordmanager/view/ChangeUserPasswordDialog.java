@@ -5,13 +5,12 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 import passwordmanager.controller.ChangePasswordController;
-import passwordmanager.model.Observer;
 
 /**
  * This class creates the GUI for changing a user's password
  * 
  * @author Arian Alikashani
- * @version 2021-03-07
+ * @version 2021-03-11
  *
  */
 public class ChangeUserPasswordDialog  extends JDialog {
