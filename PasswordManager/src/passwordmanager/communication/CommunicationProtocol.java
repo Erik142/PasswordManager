@@ -345,21 +345,23 @@ public class CommunicationProtocol implements Serializable {
 	 * @param message The Message to send
 	 */
 	public <T> void send(Message<T> message) {
-		do {
-			try {
-				if (outputStream == null) {
-					outputStream = new DataOutputStream(socket.getOutputStream());
-				}
-				break;
-			} catch (IOException ex) {
+		if (outputStream == null) {
+			System.out.println("Setting output stream...");
+			do {
 				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+					outputStream = new DataOutputStream(socket.getOutputStream());
+					break;
+				} catch (IOException ex) {
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
-			}
-		} while (true);
-
+			} while (true);
+			System.out.println("Output stream is set!");
+		}
+		
 		CryptographyMethod serializeMethod = null;
 
 		switch (message.getOperation()) {
@@ -447,7 +449,15 @@ public class CommunicationProtocol implements Serializable {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			try {
+				socket.close();
+				inputStream.close();
+				outputStream.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
+		System.out.println("Writing complete!");
 	}
 
 	/**
@@ -472,21 +482,23 @@ public class CommunicationProtocol implements Serializable {
 	 * @return The Message
 	 */
 	private <T> Message<T> receive() {
-		do {
-			try {
-				if (inputStream == null) {
-					inputStream = new DataInputStream(socket.getInputStream());
-				}
-				break;
-			} catch (IOException ex) {
+		if (inputStream == null) {
+			System.out.println("Setting input stream...");
+			do {
 				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+					inputStream = new DataInputStream(socket.getInputStream());
+					break;
+				} catch (IOException ex) {
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
-			}
-		} while (true);
-
+			} while (true);
+			System.out.println("Input stream set!");
+		}
+		
 		while (!socket.isClosed()) {
 			try {
 				int connectionType = inputStream.readInt();
@@ -533,16 +545,15 @@ public class CommunicationProtocol implements Serializable {
 
 				return response;
 			} catch (Exception e) {
-				if (e instanceof SocketException) {
-					try {
-						System.out.println("SocketException! CommunicationProtocol receive: Closing socket.");
-						socket.close();
-						System.out.println("Socket closed!");
-					} catch (IOException e1) {
-						System.out.println("Error while trying to close socket!");
-						e1.printStackTrace();
-					}
+				e.printStackTrace();
+				try {
+					socket.close();
+					inputStream.close();
+					outputStream.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
 				}
+				break;
 			}
 		}
 
@@ -557,81 +568,50 @@ public class CommunicationProtocol implements Serializable {
 	 */
 	public void subscribeOnSocket(CommunicationEventListener eventListener) {
 		Thread subscribeThread = new Thread(() -> {
-			do {
-				try {
-					if (inputStream == null) {
-						inputStream = new DataInputStream(socket.getInputStream());
-					}
-					break;
-				} catch (IOException ex) {
-					try {
-						Thread.sleep(500);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			} while (true);
-
 			while (!socket.isClosed()) {
-				try {
-					Message<Object> retrievedQuery = receive();
+				Message<Object> retrievedQuery = receive();
 
-					CommunicationOperation operation = retrievedQuery.operation;
-					Object object = retrievedQuery.data;
+				CommunicationOperation operation = retrievedQuery.operation;
+				Object object = retrievedQuery.data;
+				
+				switch (operation) {
+				case AddUser:
+				case DeleteUser:
+				case UpdateUser:
+				case GetAllCredentials:
+				case GetUser:
+				case ForgotPassword:
+					eventListener.onUserAccountEvent((UserAccount) object, operation);
+					break;
+				case AddCredential:
+				case DeleteCredential:
+				case UpdateCredential:
+					eventListener.onCredentialEvent((Credential) object, operation);
+					break;
+				case ExchangeKeys:
+					negotiateKeys();
+					break;
+				case InitiateConnection:
+					PublicKey publicKey = rsa.getPublicKey();
+					PublicKey remotePublicKey = (PublicKey) object;
 
-					switch (operation) {
-					case AddUser:
-					case DeleteUser:
-					case UpdateUser:
-					case GetAllCredentials:
-					case GetUser:
-					case ForgotPassword:
-						eventListener.onUserAccountEvent((UserAccount) object, operation);
-						break;
-					case AddCredential:
-					case DeleteCredential:
-					case UpdateCredential:
-						eventListener.onCredentialEvent((Credential) object, operation);
-						break;
-					case ExchangeKeys:
-						negotiateKeys();
-						break;
-					case InitiateConnection:
-						PublicKey publicKey = rsa.getPublicKey();
-						PublicKey remotePublicKey = (PublicKey) object;
+					rsa.setRecipientPublicKey(remotePublicKey);
 
-						rsa.setRecipientPublicKey(remotePublicKey);
+					Response<PublicKey> initiateConnectionResponse = new Response<PublicKey>(ResponseCode.OK,
+							operation, publicKey);
 
-						Response<PublicKey> initiateConnectionResponse = new Response<PublicKey>(ResponseCode.OK,
-								operation, publicKey);
+					send(initiateConnectionResponse);
+					break;
+				default:
+					break;
+				}
 
-						send(initiateConnectionResponse);
-						break;
-					default:
-						break;
-					}
-
-					switch (operation) {
-					case ExchangeKeys:
-						break;
-					default:
-						if (object != null && operation != null) {
-							validTransactionsRemaining -= 1;
-						}
-					}
-				} catch (Exception e) {
-					if (e instanceof SocketException) {
-						try {
-							System.out.println("SocketException! CommunicationProtocol receive: Closing socket.");
-							socket.close();
-							System.out.println("Socket closed!");
-						} catch (IOException e1) {
-							System.out.println("Error while trying to close socket!");
-							e1.printStackTrace();
-						}
-					} else {
-						System.out.println("Exception while retrieving query on server");
-						e.printStackTrace();
+				switch (operation) {
+				case ExchangeKeys:
+					break;
+				default:
+					if (object != null && operation != null) {
+						validTransactionsRemaining -= 1;
 					}
 				}
 			}
