@@ -3,9 +3,9 @@
     "serverIp": "0.0.0.0",
     "serverPort": 50000,
     "webPort":3000,
-    "useDummyData": true,
     "dbHostName":"postgres",
     "dbPort":5432,
     "dbUserName":"passwordmanager",
-    "dbPassword":"passwordmanager"
+    "dbPassword":"passwordmanager",
+    "publicDomainName": "127.0.0.1:3000"
 }
