@@ -91,21 +91,18 @@ public class AccountModel extends AbstractObservable<AccountModel> {
 	 * @throws ModelException Throws on data validation or server errors
 	 * @throws BadResponseException if the response code from the server was not OK
 	 */
-	public void forgotPassword(String email) throws ModelException {
+	public void forgotPassword(String email) throws ModelException, BadResponseException {
 		if (StringExtensions.isNullOrEmpty(email)) {
 			throw new ModelException("E-mail field cannot be empty!");
 		} else if (!EmailUtil.isValidEmail(email)) {
 			throw new ModelException("The value is not a valid e-mail address.");
 		} else {
-			try {
-				boolean result = client.forgotPassword(email);
+			boolean result = client.forgotPassword(email);
 
-				if (!result) {
-					throw new ModelException("The account does not exist! Please sign up to create an account.");
-				}
-			} catch (Exception ex) {
-				throw new ModelException("Error: The server could not handle the request!");
+			if (!result) {
+				throw new ModelException("The account does not exist! Please sign up to create an account.");
 			}
+			throw new ModelException("Error: The server could not handle the request!");
 		}
 	}
 

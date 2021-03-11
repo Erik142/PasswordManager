@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
+import passwordmanager.exception.BadResponseException;
 import passwordmanager.exception.ModelException;
 import passwordmanager.model.AccountModel;
 import passwordmanager.view.ForgotPasswordDialog;
@@ -13,7 +14,7 @@ import passwordmanager.view.ForgotPasswordDialog;
  * ActionListener for the buttons in ForgotPasswordDialog
  * 
  * @author Erik Wahlberger
- * @version 2021-03-07
+ * @version 2021-03-11
  */
 public class ForgotPasswordDialogController implements ActionListener {
 
@@ -57,7 +58,7 @@ public class ForgotPasswordDialogController implements ActionListener {
 			JOptionPane.showMessageDialog(view, "You will receive an email with a link to change your password.",
 					"Forgot password", JOptionPane.INFORMATION_MESSAGE);
 			view.dispose();
-		} catch (ModelException e) {
+		} catch (ModelException | BadResponseException e) {
 			JOptionPane.showMessageDialog(view, e.getMessage(), "Forgot password", JOptionPane.ERROR_MESSAGE);
 		}
 	}

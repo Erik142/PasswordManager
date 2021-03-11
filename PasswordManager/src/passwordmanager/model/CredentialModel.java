@@ -37,6 +37,7 @@ public class CredentialModel extends AbstractObservable<CredentialModel> {
 	 * @param username The username for the service
 	 * @param password The password for the service
 	 * @throws ModelException On data validation or server errors
+	 * @throws BadResponseException if the response code from the server was not OK
 	 */
 	public void addCredential(String url, String username, String password)
 			throws ModelException, BadResponseException {

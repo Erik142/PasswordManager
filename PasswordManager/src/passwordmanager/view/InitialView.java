@@ -69,6 +69,9 @@ public class InitialView {
         btnSignUp.addActionListener(actionListener); 
 	}
 	
+	/**
+	 * Enables all the buttons in the dialog
+	 */
 	public void enableButtons() {
         btnLogin.setEnabled(true);
         btnSignUp.setEnabled(true);

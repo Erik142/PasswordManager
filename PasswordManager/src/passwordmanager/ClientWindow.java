@@ -19,7 +19,7 @@ import passwordmanager.view.InitialView;
  * controllers to create a GUI for the client
  * 
  * @author Erik Wahlberger
- * @version 2021-03-07
+ * @version 2021-03-11
  */
 public class ClientWindow {
 	/**
@@ -28,8 +28,8 @@ public class ClientWindow {
 	 * 
 	 * @param config The Configuration object
 	 * @throws IOException if the created PasswordClient throws IOException
-	 * @throws ExecutionException 
-	 * @throws InterruptedException 
+	 * @throws ExecutionException if PasswordClient could not be initialized
+	 * @throws InterruptedException if PasswordClient could not be initialized 
 	 */
 	public ClientWindow(Configuration config) throws IOException, InterruptedException, ExecutionException {		
 		PasswordClient client;
