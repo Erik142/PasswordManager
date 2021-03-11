@@ -28,7 +28,7 @@ import passwordmanager.model.UserAccount;
  * Implements the protocol used to communicate between the client and server
  * 
  * @author Erik Wahlberger
- * @version 2021-03-07
+ * @version 2021-03-11
  */
 public class CommunicationProtocol implements Serializable {
 	
@@ -134,7 +134,7 @@ public class CommunicationProtocol implements Serializable {
 	private final int USE_ESTABLISHED_CONNECTION = 0;
 
 	/**
-	 * The maximum allowed transactions for the AES keys
+	 * The maximum allowed transactions for the AES keys, the actual valid transactions are randomly generated from 1 to MAX_VALID_TRANSACTIONS
 	 */
 	private final int MAX_VALID_TRANSACTIONS = 10;
 
