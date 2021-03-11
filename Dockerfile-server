@@ -14,4 +14,4 @@ FROM openjdk:15-jdk-slim
 COPY --from=build /home/app/target/PasswordManager-1.0.2-SNAPSHOT-jar-with-dependencies.jar /opt/passwordmanager/passwordmanager.jar
 COPY --from=build /home/app/target/config.json /opt/passwordmanager/config.json
 EXPOSE 50000
-ENTRYPOINT ["java","-jar","/opt/passwordmanager/passwordmanager.jar", "--config", "/opt/passwordmanager/config.json"]
+ENTRYPOINT ["java", "-Xmx2G","-jar","/opt/passwordmanager/passwordmanager.jar", "--config", "/opt/passwordmanager/config.json"]
