@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
+import passwordmanager.exception.BadResponseException;
 import passwordmanager.exception.ModelException;
 import passwordmanager.model.AccountModel;
 import passwordmanager.view.LoginDialog;
@@ -13,7 +14,7 @@ import passwordmanager.view.LoginDialog;
  * The controller for the LoginDialog
  * 
  * @author Hannes Larsson
- * @version 2021-03-07
+ * @version 2021-03-11
  */
 
 public class LoginDialogController implements ActionListener {
@@ -49,7 +50,7 @@ public class LoginDialogController implements ActionListener {
 
 		try {
 			model.login(email, password);
-		} catch (ModelException e) {
+		} catch (ModelException | BadResponseException e) {
 			JOptionPane.showMessageDialog(parentView, e.getMessage(), "Log in", JOptionPane.ERROR_MESSAGE);
 		}
 	}

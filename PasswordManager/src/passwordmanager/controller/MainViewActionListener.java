@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
+import passwordmanager.exception.BadResponseException;
 import passwordmanager.exception.ModelException;
 import passwordmanager.model.AccountModel;
 import passwordmanager.model.CredentialModel;
@@ -18,7 +19,7 @@ import passwordmanager.view.MainView;
  * 
  * @author Ermin Fazlic
  * @author Erik Wahlberger
- * @version 2021-03-07
+ * @version 2021-03-11
  *
  */
 public class MainViewActionListener implements ActionListener {
@@ -127,7 +128,7 @@ public class MainViewActionListener implements ActionListener {
                 credentialModel.removeObserver(mainView);
                 accountModel.logout();
             }
-            catch (ModelException e) {
+            catch (ModelException | BadResponseException e) {
                 JOptionPane.showMessageDialog(mainView.getFrame(), e.getMessage(), "Delete account", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -150,7 +151,7 @@ public class MainViewActionListener implements ActionListener {
                 try {
 				    credentialModel.deleteCredential();
 				    credentialModel.refreshCredentials();
-                } catch (ModelException e) {
+                } catch (ModelException | BadResponseException e) {
                     JOptionPane.showMessageDialog(mainView.getFrame(), e.getMessage(), "Delete credential", JOptionPane.ERROR_MESSAGE);
                 }
 			}

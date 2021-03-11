@@ -5,16 +5,16 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
+import passwordmanager.exception.BadResponseException;
 import passwordmanager.exception.ModelException;
 import passwordmanager.model.AccountModel;
-import passwordmanager.model.UserAccount;
 import passwordmanager.view.ChangeUserPasswordDialog;
 
 /**
  * The controller for the ChangeUserPasswordDialog
  * 
  * @author Hannes Larsson
- * @version 2021-03-07
+ * @version 2021-03-11
  */
 public class ChangePasswordController implements ActionListener {
 
@@ -55,7 +55,7 @@ public class ChangePasswordController implements ActionListener {
 			JOptionPane.showMessageDialog(view, "Successfully changed the user password!",
 					"Change user account password", JOptionPane.INFORMATION_MESSAGE);
 			view.dispose();
-		} catch (ModelException e1) {
+		} catch (ModelException | BadResponseException e1) {
 			JOptionPane.showMessageDialog(view, e1.getMessage(), "Change user account password",
 					JOptionPane.ERROR_MESSAGE);
 		}

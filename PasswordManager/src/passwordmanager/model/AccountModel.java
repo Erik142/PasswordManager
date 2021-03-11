@@ -1,6 +1,7 @@
 package passwordmanager.model;
 
 import passwordmanager.communication.PasswordClient;
+import passwordmanager.exception.BadResponseException;
 import passwordmanager.exception.ModelException;
 import passwordmanager.util.EmailUtil;
 import passwordmanager.util.StringExtensions;
@@ -8,7 +9,7 @@ import passwordmanager.util.StringExtensions;
 /**
  * Model used to validate data and manipulate UserAccount objects
  * @author Erik Wahlberger
- * @version 2021-03-07
+ * @version 2021-03-11
  */
 public class AccountModel extends AbstractObservable<AccountModel> {
 	private final int MIN_PASSWORD_LENGTH = 8;
@@ -34,9 +35,10 @@ public class AccountModel extends AbstractObservable<AccountModel> {
 	 * @param newPassword     The new password String
 	 * @param confirmPassword The new password String, confirmed
 	 * @throws ModelException Throws on data validation or server errors
+	 * @throws BadResponseException if the response code from the server was not OK
 	 */
 	public void changeUserPassword(String oldPassword, String newPassword, String confirmPassword)
-			throws ModelException {
+			throws ModelException, BadResponseException {
 		if (isValidPassword(newPassword) && isValidPassword(confirmPassword) && newPassword.equals(confirmPassword)
 				&& !newPassword.equals(oldPassword)) {
 			if (oldPassword.equals(account.getPassword())) {
@@ -66,8 +68,9 @@ public class AccountModel extends AbstractObservable<AccountModel> {
 	 * Deletes the UserAccount from the database
 	 * 
 	 * @throws ModelException Throws on data validation or server errors
+	 * @throws BadResponseException if the response code from the server was not OK
 	 */
-	public void deleteAccount() throws ModelException {
+	public void deleteAccount() throws ModelException, BadResponseException {
 		if (account != null) {
 			boolean success = client.deleteUserAccount(account);
 
@@ -86,6 +89,7 @@ public class AccountModel extends AbstractObservable<AccountModel> {
 	 * 
 	 * @param email The e-mail address
 	 * @throws ModelException Throws on data validation or server errors
+	 * @throws BadResponseException if the response code from the server was not OK
 	 */
 	public void forgotPassword(String email) throws ModelException {
 		if (StringExtensions.isNullOrEmpty(email)) {
@@ -140,8 +144,9 @@ public class AccountModel extends AbstractObservable<AccountModel> {
 	 * @param email    The e-mail address
 	 * @param password The password
 	 * @throws ModelException Throws on data validation or server errors
+	 * @throws BadResponseException if the response code from the server was not OK
 	 */
-	public void login(String email, String password) throws ModelException {
+	public void login(String email, String password) throws ModelException, BadResponseException {
 		boolean isValidEmail = EmailUtil.isValidEmail(email);
 		boolean isPasswordEmpty = StringExtensions.isNullOrEmpty(password);
 
@@ -183,8 +188,9 @@ public class AccountModel extends AbstractObservable<AccountModel> {
 	 * @param password        The password String
 	 * @param confirmPassword The password String, confirmed
 	 * @throws ModelException Throws on data validation or server errors
+	 * @throws BadResponseException if the response code from the server was not OK
 	 */
-	public void signup(String email, String password, String confirmPassword) throws ModelException {
+	public void signup(String email, String password, String confirmPassword) throws ModelException, BadResponseException {
 		boolean isValidEmail = EmailUtil.isValidEmail(email);
 		boolean arePasswordsValid = password.trim().equals(confirmPassword.trim())
 				&& password.length() >= MIN_PASSWORD_LENGTH;

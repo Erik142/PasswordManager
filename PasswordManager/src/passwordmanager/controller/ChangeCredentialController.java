@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
+import passwordmanager.exception.BadResponseException;
 import passwordmanager.exception.ModelException;
 import passwordmanager.model.CredentialModel;
 import passwordmanager.view.ChangeCredentialDialog;
@@ -13,7 +14,7 @@ import passwordmanager.view.ChangeCredentialDialog;
  * The controller for the ChangeCredentialDialog
  * 
  * @author Hannes Larsson
- * @version 2021-03-07
+ * @version 2021-03-11
  */
 public class ChangeCredentialController implements ActionListener {
 
@@ -51,7 +52,7 @@ public class ChangeCredentialController implements ActionListener {
 		try {
 			model.updateCredential(service, username, password);
 			view.dispose();
-		} catch (ModelException e) {
+		} catch (ModelException | BadResponseException e) {
 			JOptionPane.showMessageDialog(view, e.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 		}
 	}

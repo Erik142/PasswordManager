@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
+import passwordmanager.exception.BadResponseException;
 import passwordmanager.exception.ModelException;
 import passwordmanager.model.AccountModel;
 import passwordmanager.view.SignUpDialog;
@@ -13,7 +14,7 @@ import passwordmanager.view.SignUpDialog;
  * The controller for the SignUpDialog
  * 
  * @author Arian Alikashani
- * @version 2021-03-07
+ * @version 2021-03-11
  *
  */
 public class SignUpController implements ActionListener {
@@ -49,7 +50,7 @@ public class SignUpController implements ActionListener {
 			model.signup(parentView.getEmail(), parentView.getPassword(), parentView.getConfirmPassword());
 			JOptionPane.showMessageDialog(parentView, "Success!", "Sign up", JOptionPane.INFORMATION_MESSAGE);
 			parentView.dispose();
-		} catch (ModelException e) {
+		} catch (ModelException | BadResponseException e) {
 			JOptionPane.showMessageDialog(parentView, e.getMessage(), "Sign up", JOptionPane.ERROR_MESSAGE);
 		}
 	}

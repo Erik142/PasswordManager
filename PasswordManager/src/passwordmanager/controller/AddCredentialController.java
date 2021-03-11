@@ -5,16 +5,16 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
+import passwordmanager.exception.BadResponseException;
 import passwordmanager.exception.ModelException;
 import passwordmanager.model.CredentialModel;
-import passwordmanager.model.UserAccount;
 import passwordmanager.view.AddCredentialDialog;
 
 /**
  * The controller for the AddCredentialDialog
  * 
  * @author Erik Wahlberger
- * @version 2021-03-07
+ * @version 2021-03-11
  */
 public class AddCredentialController implements ActionListener {
 
@@ -51,7 +51,7 @@ public class AddCredentialController implements ActionListener {
 		try {
 			credentialModel.addCredential(url, username, password);
 			view.dispose();
-		} catch (ModelException e1) {
+		} catch (ModelException | BadResponseException e1) {
 			JOptionPane.showMessageDialog(view, e1.getMessage(), "Add credential", JOptionPane.ERROR_MESSAGE);
 		}
 	}

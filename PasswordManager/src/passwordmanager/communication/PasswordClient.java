@@ -7,13 +7,14 @@ import passwordmanager.communication.CommunicationProtocol.CommunicationOperatio
 import passwordmanager.communication.CommunicationProtocol.ProtocolMode;
 import passwordmanager.communication.Response.ResponseCode;
 import passwordmanager.config.Configuration;
+import passwordmanager.exception.BadResponseException;
 import passwordmanager.model.Credential;
 import passwordmanager.model.UserAccount;
 
 /**
  * Used to send queries to the server and receive responses from the server 
  * @author Yemeri Nisa
- * @version 2021-03-07
+ * @version 2021-03-11
  * 
  */
 public class PasswordClient {
@@ -38,11 +39,17 @@ public class PasswordClient {
 	 * 
 	 * @param account is the account whose credentials is retrieved
 	 * @return list of credentials stored on server database.
+	 * @throws BadResponseException if the response code from the server was not OK
 	 */
 
-	public Credential[] getCredentials(UserAccount account) {
+	public Credential[] getCredentials(UserAccount account) throws BadResponseException {
 		Query<UserAccount> query = new Query<UserAccount>(CommunicationOperation.GetAllCredentials, account);
 		Response<Credential[]> response = protocol.sendAndReceive(query);
+
+		if (response.getResponseCode() != ResponseCode.OK) {
+			throw new BadResponseException("The server could not process the query.", response.getResponseCode());	
+		}
+
 		return response.getData();
 
 	}
@@ -51,12 +58,17 @@ public class PasswordClient {
 	 * 
 	 * @param credential is the credential that shall be stored
 	 * @return returns the success of the operation
+	 * @throws BadResponseException if the response code from the server was not OK
 	 */
 
 
-	public boolean storeCredential(Credential credential) {
+	public boolean storeCredential(Credential credential) throws BadResponseException {
 		Query<Credential> query = new Query<Credential>(CommunicationOperation.AddCredential, credential);
 		Response<Boolean> response = protocol.sendAndReceive(query);
+
+		if (response.getResponseCode() != ResponseCode.OK) {
+			throw new BadResponseException("The server could not process the query.", response.getResponseCode());
+		}
 
 		return response.getData();
 
@@ -67,10 +79,15 @@ public class PasswordClient {
 	 * 
 	 * @param credential is the credential that shall be updated
 	 * @return returns the success of the operation
+	 * @throws BadResponseException if the response code from the server was not OK
 	 */
-	public boolean modifyCredential(Credential credential) {
+	public boolean modifyCredential(Credential credential) throws BadResponseException {
 		Query<Credential> query = new Query<Credential>(CommunicationOperation.UpdateCredential, credential);
 		Response<Boolean> response = protocol.sendAndReceive(query);
+
+		if (response.getResponseCode() != ResponseCode.OK) {
+			throw new BadResponseException("The server could not process the query.", response.getResponseCode());
+		}
 
 		return response.getData();
 
@@ -81,10 +98,16 @@ public class PasswordClient {
 	 * 
 	 * @param credential that shall be deleted
 	 * @return returns the success of the operation
+	 * @throws BadResponseException if the response code from the server was not OK
 	 */
-	public boolean deleteCredential(Credential credential) {
+	public boolean deleteCredential(Credential credential) throws BadResponseException {
 		Query<Credential> query = new Query<Credential>(CommunicationOperation.DeleteCredential, credential);
 		Response<Boolean> response = protocol.sendAndReceive(query);
+		
+		if (response.getResponseCode() != ResponseCode.OK) {
+			throw new BadResponseException("The server could not process the query.", response.getResponseCode());
+		}
+
 		return response.getData();
 
 	}
@@ -94,10 +117,16 @@ public class PasswordClient {
 	 * 
 	 * @param account that shall be added
 	 * @return returns the success of the operation
+	 * @throws BadResponseException if the response code from the server was not OK
 	 */
-	public boolean addUserAccount(UserAccount account) {
+	public boolean addUserAccount(UserAccount account) throws BadResponseException{
 		Query<UserAccount> query = new Query<UserAccount>(CommunicationOperation.AddUser, account);
 		Response<Boolean> response = protocol.sendAndReceive(query);
+		
+		if (response.getResponseCode() != ResponseCode.OK) {
+			throw new BadResponseException("The server could not process the query.", response.getResponseCode());
+		}
+
 		return response.getData();
 
 	}
@@ -107,11 +136,17 @@ public class PasswordClient {
 	 * 
 	 * @param account that shall be updated
 	 * @return returns the success of the operation
+	 * @throws BadResponseException if the response code from the server was not OK
 	 */
-	public boolean modifyUserAccount(UserAccount account) {
+	public boolean modifyUserAccount(UserAccount account) throws BadResponseException{
 
 		Query<UserAccount> query = new Query<UserAccount>(CommunicationOperation.UpdateUser, account);
 		Response<Boolean> response = protocol.sendAndReceive(query);
+		
+		if (response.getResponseCode() != ResponseCode.OK) {
+			throw new BadResponseException("The server could not process the query.", response.getResponseCode());
+		}
+
 		return response.getData();
 	}
 	
@@ -120,11 +155,17 @@ public class PasswordClient {
 	 * 
 	 * @param account that shall be deleted
 	 * @return returns the success of the operation
+	 * @throws BadResponseException if the response code from the server was not OK
 	 */
-	public boolean deleteUserAccount(UserAccount account) {
+	public boolean deleteUserAccount(UserAccount account) throws BadResponseException {
 
 		Query<UserAccount> query = new Query<UserAccount>(CommunicationOperation.DeleteUser, account);
 		Response<Boolean> response = protocol.sendAndReceive(query);
+		
+		if (response.getResponseCode() != ResponseCode.OK) {
+			throw new BadResponseException("The server could not process the query.", response.getResponseCode());
+		}
+
 		return response.getData();
 
 	}
@@ -134,11 +175,16 @@ public class PasswordClient {
 	 * 
 	 * @param email of the UserAccount that shall be retrieved
 	 * @return returns the success of the operation
+	 * @throws BadResponseException if the response code from the server was not OK
 	 */
-	public UserAccount getUserAccount(String email) {
+	public UserAccount getUserAccount(String email) throws BadResponseException {
 		UserAccount account = new UserAccount(email, "");
 		Query<UserAccount> query = new Query<UserAccount>(CommunicationOperation.GetUser, account);
 		Response<UserAccount> response = protocol.sendAndReceive(query);
+
+		if (response.getResponseCode() != ResponseCode.OK) {
+			throw new BadResponseException("The server could not process the query.", response.getResponseCode());
+		}
 
 		return response.getData();
 	}
@@ -148,15 +194,15 @@ public class PasswordClient {
 	 * 
 	 * @param email of the account
 	 * @return returns the success of the operation
-	 * @throws Exception if the response code from the server was not OK
+	 * @throws BadResponseException if the response code from the server was not OK
 	 */
-	public boolean forgotPassword(String email) throws Exception {
+	public boolean forgotPassword(String email) throws BadResponseException {
 		Query<UserAccount> query = new Query<UserAccount>(CommunicationOperation.ForgotPassword,
 				new UserAccount(email, ""));
 		Response<Boolean> response = protocol.sendAndReceive(query);
-
+		
 		if (response.getResponseCode() != ResponseCode.OK) {
-			throw new Exception("The query did not complete successfully!");
+			throw new BadResponseException("The server could not process the query.", response.getResponseCode());
 		}
 
 		return response.getData();

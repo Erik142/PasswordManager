@@ -1,13 +1,15 @@
 package passwordmanager.model;
 
 import passwordmanager.communication.PasswordClient;
+import passwordmanager.exception.BadResponseException;
 import passwordmanager.exception.ModelException;
 import passwordmanager.util.StringExtensions;
 
 /**
  * Model used to validate data and manipulate Credential objects
+ * 
  * @author Erik Wahlberger
- * @version 2021-03-07
+ * @version 2021-03-11
  */
 public class CredentialModel extends AbstractObservable<CredentialModel> {
 	private final PasswordClient client;
@@ -18,7 +20,9 @@ public class CredentialModel extends AbstractObservable<CredentialModel> {
 	private Credential selectedCredential = null;
 
 	/**
-	 * Create a new instance of the CredentialModel class with the specified PasswordClient object
+	 * Create a new instance of the CredentialModel class with the specified
+	 * PasswordClient object
+	 * 
 	 * @param client The PasswordClient
 	 */
 	public CredentialModel(PasswordClient client) {
@@ -34,7 +38,8 @@ public class CredentialModel extends AbstractObservable<CredentialModel> {
 	 * @param password The password for the service
 	 * @throws ModelException On data validation or server errors
 	 */
-	public void addCredential(String url, String username, String password) throws ModelException {
+	public void addCredential(String url, String username, String password)
+			throws ModelException, BadResponseException {
 		if (StringExtensions.isNullOrEmpty(url) || StringExtensions.isNullOrEmpty(username)
 				|| StringExtensions.isNullOrEmpty(password)) {
 			throw new ModelException("Please fill in all the fields");
@@ -55,8 +60,9 @@ public class CredentialModel extends AbstractObservable<CredentialModel> {
 	 * Deletes the Credential in this instance from the database
 	 * 
 	 * @throws ModelException On data validation or server errors
+	 * @throws BadResponseException if the response code from the server was not OK
 	 */
-	public void deleteCredential() throws ModelException {
+	public void deleteCredential() throws ModelException, BadResponseException {
 		if (selectedCredential != null) {
 			boolean success = client.deleteCredential(selectedCredential);
 
@@ -132,28 +138,33 @@ public class CredentialModel extends AbstractObservable<CredentialModel> {
 	 */
 	public void refreshCredentials() {
 		if (account != null) {
-			Credential[] credentials = client.getCredentials(account);
+			Credential[] credentials;
+			try {
+				credentials = client.getCredentials(account);
 
-			if (credentials != null && credentials.length > 0) {
-				Object[][] tableData = new Object[credentials.length][3];
+				if (credentials != null && credentials.length > 0) {
+					Object[][] tableData = new Object[credentials.length][3];
 
-				for (int i = 0; i < credentials.length; i++) {
-					Credential cred = credentials[i];
+					for (int i = 0; i < credentials.length; i++) {
+						Credential cred = credentials[i];
 
-					Object[] credObj = new Object[3];
-					credObj[0] = cred.getURL();
-					credObj[1] = cred.getUsername();
-					credObj[2] = cred.getPassword();
+						Object[] credObj = new Object[3];
+						credObj[0] = cred.getURL();
+						credObj[1] = cred.getUsername();
+						credObj[2] = cred.getPassword();
 
-					tableData[i] = credObj;
+						tableData[i] = credObj;
+					}
+
+					this.tableData = tableData;
+				} else {
+					this.tableData = new Object[0][0];
 				}
 
-				this.tableData = tableData;
-			} else {
-				this.tableData = new Object[0][0];
+				this.credentials = credentials;
+			} catch (BadResponseException e) {
+				e.printStackTrace();
 			}
-
-			this.credentials = credentials;
 		}
 
 		updateObservers(this);
@@ -187,8 +198,10 @@ public class CredentialModel extends AbstractObservable<CredentialModel> {
 	 * @param username The new username
 	 * @param password The new password
 	 * @throws ModelException On data validation or server errors
+	 * @throws BadResponseException if the response code from the server was not OK
 	 */
-	public void updateCredential(String url, String username, String password) throws ModelException {
+	public void updateCredential(String url, String username, String password)
+			throws ModelException, BadResponseException {
 		if (StringExtensions.isNullOrEmpty(url) || StringExtensions.isNullOrEmpty(username)
 				|| StringExtensions.isNullOrEmpty(password)) {
 			throw new ModelException("Error: One or more fields are empty!");
