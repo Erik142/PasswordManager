@@ -6,7 +6,8 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: postgresql
-    network_mode: bridge
+    networks:
+      - backend
   web:
     build:
       context: .
@@ -16,7 +17,9 @@ services:
       - "3000:3000"
     volumes:
       - ./Docker/config.json:/root/passwordmanager-ui/config.json
-    network_mode: bridge
+    networks:
+      - frontend
+      - backend
   server:
     build:
       context: .
@@ -26,4 +29,11 @@ services:
       - "50000:50000"
     volumes:
       - ./Docker/config.json:/opt/passwordmanager/config.json
-    network_mode: bridge
+    networks:
+      - frontend
+      - backend
+networks:
+  frontend:
+    name: frontend
+  backend:
+    name: backend
