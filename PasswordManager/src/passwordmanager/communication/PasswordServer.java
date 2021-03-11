@@ -25,7 +25,7 @@ import passwordmanager.util.StringExtensions;
  * Used to receive queries from clients, interact with the PostgreSQL database and send responses back to clients 
  * @author Erik Wahlberger
  * @author Yemeri Nisa
- * @version 2021-03-07
+ * @version 2021-03-11
  *
  */
 public class PasswordServer implements Runnable {
@@ -141,6 +141,7 @@ public class PasswordServer implements Runnable {
 				} catch (Exception e) {
 					e.printStackTrace();
 					Response<Object> failedResponse = new Response<Object>(ResponseCode.Fail, operation, null);
+					communicationProtocol.send(failedResponse);
 				}
 			}
 			
@@ -207,6 +208,7 @@ public class PasswordServer implements Runnable {
 				} catch (Exception e) {
 					e.printStackTrace();
 					Response<Object> failedResponse = new Response<Object>(ResponseCode.Fail, operation, null);
+					communicationProtocol.send(failedResponse);
 				}
 			}
 		});
